@@ -1,4 +1,4 @@
-type Guitar = {
+export type Guitar = {
   id: number,
   name: string,
   vendorCode: string,
@@ -10,6 +10,6 @@ type Guitar = {
   price: number,
 };
 
-type Guitars = Guitar[];
+export type Guitars = Guitar[];
 
-export type {Guitar, Guitars};
+
