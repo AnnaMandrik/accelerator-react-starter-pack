@@ -1,5 +1,6 @@
 import ProductCard from '../product-card/product-card';
 import {Guitars} from '../../types/guitar';
+import {ITEMS_PER_PAGE} from '../../const';
 
 type ProductCardsListProps = {
   productsList: Guitars;
@@ -8,7 +9,7 @@ type ProductCardsListProps = {
 function ProductCardsList({productsList}: ProductCardsListProps): JSX.Element {
   return (
     <div className="cards catalog__cards">
-      {productsList.slice(0,9).map((guitar) => (
+      {productsList.slice(0, ITEMS_PER_PAGE).map((guitar) => (
         <ProductCard key={guitar.id} guitar={guitar} /> ))}
     </div>
   );

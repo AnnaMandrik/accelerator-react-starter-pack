@@ -1,5 +1,8 @@
+const ITEMS_PER_PAGE = 9;
+
 enum AppRoute {
   Main = '/',
+  Guitars = '/guitars/',
 }
 
 enum APIRoute {
@@ -11,5 +14,5 @@ enum APIRoute {
   Order = '/orders',
 }
 
-export {AppRoute, APIRoute};
+export {AppRoute, APIRoute, ITEMS_PER_PAGE};
 
