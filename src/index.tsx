@@ -5,7 +5,7 @@ import {rootReducer} from './store/root-reducer';
 import {Provider} from 'react-redux';
 import App from './components/app/app';
 import {createAPI} from './services/api';
-import {fetchProductCartsListAction} from './store/api-actions';
+import {fetchProductCardsListAction} from './store/api-actions';
 
 const api = createAPI();
 
@@ -19,7 +19,7 @@ const store = configureStore({
     }),
 });
 
-store.dispatch(fetchProductCartsListAction());
+store.dispatch(fetchProductCardsListAction());
 
 ReactDOM.render(
   <React.StrictMode>

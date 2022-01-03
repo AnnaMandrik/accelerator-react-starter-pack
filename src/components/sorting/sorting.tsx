@@ -1,14 +1,80 @@
-function Sorting(): JSX.Element {
+import {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {fetchSortingProductCardsAction} from '../../store/api-actions';
+
+
+enum Params {
+  Sort = 'sort',
+  Order = 'order',
+}
+
+enum SortKey {
+  Price = 'price',
+  Rating = 'rating',
+}
+
+enum OrderKey {
+  Desc = 'desc',
+  Asc = 'asc,'
+}
+
+function Sorting():JSX.Element {
+  const dispatch = useDispatch();
+
+  const [sort, setSort] = useState<string>('');
+  const [order, setOrder] = useState<string>('');
+
+  useEffect(() => {
+    dispatch(fetchSortingProductCardsAction(`?_${Params.Sort}=${sort}${order && `&_${Params.Order}=${order}`}`));
+  }, [sort, order]);
+
+
   return (
     <div className="catalog-sort">
       <h2 className="catalog-sort__title">Сортировать:</h2>
       <div className="catalog-sort__type">
-        <button className="catalog-sort__type-button catalog-sort__type-button--active" aria-label="по цене" tabIndex={-1}>по цене</button>
-        <button className="catalog-sort__type-button" aria-label="по популярности">по популярности</button>
+        <button
+          className={`catalog-sort__type-button${(sort === SortKey.Price) ? ' catalog-sort__type-button--active' : ''}`}
+          aria-label="по цене"
+          tabIndex={(sort === SortKey.Price) ? -1 : 0}
+          onClick={()=> setSort(SortKey.Price)}
+        >
+          по цене
+        </button>
+        <button
+          className={`catalog-sort__type-button${(sort === SortKey.Rating) ? ' catalog-sort__type-button--active' : ''}`}
+          aria-label="по популярности"
+          tabIndex={(sort === SortKey.Rating) ? -1 : 0}
+          onClick={()=> setSort(SortKey.Rating)}
+        >
+          по популярности
+        </button>
       </div>
       <div className="catalog-sort__order">
-        <button className="catalog-sort__order-button catalog-sort__order-button--up catalog-sort__order-button--active" aria-label="По возрастанию" tabIndex={-1}></button>
-        <button className="catalog-sort__order-button catalog-sort__order-button--down" aria-label="По убыванию"></button>
+        <button
+          className={`catalog-sort__order-button catalog-sort__order-button--up${(order === OrderKey.Asc) ? ' catalog-sort__order-button--active' : ''}`}
+          aria-label="По возрастанию"
+          tabIndex={(order === OrderKey.Asc) ? -1 : 0}
+          onClick={()=> {
+            if (sort === '') {
+              setSort(SortKey.Price);
+            }
+            setOrder(OrderKey.Asc);
+          }}
+        >
+        </button>
+        <button
+          className={`catalog-sort__order-button catalog-sort__order-button--down${(order === OrderKey.Desc) ? ' catalog-sort__order-button--active' : ''}`}
+          aria-label="По убыванию"
+          tabIndex={(order === OrderKey.Desc) ? -1 : 0}
+          onClick={()=> {
+            if (sort === '') {
+              setSort(SortKey.Price);
+            }
+            setOrder(OrderKey.Desc);
+          }}
+        >
+        </button>
       </div>
     </div>
   );
