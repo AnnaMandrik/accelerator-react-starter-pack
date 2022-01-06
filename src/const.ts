@@ -14,5 +14,20 @@ enum APIRoute {
   Order = '/orders',
 }
 
-export {AppRoute, APIRoute, ITEMS_PER_PAGE};
+enum Params {
+  Sort = 'sort',
+  Order = 'order',
+}
+
+enum SortKey {
+  Price = 'price',
+  Rating = 'rating',
+}
+
+enum OrderKey {
+  Desc = 'desc',
+  Asc = 'asc',
+}
+
+export {AppRoute, APIRoute, ITEMS_PER_PAGE, Params, SortKey, OrderKey};
 

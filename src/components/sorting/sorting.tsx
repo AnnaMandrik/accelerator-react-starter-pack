@@ -1,22 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {fetchSortingProductCardsAction} from '../../store/api-actions';
-
-
-enum Params {
-  Sort = 'sort',
-  Order = 'order',
-}
-
-enum SortKey {
-  Price = 'price',
-  Rating = 'rating',
-}
-
-enum OrderKey {
-  Desc = 'desc',
-  Asc = 'asc,'
-}
+import {Params, SortKey, OrderKey} from '../../const';
 
 function Sorting():JSX.Element {
   const dispatch = useDispatch();
