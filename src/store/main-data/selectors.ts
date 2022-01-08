@@ -4,5 +4,8 @@ import {NameDataList} from '../root-reducer';
 
 const getGuitars = (state: State): Guitars => state[NameDataList.MainData].productsList;
 const getIsLoaded = (state: State): boolean => state[NameDataList.MainData].isDataLoaded;
+const getMinPrice = (state: State): number => Math.min(...state[NameDataList.MainData].productsList.map((guitar) => guitar.price));
+const getMaxPrice = (state: State): number => Math.max(...state[NameDataList.MainData].productsList.map((guitar) => guitar.price));
 
-export {getGuitars, getIsLoaded};
+
+export {getGuitars, getIsLoaded, getMinPrice, getMaxPrice};
