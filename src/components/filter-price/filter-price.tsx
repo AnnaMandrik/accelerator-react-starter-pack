@@ -1,17 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useRef, useState, FormEvent } from 'react';
 import {getMinPrice, getMaxPrice} from '../../store/main-data/selectors';
-
-const FilterOfPrices = {
-  PRICE_MIN: {
-    id: 'priceMin',
-    name: 'от',
-  },
-  PRICE_MAX: {
-    id: 'priceMax',
-    name: 'от',
-  },
-};
+import {FilterOfPrices} from '../../const';
 
 function FilterPrice(): JSX.Element {
   const minPrice = useSelector(getMinPrice);
@@ -33,55 +23,81 @@ function FilterPrice(): JSX.Element {
     setUserMaxPrice(priceValue);
   };
 
-  const blurHandler = (evt: FormEvent<HTMLInputElement>) => {
+  const handlerEmptyPlaceChange = (evt: FormEvent<HTMLInputElement>) => {
     if (evt.currentTarget.value === '') {
       return;
     }
+    const min = Number(userMinPrice);
+    const max = Number(userMaxPrice);
 
-    switch (evt.currentTarget.id) {
-      case FilterOfPrices.PRICE_MIN.id: {
-        let priceValueOfUser = Number(evt.currentTarget.value);
-
-        if (priceValueOfUser < minPrice) {
-          priceValueOfUser = minPrice;
+    switch (evt.currentTarget.name) {
+      case FilterOfPrices.PRICE_MIN.name:
+        if (min < minPrice) {
+          setUserMinPrice(String(minPrice));
         }
 
-        if (priceValueOfUser > maxPrice) {
-          priceValueOfUser = maxPrice;
-        }
-
-        if (userMaxPrice !== '') {
-          const maxValueOfUser = Number(userMaxPrice);
-
-          if (priceValueOfUser > maxValueOfUser) {
-            priceValueOfUser = maxValueOfUser;
-          }
+        if (min > maxPrice) {
+          setUserMinPrice(String(maxPrice));
         }
         break;
-      }
-      case FilterOfPrices.PRICE_MAX.id: {
-        let priceValueOfUser = Number(evt.currentTarget.value);
-
-        if (priceValueOfUser > maxPrice) {
-          priceValueOfUser = maxPrice;
+      case FilterOfPrices.PRICE_MAX.name:
+        if (max > maxPrice) {
+          setUserMaxPrice(String(maxPrice));
         }
 
-        if (priceValueOfUser < minPrice) {
-          priceValueOfUser = minPrice;
+        if (max < maxPrice) {
+          setUserMaxPrice(String(minPrice));
         }
-        if (userMinPrice !== '') {
-          const minValueOfUser = Number(userMinPrice);
-
-          if (priceValueOfUser < minValueOfUser) {
-            priceValueOfUser = minValueOfUser;
-          }
-        }
-        setUserMaxPrice(String());
         break;
-      }
       default:
         break;
     }
+
+    // switch (evt.currentTarget.id) {
+    //   case FilterOfPrices.PRICE_MIN.id: {
+    //     let priceValueOfUser = Number(evt.currentTarget.value);
+
+    //     if (priceValueOfUser < minPrice) {
+    //       priceValueOfUser = minPrice;
+    //     }
+
+    //     if (priceValueOfUser > maxPrice) {
+    //       priceValueOfUser = maxPrice;
+    //     }
+
+    //     if (userMaxPrice !== '') {
+    //       const maxValueOfUser = Number(userMaxPrice);
+
+    //       if (priceValueOfUser > maxValueOfUser) {
+    //         priceValueOfUser = maxValueOfUser;
+    //       }
+    //     }
+    //     setUserMinPrice(String());
+    //     break;
+    //   }
+    //   case FilterOfPrices.PRICE_MAX.id: {
+    //     let priceValueOfUser = Number(evt.currentTarget.value);
+
+    //     if (priceValueOfUser > maxPrice) {
+    //       priceValueOfUser = maxPrice;
+    //     }
+
+    //     if (priceValueOfUser < minPrice) {
+    //       priceValueOfUser = minPrice;
+    //     }
+    //     if (userMinPrice !== '') {
+    //       const minValueOfUser = Number(userMinPrice);
+
+    //       if (priceValueOfUser < minValueOfUser) {
+    //         priceValueOfUser = minValueOfUser;
+    //       }
+    //     }
+    //     setUserMaxPrice(String());
+    //     break;
+    //   }
+    //   default:
+    //     break;
+    // }
   };
 
   return (
@@ -98,7 +114,7 @@ function FilterPrice(): JSX.Element {
             ref={minPriceRef}
             onChange={handlerMinPriceChange}
             value={userMinPrice}
-            onBlur={blurHandler}
+            onBlur={handlerEmptyPlaceChange}
           />
         </div>
         <div className="form-input">
@@ -111,7 +127,7 @@ function FilterPrice(): JSX.Element {
             ref={maxPriceRef}
             onChange={handlerMaxPriceChange}
             value={userMaxPrice}
-            onBlur={blurHandler}
+            onBlur={handlerEmptyPlaceChange}
           />
         </div>
       </div>

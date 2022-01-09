@@ -9,14 +9,25 @@ export const fetchProductCardsListAction = (): ThunkActionResult =>
     dispatch(loadProductCardsList(data));
   };
 
-export const fetchSortingProductCardsAction = (type: string): ThunkActionResult =>
+export const fetchSortingProductCardsAction = (name: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     try {
-      const {data} = await api.get<Guitars>(`${APIRoute.Guitars}${type}`);
+      const {data} = await api.get<Guitars>(`${APIRoute.Guitars}${name}`);
       dispatch(loadProductCardsList(data));
     } catch {
     // eslint-disable-next-line no-console
-      console.log('do not load from server');
+      console.log('do not load sorting from server');
+    }
+  };
+
+export const fetchFilterUserAction = (filter: string): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    try {
+      const {data} = await api.get<Guitars>(`${APIRoute.Guitars}${filter}`);
+      dispatch(loadProductCardsList(data));
+    } catch {
+      // eslint-disable-next-line no-console
+      console.log('do not load filter from server');
     }
   };
 
