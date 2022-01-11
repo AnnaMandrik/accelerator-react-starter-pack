@@ -1,11 +1,34 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import {ChangeEvent, useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectType, selectStrings} from '../../store/action';
+import {fetchFilterUserAction} from '../../store/api-actions';
+import {getUserType, getUserStrings} from '../../store/user-data/selectors';
+import {getFilterTypeInfo} from '../../utils';
 import FilterPrice from '../filter-price/filter-price';
 import {STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
 
+const allTypes = (factTypes: string[], type: string): string[] => {
+  if (factTypes.includes(type)) {
+    return factTypes.filter((factType) => factType !== type);
+  }
+
+  return [...factTypes, type];
+};
+
+
 function Filter(): JSX.Element {
+  const userType = useSelector(getUserType);
+  const userStrings = useSelector(getUserStrings);
+
   const [types, setTypes] = useState<boolean[]>(new Array(TYPES_QUANTITY).fill(false));
   const [strings, setStrings] = useState<boolean[]>(new Array(STRINGS_QUANTITY).fill(false));
   const [availableStrings, setAvailableStrings] = useState<number[]>(STRINGS);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchFilterUserAction(getFilterTypeInfo(userType, userStrings)));
+  }, [strings, dispatch, userType, userStrings]);
 
   useEffect(() => {
     if (!types.some((type) => type)) {
@@ -46,6 +69,7 @@ function Filter(): JSX.Element {
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
                     const value = target.checked;
                     setTypes([...types.slice(0, index), value, ...types.slice(index + 1)]);
+                    dispatch(selectType(allTypes(userType, name)));
                   }}
                 />
                 <label htmlFor={name}>{type}</label>
@@ -70,6 +94,7 @@ function Filter(): JSX.Element {
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
                     const value = target.checked;
                     setStrings([...strings.slice(0, index), value, ...strings.slice(index + 1)]);
+                    dispatch(selectStrings(allTypes(userStrings, String(countOfString))));
                   }}
                   disabled={!availableStrings.includes(countOfString)}
                 />

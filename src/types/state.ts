@@ -6,5 +6,13 @@ export type MainData = {
   isDataLoaded: boolean,
 };
 
+export type UserData = {
+  minPrice: string,
+  maxPrice: string,
+  types: string[],
+  strings: string[],
+};
+
+
 export type State = RootState;
 

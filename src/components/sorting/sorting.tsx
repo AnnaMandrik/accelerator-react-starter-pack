@@ -11,7 +11,7 @@ function Sorting():JSX.Element {
 
   useEffect(() => {
     dispatch(fetchSortingProductCardsAction(`?_${Params.Sort}=${sort}${order && `&_${Params.Order}=${order}`}`));
-  }, [sort, order]);
+  }, [sort, order, dispatch]);
 
 
   return (
