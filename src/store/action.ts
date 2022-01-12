@@ -36,3 +36,17 @@ export const selectStrings = createAction(
     payload: types,
   }),
 );
+
+export const selectSorting = createAction(
+  ActionType.SelectSorting,
+  (sorting: string) => ({
+    payload: sorting,
+  }),
+);
+
+export const selectOrder = createAction(
+  ActionType.SelectOrder,
+  (order: string) => ({
+    payload: order,
+  }),
+);

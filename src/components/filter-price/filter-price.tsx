@@ -1,9 +1,9 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {useRef, useEffect, FormEvent, useState} from 'react';
+import {useRef, useEffect, FormEvent} from 'react';
 import {getDefaultMinPrice, getDefaultMaxPrice} from '../../store/main-data/selectors';
-import {getMaxUserPrice, getMinUserPrice} from '../../store/user-data/selectors';
+import {getMaxUserPrice, getMinUserPrice, getUserSorting, getUserOrder} from '../../store/user-data/selectors';
 import {FilterOfPrices, DIGIT_ZERO} from '../../const';
-import {getFilterPriceInfo} from '../../utils';
+import {getFilterPriceInfo, getSortingOrderInfo} from '../../utils';
 import {fetchFilterUserAction} from '../../store/api-actions';
 import {selectMaxPrice, selectMinPrice} from '../../store/action';
 
@@ -12,9 +12,12 @@ function FilterPrice(): JSX.Element {
   const maxDefaultPrice = useSelector(getDefaultMaxPrice);
   const maxUserPrice = useSelector(getMaxUserPrice);
   const minUserPrice = useSelector(getMinUserPrice);
+  const userSorting = useSelector(getUserSorting);
+  const userOrder = useSelector(getUserOrder);
 
-  const [, setPriceMin] = useState<string>('');
-  const [, setPriceMax] = useState<string>('');
+
+  // const [, setPriceMin] = useState<string>('');
+  // const [, setPriceMax] = useState<string>('');
 
   const minDefaultPriceRef = useRef(null);
   const maxDefaultPriceRef = useRef(null);
@@ -22,8 +25,8 @@ function FilterPrice(): JSX.Element {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchFilterUserAction(getFilterPriceInfo(minUserPrice, maxUserPrice)));
-  }, [dispatch,minUserPrice, maxUserPrice]);
+    dispatch(fetchFilterUserAction(getFilterPriceInfo(minUserPrice, maxUserPrice, getSortingOrderInfo(userSorting, userOrder))));
+  }, [dispatch,minUserPrice, maxUserPrice, userSorting, userOrder]);
 
   const handlerMinPriceChange = (evt: FormEvent<HTMLInputElement>) => {
     const priceValue = evt.currentTarget.value;
@@ -39,89 +42,75 @@ function FilterPrice(): JSX.Element {
     if (evt.currentTarget.value === '') {
       return;
     }
-    // const min = Number(minUserPrice);
-    // const max = Number(maxUserPrice);
+    const min = Number(minUserPrice);
+    const max = Number(maxUserPrice);
 
-    // switch (evt.currentTarget.name) {
-    //   case FilterOfPrices.PRICE_MIN.name:
-    //     if (min < minDefaultPrice || min === DIGIT_ZERO) {
-    //       dispatch(selectMinPrice(String(minDefaultPrice)));
-    //     }
-
-    //     if (min > maxDefaultPrice) {
-    //       dispatch(selectMaxPrice(String(maxDefaultPrice)));
-    //     }
-    //     break;
-    //   case FilterOfPrices.PRICE_MAX.name:
-    //     if (max > maxDefaultPrice || max === DIGIT_ZERO) {
-    //       dispatch(selectMaxPrice(String(maxDefaultPrice)));
-    //     }
-
-    //     // if (max < maxDefaultPrice) {
-    //     //   dispatch(selectMaxPrice(String(minDefaultPrice)));
-    //     // }
-    //     break;
-    //   default:
-    //     break;
-    // }
-
-    switch (evt.currentTarget.id) {
-      case FilterOfPrices.PRICE_MIN.id: {
-        let priceOfUser = Number(evt.currentTarget.value);
-
-        if (priceOfUser < minDefaultPrice) {
-          priceOfUser = minDefaultPrice;
+    switch (evt.currentTarget.name) {
+      case FilterOfPrices.PRICE_MIN.name:
+        if (min < minDefaultPrice || min === DIGIT_ZERO) {
+          dispatch(selectMinPrice(String(minDefaultPrice)));
         }
 
-        if (priceOfUser > maxDefaultPrice) {
-          priceOfUser = maxDefaultPrice;
+        if (min > maxDefaultPrice) {
+          dispatch(selectMaxPrice(String(maxDefaultPrice)));
         }
-
-        if (priceOfUser < DIGIT_ZERO) {
-          priceOfUser = DIGIT_ZERO;
-        }
-
-        if (maxUserPrice !== '') {
-          const maxValueOfUser = Number(maxUserPrice);
-
-          if (priceOfUser > maxValueOfUser) {
-            priceOfUser = maxValueOfUser;
-          }
-        }
-        setPriceMin(String(priceOfUser));
-        dispatch(selectMinPrice(String(priceOfUser)));
         break;
-      }
-      case FilterOfPrices.PRICE_MAX.id: {
-        let priceOfUser = Number(evt.currentTarget.value);
-
-        if (priceOfUser > maxDefaultPrice) {
-          priceOfUser = maxDefaultPrice;
+      case FilterOfPrices.PRICE_MAX.name:
+        if (max > maxDefaultPrice || max === DIGIT_ZERO) {
+          dispatch(selectMaxPrice(String(maxDefaultPrice)));
         }
 
-        if (priceOfUser < minDefaultPrice) {
-          priceOfUser = minDefaultPrice;
+        if (max < maxDefaultPrice) {
+          dispatch(selectMaxPrice(String(minDefaultPrice)));
         }
-
-        if (priceOfUser < DIGIT_ZERO) {
-          priceOfUser = DIGIT_ZERO;
-        }
-
-        if (minUserPrice !== '') {
-          const minValueOfUser = Number(minUserPrice);
-
-          if (priceOfUser < minValueOfUser) {
-            priceOfUser = minValueOfUser;
-          }
-        }
-        setPriceMax(String(priceOfUser));
-        dispatch(selectMaxPrice(String(priceOfUser)));
         break;
-      }
       default:
         break;
     }
   };
+
+  //   switch (evt.currentTarget.id) {
+  //     case FilterOfPrices.PRICE_MIN.id: {
+  //       let priceOfUser = Number(evt.currentTarget.value);
+
+  //       if (priceOfUser < minDefaultPrice) {
+  //         priceOfUser = minDefaultPrice;
+  //       }
+
+  //       // if (priceOfUser > maxDefaultPrice) {
+  //       //   priceOfUser = maxDefaultPrice;
+  //       // }
+
+  //       if (priceOfUser < DIGIT_ZERO) {
+  //         priceOfUser = minDefaultPrice;
+  //       }
+  //       setPriceMin(String(priceOfUser));
+  //       dispatch(selectMinPrice(String(priceOfUser)));
+  //       break;
+  //     }
+  //     case FilterOfPrices.PRICE_MAX.id: {
+  //       let priceOfUser = Number(evt.currentTarget.value);
+
+  //       if (priceOfUser > maxDefaultPrice) {
+  //         priceOfUser = maxDefaultPrice;
+  //       }
+
+  //       // if (priceOfUser < minDefaultPrice) {
+  //       //   priceOfUser = minDefaultPrice;
+  //       // }
+
+  //       if (priceOfUser < DIGIT_ZERO) {
+  //         priceOfUser = maxDefaultPrice;
+  //       }
+
+  //       setPriceMax(String(priceOfUser));
+  //       dispatch(selectMaxPrice(String(priceOfUser)));
+  //       break;
+  //     }
+  //     default:
+  //       break;
+  //   }
+  //  };
 
   return (
     <fieldset className="catalog-filter__block">

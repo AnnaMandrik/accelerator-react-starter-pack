@@ -11,6 +11,8 @@ export type UserData = {
   maxPrice: string,
   types: string[],
   strings: string[],
+  sorting: string,
+  order: string,
 };
 
 

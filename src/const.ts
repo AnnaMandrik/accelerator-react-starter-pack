@@ -1,12 +1,12 @@
 const ITEMS_PER_PAGE = 9;
 const DIGIT_ZERO = 0;
 
-enum AppRoute {
+const enum AppRoute {
   Main = '/',
-  Guitars = '/guitars/',
+  Page = 'catalog/:page',
 }
 
-enum APIRoute {
+const enum APIRoute {
   Guitars = '/guitars',
   Guitar = '/guitars/:id',
   Comments = '/guitars/:id/comments',
@@ -15,17 +15,17 @@ enum APIRoute {
   Order = '/orders',
 }
 
-enum Params {
+const enum Parameter {
   Sort = 'sort',
   Order = 'order',
 }
 
-enum SortKey {
+const enum SortKey {
   Price = 'price',
   Rating = 'rating',
 }
 
-enum OrderKey {
+const enum OrderKey {
   Desc = 'desc',
   Asc = 'asc',
 }
@@ -65,7 +65,18 @@ const FilterOfTypesStrings = {
 
 const FILTER_OF_TYPES_STRINGS = [FilterOfTypesStrings.ACOUSTIC, FilterOfTypesStrings.ELECTRIC, FilterOfTypesStrings.UKULELE];
 
+const DEFAULT_PAGE = 1;
+const STEP_OF_COUNT = 3;
+
+const enum CountOfPages {
+  First = 0,
+  Last = 3,
+}
+
+const RATING_NUMBERS: number[] = [1, 2, 3, 4, 5];
+
 export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
-  Params, SortKey, OrderKey, DIGIT_ZERO, STRINGS,
-  TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS};
+  Parameter, SortKey, OrderKey, DIGIT_ZERO, STRINGS,
+  TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS,
+  DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, RATING_NUMBERS};
 

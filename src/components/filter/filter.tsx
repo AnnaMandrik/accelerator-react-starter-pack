@@ -1,11 +1,11 @@
 import {ChangeEvent, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectType, selectStrings} from '../../store/action';
+import {getUserType, getUserStrings, getUserSorting, getUserOrder} from '../../store/user-data/selectors';
 import {fetchFilterUserAction} from '../../store/api-actions';
-import {getUserType, getUserStrings} from '../../store/user-data/selectors';
-import {getFilterTypeInfo} from '../../utils';
 import FilterPrice from '../filter-price/filter-price';
 import {STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
+import {getFilterTypeInfo, getSortingOrderInfo} from '../../utils';
 
 const allTypes = (factTypes: string[], type: string): string[] => {
   if (factTypes.includes(type)) {
@@ -19,6 +19,8 @@ const allTypes = (factTypes: string[], type: string): string[] => {
 function Filter(): JSX.Element {
   const userType = useSelector(getUserType);
   const userStrings = useSelector(getUserStrings);
+  const userSorting = useSelector(getUserSorting);
+  const userOrder = useSelector(getUserOrder);
 
   const [types, setTypes] = useState<boolean[]>(new Array(TYPES_QUANTITY).fill(false));
   const [strings, setStrings] = useState<boolean[]>(new Array(STRINGS_QUANTITY).fill(false));
@@ -27,8 +29,8 @@ function Filter(): JSX.Element {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchFilterUserAction(getFilterTypeInfo(userType, userStrings)));
-  }, [strings, dispatch, userType, userStrings]);
+    dispatch(fetchFilterUserAction(getFilterTypeInfo(userType, userStrings, getSortingOrderInfo(userSorting, userOrder))));
+  }, [strings, dispatch, userType, userStrings, userSorting, userOrder]);
 
   useEffect(() => {
     if (!types.some((type) => type)) {
@@ -57,7 +59,7 @@ function Filter(): JSX.Element {
           FILTER_OF_TYPES_STRINGS.map((guitar, index) => {
             const key = `${index}-${guitar.name}`;
             const {name, type} = guitar;
-
+            const isChecked = userType.includes(name);
             return (
               <div key={key} className="form-checkbox catalog-filter__block-item">
                 <input
@@ -65,7 +67,7 @@ function Filter(): JSX.Element {
                   type="checkbox"
                   id={name}
                   name={name}
-                  checked={types[index]}
+                  checked={isChecked}
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
                     const value = target.checked;
                     setTypes([...types.slice(0, index), value, ...types.slice(index + 1)]);
