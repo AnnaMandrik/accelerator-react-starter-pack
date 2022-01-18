@@ -3,9 +3,12 @@ import ReactDOM from 'react-dom';
 import {configureStore} from '@reduxjs/toolkit';
 import {rootReducer} from './store/root-reducer';
 import {Provider} from 'react-redux';
+import {Router as BrowserRouter} from 'react-router-dom';
 import App from './components/app/app';
 import {createAPI} from './services/api';
 import {fetchProductCardsListAction} from './store/api-actions';
+import browserHistory from './browser-history';
+
 
 const api = createAPI();
 
@@ -24,7 +27,9 @@ store.dispatch(fetchProductCardsListAction());
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <BrowserRouter history={browserHistory}>
+        <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'));

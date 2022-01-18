@@ -4,6 +4,7 @@ import {Guitars} from './guitar';
 export type MainData = {
   productsList: Guitars,
   isDataLoaded: boolean,
+  pageCount: number,
 };
 
 export type UserData = {
@@ -13,6 +14,10 @@ export type UserData = {
   strings: string[],
   sorting: string,
   order: string,
+  actualPage: number,
+  actualPageCount: number,
+  firstPage: number,
+  lastPage: number,
 };
 
 

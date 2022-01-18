@@ -1,10 +1,9 @@
-import { Route, Router as BrowserRouter, Switch } from 'react-router';
+import { Route, Switch } from 'react-router';
 import {useSelector} from 'react-redux';
 import { AppRoute } from '../../const';
 import CatalogPage from '../catalog-page/catalog-page';
 import ErrorPage from '../error-page/error-page';
 import Spinner from '../spinner/spinner';
-import browserHistory from '../../browser-history';
 import {getIsLoaded} from '../../store/main-data/selectors';
 
 function App(): JSX.Element {
@@ -16,16 +15,14 @@ function App(): JSX.Element {
   }
 
   return (
-    <BrowserRouter history={browserHistory}>
-      <Switch>
-        <Route exact path={AppRoute.Main}>
-          <CatalogPage />
-        </Route>
-        <Route>
-          <ErrorPage />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route exact path={AppRoute.Main}>
+        <CatalogPage />
+      </Route>
+      <Route>
+        <ErrorPage />
+      </Route>
+    </Switch>
   );
 }
 

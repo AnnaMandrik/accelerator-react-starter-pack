@@ -4,12 +4,21 @@ import {AxiosInstance} from 'axios';
 
 export const enum ActionType {
   LoadProductCardsList = 'data/loadProductCardsList',
+  LoadPageCount = 'data/loadPageCount',
   SelectMinPrice ='user/selectMinPrice',
   SelectMaxPrice ='user/selectMaxPrice',
   SelectType = 'user/selectType',
   SelectStrings = 'user/selectStrings',
   SelectSorting = 'user/selectSorting',
-  SelectOrder = 'user/selectOrder'
+  SelectOrder = 'user/selectOrder',
+  SelectActualPage = 'user/selectActualPage',
+  SelectActualPageCount = 'user/selectActualPageCount',
+  SelectFirstPage = 'user/selectFirstPage',
+  SelectLastPage = 'user/selectLastPage',
+  PrevFirstPage = 'user/prevFirstPage',
+  PrevLastPage = 'user/prevLastPage',
+  NextFirstPage = 'user/nextFirstPage',
+  NextLastPage = 'user/nextLastPage',
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;

@@ -9,6 +9,13 @@ export const loadProductCardsList = createAction(
   }),
 );
 
+export const loadPageCount = createAction(
+  ActionType.LoadPageCount,
+  (count: number) => ({
+    payload: count,
+  }),
+);
+
 export const selectMinPrice = createAction(
   ActionType.SelectMinPrice,
   (minPrice: string) => ({
@@ -50,3 +57,37 @@ export const selectOrder = createAction(
     payload: order,
   }),
 );
+
+export const selectActualPage = createAction(
+  ActionType.SelectActualPage,
+  (actualPage: number) => ({
+    payload: actualPage,
+  }),
+);
+
+export const selectActualPageCount = createAction(
+  ActionType.SelectActualPageCount,
+  (actualPageCount: number) => ({
+    payload: actualPageCount,
+  }),
+);
+
+export const selectFirstPage = createAction(
+  ActionType.SelectFirstPage,
+  (firstPage: number) => ({
+    payload: firstPage,
+  }),
+);
+
+export const selectLastPage = createAction(
+  ActionType.SelectLastPage,
+  (lastPage: number) => ({
+    payload: lastPage,
+  }),
+);
+
+export const prevFirstPage = createAction(ActionType.PrevFirstPage);
+export const prevLastPage = createAction(ActionType.PrevLastPage);
+export const nextFirstPage = createAction(ActionType.NextFirstPage);
+export const nextLastPage = createAction(ActionType.NextLastPage);
+

@@ -1,11 +1,11 @@
 import {ChangeEvent, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectType, selectStrings} from '../../store/action';
-import {getUserType, getUserStrings, getUserSorting, getUserOrder} from '../../store/user-data/selectors';
-import {fetchFilterUserAction} from '../../store/api-actions';
+import {selectType, selectStrings, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
+import {getUserType, getUserStrings} from '../../store/user-data/selectors';
+//import {fetchFilterUserAction} from '../../store/api-actions';
 import FilterPrice from '../filter-price/filter-price';
-import {STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
-import {getFilterTypeInfo, getSortingOrderInfo} from '../../utils';
+import { DEFAULT_PAGE, CountOfPages, STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
+//import {getFilterTypeInfo, getFilterInfo} from '../../utils';
 
 const allTypes = (factTypes: string[], type: string): string[] => {
   if (factTypes.includes(type)) {
@@ -19,8 +19,6 @@ const allTypes = (factTypes: string[], type: string): string[] => {
 function Filter(): JSX.Element {
   const userType = useSelector(getUserType);
   const userStrings = useSelector(getUserStrings);
-  const userSorting = useSelector(getUserSorting);
-  const userOrder = useSelector(getUserOrder);
 
   const [types, setTypes] = useState<boolean[]>(new Array(TYPES_QUANTITY).fill(false));
   const [strings, setStrings] = useState<boolean[]>(new Array(STRINGS_QUANTITY).fill(false));
@@ -28,9 +26,6 @@ function Filter(): JSX.Element {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchFilterUserAction(getFilterTypeInfo(userType, userStrings, getSortingOrderInfo(userSorting, userOrder))));
-  }, [strings, dispatch, userType, userStrings, userSorting, userOrder]);
 
   useEffect(() => {
     if (!types.some((type) => type)) {
@@ -48,6 +43,12 @@ function Filter(): JSX.Element {
 
     setAvailableStrings(guitarsHadStrings);
   }, [types]);
+
+  const handlerPagesChange = () => {
+    dispatch(selectFirstPage(CountOfPages.First));
+    dispatch(selectLastPage(CountOfPages.Last));
+    dispatch(selectActualPage(DEFAULT_PAGE));
+  };
 
   return (
     <form className="catalog-filter">
@@ -69,6 +70,7 @@ function Filter(): JSX.Element {
                   name={name}
                   checked={isChecked}
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
+                    handlerPagesChange();
                     const value = target.checked;
                     setTypes([...types.slice(0, index), value, ...types.slice(index + 1)]);
                     dispatch(selectType(allTypes(userType, name)));
@@ -95,6 +97,7 @@ function Filter(): JSX.Element {
                   name={`${countOfString}-strings`}
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
                     const value = target.checked;
+                    handlerPagesChange();
                     setStrings([...strings.slice(0, index), value, ...strings.slice(index + 1)]);
                     dispatch(selectStrings(allTypes(userStrings, String(countOfString))));
                   }}

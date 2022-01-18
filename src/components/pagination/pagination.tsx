@@ -1,49 +1,54 @@
-import {useState} from 'react';
-import {useSelector} from 'react-redux';
-import {DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages} from '../../const';
+import {useSelector, useDispatch} from 'react-redux';
+import {CountOfPages} from '../../const';
 import {getPagesCount} from '../../store/main-data/selectors';
+import {getUserActualPage, getIsFilterChecked, getUserActualPageCount, getUserFirstPage, getUserLastPage} from '../../store/user-data/selectors';
+import {selectActualPage, nextFirstPage, nextLastPage, prevFirstPage, prevLastPage} from '../../store/action';
 
 
 function Pagination(): JSX.Element {
-  const [first, setFirst] = useState<number>(CountOfPages.First);
-  const [last, setLast] = useState<number>(CountOfPages.Last);
-  const [currentPage, setCurrentPage] = useState<number>(DEFAULT_PAGE);
-
+  const isFilter = useSelector(getIsFilterChecked);
   const pagesCount = useSelector(getPagesCount);
-  const pagination = Array(pagesCount).fill(true).map((_, i) => i + 1);
+  const actualPageCount = useSelector(getUserActualPageCount);
+  const firstPage = useSelector(getUserFirstPage);
+  const lastPage = useSelector(getUserLastPage);
+  const actualPage = useSelector(getUserActualPage);
 
-  const handlerPageChange = (evt: { preventDefault: () => void; }) => {
-    evt.preventDefault();
-    setFirst((prevFirstPage) => prevFirstPage - STEP_OF_COUNT);
-    setLast((prevLastPage) => prevLastPage - STEP_OF_COUNT);
-  };
+  const pageCountDefault = isFilter ? actualPageCount : pagesCount;
+  const pagination = Array(pageCountDefault).fill(true).map((_, i) => i + 1);
+
+  const dispatch = useDispatch();
 
   return (
     <div className="pagination page-content__pagination">
       <ul className="pagination__list">
         {
-          (first !== CountOfPages.First) &&
+          (firstPage !== CountOfPages.First) &&
           <li className="pagination__page pagination__page--prev" id="prev">
             <a
               className="link pagination__page-link"
-              href="1"
-              onClick={handlerPageChange}
+              href="##"
+              onClick={(evt) => {
+                evt.preventDefault();
+
+                dispatch(prevFirstPage());
+                dispatch(prevLastPage());
+              }}
             >
-          Назад
+              Назад
             </a>
           </li>
         }
         {
-          pagination.slice(first, last).map((page) => {
+          pagination.slice(firstPage, lastPage).map((page) => {
             const key = `${page}-page`;
 
             return (
               <li key={key} className="pagination__page">
                 <a
-                  className={`link pagination__page-link${(page === currentPage) ? ' pagination__page--active' : ''}`}
+                  className={`link pagination__page-link${(page === actualPage) ? 'pagination__page--active' : ''}`}
                   href="##"
                   onClick={() => {
-                    setCurrentPage(page);
+                    dispatch(selectActualPage(page));
                   }}
                 >
                   {page}
@@ -53,12 +58,17 @@ function Pagination(): JSX.Element {
           })
         }
         {
-          (last < pagesCount) &&
+          (lastPage < pageCountDefault) &&
           <li className="pagination__page pagination__page--next" id="next">
             <a
               className="link pagination__page-link"
-              href="2"
-              onClick={handlerPageChange}
+              href="##"
+              onClick={(evt) => {
+                evt.preventDefault();
+
+                dispatch(nextFirstPage());
+                dispatch(nextLastPage());
+              }}
             >
               Далее
             </a>

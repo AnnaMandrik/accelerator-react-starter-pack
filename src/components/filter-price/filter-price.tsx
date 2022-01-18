@@ -1,11 +1,11 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {useRef, useEffect, FormEvent} from 'react';
 import {getDefaultMinPrice, getDefaultMaxPrice} from '../../store/main-data/selectors';
-import {getMaxUserPrice, getMinUserPrice, getUserSorting, getUserOrder} from '../../store/user-data/selectors';
-import {FilterOfPrices, DIGIT_ZERO} from '../../const';
-import {getFilterPriceInfo, getSortingOrderInfo} from '../../utils';
+import {getUserActualPage, getMaxUserPrice, getMinUserPrice, getUserSorting, getUserOrder, getUserType, getUserStrings} from '../../store/user-data/selectors';
+import {FilterOfPrices, DIGIT_ZERO, DEFAULT_PAGE, CountOfPages} from '../../const';
+import {getFilterInfo, getSortingOrderInfo, getItemsPerPage} from '../../utils';
 import {fetchFilterUserAction} from '../../store/api-actions';
-import {selectMaxPrice, selectMinPrice} from '../../store/action';
+import {selectMaxPrice, selectMinPrice, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 
 function FilterPrice(): JSX.Element {
   const minDefaultPrice = useSelector(getDefaultMinPrice);
@@ -14,7 +14,9 @@ function FilterPrice(): JSX.Element {
   const minUserPrice = useSelector(getMinUserPrice);
   const userSorting = useSelector(getUserSorting);
   const userOrder = useSelector(getUserOrder);
-
+  const userType = useSelector(getUserType);
+  const userStrings = useSelector(getUserStrings);
+  const actualPage = useSelector(getUserActualPage);
 
   // const [, setPriceMin] = useState<string>('');
   // const [, setPriceMax] = useState<string>('');
@@ -25,8 +27,8 @@ function FilterPrice(): JSX.Element {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchFilterUserAction(getFilterPriceInfo(minUserPrice, maxUserPrice, getSortingOrderInfo(userSorting, userOrder))));
-  }, [dispatch,minUserPrice, maxUserPrice, userSorting, userOrder]);
+    dispatch(fetchFilterUserAction(getItemsPerPage(actualPage), getFilterInfo(minUserPrice, maxUserPrice, userType, userStrings, getSortingOrderInfo(userSorting, userOrder))));
+  }, [dispatch,actualPage, minUserPrice, maxUserPrice, userSorting, userOrder, userType, userStrings]);
 
   const handlerMinPriceChange = (evt: FormEvent<HTMLInputElement>) => {
     const priceValue = evt.currentTarget.value;
@@ -40,6 +42,8 @@ function FilterPrice(): JSX.Element {
 
   const handlerEmptyPlaceChange = (evt: FormEvent<HTMLInputElement>) => {
     if (evt.currentTarget.value === '') {
+      dispatch(selectMinPrice(evt.currentTarget.value));
+      dispatch(selectMaxPrice(evt.currentTarget.value));
       return;
     }
     const min = Number(minUserPrice);
@@ -67,6 +71,10 @@ function FilterPrice(): JSX.Element {
       default:
         break;
     }
+
+    dispatch(selectFirstPage(CountOfPages.First));
+    dispatch(selectLastPage(CountOfPages.Last));
+    dispatch(selectActualPage(DEFAULT_PAGE));
   };
 
   //   switch (evt.currentTarget.id) {

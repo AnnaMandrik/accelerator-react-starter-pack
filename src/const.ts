@@ -3,7 +3,7 @@ const DIGIT_ZERO = 0;
 
 const enum AppRoute {
   Main = '/',
-  Page = 'catalog/:page',
+  Page = '/catalog/:page',
 }
 
 const enum APIRoute {
