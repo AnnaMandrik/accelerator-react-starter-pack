@@ -1,22 +1,17 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {useRef, useEffect, FormEvent} from 'react';
+import {useRef, FormEvent} from 'react';
 import {getDefaultMinPrice, getDefaultMaxPrice} from '../../store/main-data/selectors';
-import {getUserActualPage, getMaxUserPrice, getMinUserPrice, getUserSorting, getUserOrder, getUserType, getUserStrings} from '../../store/user-data/selectors';
-import {FilterOfPrices, DIGIT_ZERO, DEFAULT_PAGE, CountOfPages} from '../../const';
-import {getFilterInfo, getSortingOrderInfo, getItemsPerPage} from '../../utils';
-import {fetchFilterUserAction} from '../../store/api-actions';
+import {getMaxUserPrice, getMinUserPrice} from '../../store/user-data/selectors';
+import {FilterOfPrices, DIGIT_ZERO, DEFAULT_PAGE, CountOfPages, AppRoute} from '../../const';
 import {selectMaxPrice, selectMinPrice, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
+import browserHistory from '../../browser-history';
+
 
 function FilterPrice(): JSX.Element {
   const minDefaultPrice = useSelector(getDefaultMinPrice);
   const maxDefaultPrice = useSelector(getDefaultMaxPrice);
   const maxUserPrice = useSelector(getMaxUserPrice);
   const minUserPrice = useSelector(getMinUserPrice);
-  const userSorting = useSelector(getUserSorting);
-  const userOrder = useSelector(getUserOrder);
-  const userType = useSelector(getUserType);
-  const userStrings = useSelector(getUserStrings);
-  const actualPage = useSelector(getUserActualPage);
 
   // const [, setPriceMin] = useState<string>('');
   // const [, setPriceMax] = useState<string>('');
@@ -26,9 +21,6 @@ function FilterPrice(): JSX.Element {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchFilterUserAction(getItemsPerPage(actualPage), getFilterInfo(minUserPrice, maxUserPrice, userType, userStrings, getSortingOrderInfo(userSorting, userOrder))));
-  }, [dispatch,actualPage, minUserPrice, maxUserPrice, userSorting, userOrder, userType, userStrings]);
 
   const handlerMinPriceChange = (evt: FormEvent<HTMLInputElement>) => {
     const priceValue = evt.currentTarget.value;
@@ -75,6 +67,7 @@ function FilterPrice(): JSX.Element {
     dispatch(selectFirstPage(CountOfPages.First));
     dispatch(selectLastPage(CountOfPages.Last));
     dispatch(selectActualPage(DEFAULT_PAGE));
+    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}`));
   };
 
   //   switch (evt.currentTarget.id) {

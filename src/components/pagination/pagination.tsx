@@ -1,9 +1,11 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {CountOfPages} from '../../const';
+import {useLocation} from 'react-router-dom';
+import {AppRoute, STEP_OF_COUNT, DEFAULT_PAGE} from '../../const';
 import {getPagesCount} from '../../store/main-data/selectors';
 import {getUserActualPage, getIsFilterChecked, getUserActualPageCount, getUserFirstPage, getUserLastPage} from '../../store/user-data/selectors';
 import {selectActualPage, nextFirstPage, nextLastPage, prevFirstPage, prevLastPage} from '../../store/action';
-
+import browserHistory from '../../browser-history';
+import {getItems} from '../../utils';
 
 function Pagination(): JSX.Element {
   const isFilter = useSelector(getIsFilterChecked);
@@ -13,25 +15,49 @@ function Pagination(): JSX.Element {
   const lastPage = useSelector(getUserLastPage);
   const actualPage = useSelector(getUserActualPage);
 
+  const dispatch = useDispatch();
+
   const pageCountDefault = isFilter ? actualPageCount : pagesCount;
   const pagination = Array(pageCountDefault).fill(true).map((_, i) => i + 1);
 
-  const dispatch = useDispatch();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const handlePageChange = (page: number): void => {
+    const actualItemsOnPage = getItems(page);
+
+    searchParams.has('_start')
+      ? searchParams.set('_start', String(actualItemsOnPage.firstItem))
+      : searchParams.append('_start', String(actualItemsOnPage.firstItem));
+    searchParams.has('_end')
+      ? searchParams.set('_end', String(actualItemsOnPage.lastItem))
+      : searchParams.append('_end', String(actualItemsOnPage.lastItem));
+
+    browserHistory.push(AppRoute.Page.replace(':page', `page_${page}/?${searchParams.toString()}`));
+  };
+
 
   return (
     <div className="pagination page-content__pagination">
       <ul className="pagination__list">
         {
-          (firstPage !== CountOfPages.First) &&
+          (actualPage !== DEFAULT_PAGE) &&
           <li className="pagination__page pagination__page--prev" id="prev">
             <a
               className="link pagination__page-link"
               href="##"
               onClick={(evt) => {
                 evt.preventDefault();
+                const currentPage = actualPage - 1;
 
-                dispatch(prevFirstPage());
-                dispatch(prevLastPage());
+                if (currentPage % STEP_OF_COUNT === 0) {
+                  dispatch(prevFirstPage());
+                  dispatch(prevLastPage());
+                }
+
+                dispatch(selectActualPage(currentPage - 1));
+                handlePageChange(currentPage - 1);
               }}
             >
               Назад
@@ -45,10 +71,12 @@ function Pagination(): JSX.Element {
             return (
               <li key={key} className="pagination__page">
                 <a
-                  className={`link pagination__page-link${(page === actualPage) ? 'pagination__page--active' : ''}`}
                   href="##"
-                  onClick={() => {
+                  className={`link pagination__page-link${(page === actualPage) ? 'pagination__page--active' : ''}`}
+                  onClick={(evt) => {
+                    evt.preventDefault();
                     dispatch(selectActualPage(page));
+                    handlePageChange(page);
                   }}
                 >
                   {page}
@@ -58,16 +86,23 @@ function Pagination(): JSX.Element {
           })
         }
         {
-          (lastPage < pageCountDefault) &&
+          (actualPage !== actualPageCount) &&
+
           <li className="pagination__page pagination__page--next" id="next">
             <a
               className="link pagination__page-link"
               href="##"
               onClick={(evt) => {
                 evt.preventDefault();
+                const currentPage = actualPage + 1;
 
-                dispatch(nextFirstPage());
-                dispatch(nextLastPage());
+                if (currentPage % STEP_OF_COUNT === 1) {
+                  dispatch(nextFirstPage());
+                  dispatch(nextLastPage());
+                }
+
+                dispatch(selectActualPage(currentPage));
+                handlePageChange(currentPage);
               }}
             >
               Далее

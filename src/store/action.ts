@@ -16,6 +16,13 @@ export const loadPageCount = createAction(
   }),
 );
 
+export const searchingProducts = createAction(
+  ActionType.SearchingProducts,
+  (searching: Guitars) => ({
+    payload: searching,
+  }),
+);
+
 export const selectMinPrice = createAction(
   ActionType.SelectMinPrice,
   (minPrice: string) => ({

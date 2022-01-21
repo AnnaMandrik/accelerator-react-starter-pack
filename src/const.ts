@@ -66,7 +66,7 @@ const FilterOfTypesStrings = {
 const FILTER_OF_TYPES_STRINGS = [FilterOfTypesStrings.ACOUSTIC, FilterOfTypesStrings.ELECTRIC, FilterOfTypesStrings.UKULELE];
 
 const DEFAULT_PAGE = 1;
-const STEP_OF_COUNT = 3;
+const STEP_OF_COUNT = 1;
 
 const enum CountOfPages {
   First = 0,
@@ -79,4 +79,5 @@ export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO, STRINGS,
   TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS,
   DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, RATING_NUMBERS};
+
 

@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {UserData} from '../../types/state';
-import {selectStrings, selectType, selectMaxPrice, selectMinPrice, selectSorting, selectOrder, selectActualPage, selectActualPageCount, selectFirstPage, selectLastPage, prevFirstPage, prevLastPage, nextFirstPage, nextLastPage} from '../action';
+import {searchingProducts, selectStrings, selectType, selectMaxPrice, selectMinPrice, selectSorting, selectOrder, selectActualPage, selectActualPageCount, selectFirstPage, selectLastPage, prevFirstPage, prevLastPage, nextFirstPage, nextLastPage} from '../action';
 import {CountOfPages, STEP_OF_COUNT} from '../../const';
 
 const initialState: UserData = {
@@ -14,10 +14,14 @@ const initialState: UserData = {
   actualPageCount: 0,
   firstPage: CountOfPages.First,
   lastPage: CountOfPages.Last,
+  searching: [],
 };
 
 const userData = createReducer (initialState, (builder) => {
   builder
+    .addCase(searchingProducts, (state, action) => {
+      state.searching = action.payload;
+    })
     .addCase(selectMinPrice, (state, action) => {
       state.minPrice = action.payload;
     })

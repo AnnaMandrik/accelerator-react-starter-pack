@@ -1,20 +1,19 @@
-import {useSelector} from 'react-redux';
-import {ChangeEvent, useEffect, useState} from 'react';
-import {getGuitars} from '../../store/main-data/selectors';
+import {useSelector, useDispatch} from 'react-redux';
+import {FormEvent, useState, useRef} from 'react';
+import {getUserSearching} from '../../store/user-data/selectors';
+import {fetchSearchingProductsUserAction} from '../../store/api-actions';
 
 function HeaderSearch(): JSX.Element {
-  const guitarsList = useSelector(getGuitars);
-  const guitarsNamesList = guitarsList.map((guitar) => guitar.name);
+  const [searchString, setSearchString] = useState<string>('');
 
-  const [searchString, setSearchString] = useState('');
-  const [searchResult, setSearchResult] = useState(['']);
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  const guitarsList = useSelector(getUserSearching);
+  const dispatch = useDispatch();
 
-  const handleSearchChange = ({target}: ChangeEvent<HTMLInputElement>) => setSearchString(target.value);
-  useEffect(() => {
-    const results = guitarsNamesList.filter((guitarName) =>
-      guitarName.toLowerCase().includes(searchString.toLowerCase()));
-    setSearchResult(results);
-  }, [searchString]);
+  const handleSearchChange = (evt: FormEvent<HTMLInputElement>) => {
+    setSearchString(evt.currentTarget.value);
+    dispatch(fetchSearchingProductsUserAction(evt.currentTarget.value));
+  };
 
   return (
     <div className="form-search">
@@ -31,13 +30,20 @@ function HeaderSearch(): JSX.Element {
           placeholder="что вы ищите?"
           value={searchString}
           onChange={handleSearchChange}
+          ref={searchRef}
         />
         <label className="visually-hidden" htmlFor="search">Поиск</label>
       </form>
       <ul style={{zIndex: 1}} className={`form-search__select-list ${!searchString ? 'hidden' : ''}`}>
-        {searchResult.map((resultItem) => (
-          <li className="form-search__select-item" tabIndex={0} key={resultItem}>{resultItem}</li>
-        ))}
+        {
+          (!searchString && guitarsList.length !== 0)
+            ? ''
+            : guitarsList.map((guitar) => {
+              const key = `${guitar.id}-${guitar.name}`;
+              return (
+                <li className="form-search__select-item" tabIndex={0} key={key}>{guitar.name}</li>
+              );})
+        }
       </ul>
     </div>
   );

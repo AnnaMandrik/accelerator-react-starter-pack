@@ -1,6 +1,8 @@
 import {State} from '../../types/state';
 import {NameDataList} from '../root-reducer';
+import {getFilterInfo, getSortingOrderInfo} from '../../utils';
 
+const getUserSearching = (state: State) => state[NameDataList.UserData].searching;
 const getMinUserPrice = (state: State): string => state[NameDataList.UserData].minPrice;
 const getMaxUserPrice = (state: State): string => state[NameDataList.UserData].maxPrice;
 const getUserType = (state: State): string[] => state[NameDataList.UserData].types;
@@ -22,6 +24,14 @@ const getUserActualPageCount = (state: State): number => state[NameDataList.User
 const getUserFirstPage = (state: State): number => state[NameDataList.UserData].firstPage;
 const getUserLastPage = (state: State): number => state[NameDataList.UserData].lastPage;
 
-export {getIsFilterChecked, getUserActualPageCount, getUserFirstPage, getUserLastPage, getUserActualPage, getMinUserPrice, getMaxUserPrice, getUserType, getUserStrings, getUserSorting, getUserOrder};
+const collectFilterInfo = (state: State): string => getFilterInfo(
+  state[NameDataList.UserData].minPrice,
+  state[NameDataList.UserData].maxPrice,
+  state[NameDataList.UserData].types,
+  state[NameDataList.UserData].strings,
+  getSortingOrderInfo(state[NameDataList.UserData].sorting, state[NameDataList.UserData].order),
+);
+
+export {collectFilterInfo, getUserSearching, getIsFilterChecked, getUserActualPageCount, getUserFirstPage, getUserLastPage, getUserActualPage, getMinUserPrice, getMaxUserPrice, getUserType, getUserStrings, getUserSorting, getUserOrder};
 
 

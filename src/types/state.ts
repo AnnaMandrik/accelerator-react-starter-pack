@@ -8,6 +8,7 @@ export type MainData = {
 };
 
 export type UserData = {
+  searching: Guitars,
   minPrice: string,
   maxPrice: string,
   types: string[],

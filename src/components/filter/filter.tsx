@@ -4,8 +4,10 @@ import {selectType, selectStrings, selectActualPage, selectFirstPage, selectLast
 import {getUserType, getUserStrings} from '../../store/user-data/selectors';
 //import {fetchFilterUserAction} from '../../store/api-actions';
 import FilterPrice from '../filter-price/filter-price';
-import { DEFAULT_PAGE, CountOfPages, STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
+import {AppRoute, DEFAULT_PAGE, CountOfPages, STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
 //import {getFilterTypeInfo, getFilterInfo} from '../../utils';
+import browserHistory from '../../browser-history';
+
 
 const allTypes = (factTypes: string[], type: string): string[] => {
   if (factTypes.includes(type)) {
@@ -58,7 +60,7 @@ function Filter(): JSX.Element {
         <legend className="catalog-filter__block-title">Тип гитар</legend>
         {
           FILTER_OF_TYPES_STRINGS.map((guitar, index) => {
-            const key = `${index}-${guitar.name}`;
+            const key = `type-${guitar.name}`;
             const {name, type} = guitar;
             const isChecked = userType.includes(name);
             return (
@@ -74,6 +76,7 @@ function Filter(): JSX.Element {
                     const value = target.checked;
                     setTypes([...types.slice(0, index), value, ...types.slice(index + 1)]);
                     dispatch(selectType(allTypes(userType, name)));
+                    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}`));
                   }}
                 />
                 <label htmlFor={name}>{type}</label>
@@ -86,7 +89,7 @@ function Filter(): JSX.Element {
         <legend className="catalog-filter__block-title">Количество струн</legend>
         {
           STRINGS.map((countOfString, index) => {
-            const key = `${index}-${countOfString}`;
+            const key = `string-${countOfString}`;
 
             return (
               <div key={key} className="form-checkbox catalog-filter__block-item">
@@ -95,11 +98,13 @@ function Filter(): JSX.Element {
                   type="checkbox"
                   id={`${countOfString}-strings`}
                   name={`${countOfString}-strings`}
+                  checked={userStrings.includes(String(countOfString))}
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
                     const value = target.checked;
                     handlerPagesChange();
                     setStrings([...strings.slice(0, index), value, ...strings.slice(index + 1)]);
                     dispatch(selectStrings(allTypes(userStrings, String(countOfString))));
+                    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}`));
                   }}
                   disabled={!availableStrings.includes(countOfString)}
                 />
