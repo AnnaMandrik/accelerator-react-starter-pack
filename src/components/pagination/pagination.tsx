@@ -37,7 +37,6 @@ function Pagination(): JSX.Element {
     browserHistory.push(AppRoute.Page.replace(':page', `page_${page}/?${searchParams.toString()}`));
   };
 
-
   return (
     <div className="pagination page-content__pagination">
       <ul className="pagination__list">

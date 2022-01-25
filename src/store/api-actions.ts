@@ -1,5 +1,6 @@
+import {toast} from 'react-toastify';
 import {ThunkActionResult} from '../types/action';
-import {APIRoute, ITEMS_PER_PAGE} from '../const';
+import {APIRoute, ITEMS_PER_PAGE, ErrorText} from '../const';
 import {Guitars} from '../types/guitar';
 import {loadProductCardsList, loadPageCount, selectActualPageCount, searchingProducts} from './action';
 
@@ -17,8 +18,7 @@ export const fetchSearchingProductsUserAction = (text: string): ThunkActionResul
       const {data} = await api.get<Guitars>(`${APIRoute.Guitars}?name_like=${text}`);
       dispatch(searchingProducts(data));
     } catch {
-      // eslint-disable-next-line no-console
-      console.log('do not load filter from server');
+      toast.info(ErrorText.LoadData);
     }
   };
 
@@ -31,8 +31,7 @@ export const fetchFilterUserAction = (pageItems: string, filter: string): ThunkA
       dispatch(loadProductCardsList(data));
       dispatch(selectActualPageCount(actualPageCount));
     } catch {
-      // eslint-disable-next-line no-console
-      console.log('do not load filter from server');
+      toast.info(ErrorText.LoadData);
     }
   };
 

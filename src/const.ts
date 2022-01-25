@@ -64,9 +64,9 @@ const FilterOfTypesStrings = {
 };
 
 const FILTER_OF_TYPES_STRINGS = [FilterOfTypesStrings.ACOUSTIC, FilterOfTypesStrings.ELECTRIC, FilterOfTypesStrings.UKULELE];
-
+const TYPE_NAMES = ['acoustic', 'electric', 'ukulele'];
 const DEFAULT_PAGE = 1;
-const STEP_OF_COUNT = 1;
+const STEP_OF_COUNT = 3;
 
 const enum CountOfPages {
   First = 0,
@@ -75,9 +75,14 @@ const enum CountOfPages {
 
 const RATING_NUMBERS: number[] = [1, 2, 3, 4, 5];
 
+const enum ErrorText {
+  // MinPrice = 'Цена не может быть нулевой или отрицательной',
+  // MaxPrice = 'Цена не может быть больше максимального значения',
+  LoadData = 'Не загрузились данные. Попробуйте позже!!!',
+}
+
 export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO, STRINGS,
   TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS,
-  DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, RATING_NUMBERS};
-
+  DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, RATING_NUMBERS, ErrorText, TYPE_NAMES};
 

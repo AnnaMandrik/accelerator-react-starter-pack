@@ -1,37 +1,52 @@
-import {useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import browserHistory from '../../browser-history';
 import {SortKey, OrderKey} from '../../const';
 import {selectSorting, selectOrder} from '../../store/action';
 // import {fetchFilterUserAction} from '../../store/api-actions';
-// import {getUserStrings, getUserType, getMaxUserPrice, getMinUserPrice} from '../../store/user-data/selectors';
-// import {getFilterTypeInfo, getFilterPriceInfo} from '../../utils/filter';
+import {getUserOrder, getUserSorting} from '../../store/user-data/selectors';
+
 
 function Sorting():JSX.Element {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const sort = useSelector(getUserSorting);
+  const order = useSelector(getUserOrder);
+
   const dispatch = useDispatch();
 
-  const [actualSort, setActualSort] = useState<string>('');
-  const [actualOrder, setActualOrder] = useState<string>('');
+  const [actualSort, setActualSort] = useState<string>(sort);
+  const [actualOrder, setActualOrder] = useState<string>(order);
 
-  // useEffect(() => {
-  //   dispatch(fetchSortingProductCardsAction(`?_${Params.Sort}=${sort}${order && `&_${Params.Order}=${order}`}`));
-  // }, [sort, order, dispatch]);
+  useEffect(() => {
+    setActualSort(sort);
+    setActualOrder(order);
+  }, [sort, order]);
 
-  const handlerSortingTypeChange = (type: string): void => {
+  const handlerSortingTypeChange = (sortType: string): void => {
     if (actualOrder === '') {
       setActualOrder(OrderKey.Asc);
       dispatch(selectOrder(OrderKey.Asc));
     }
-    setActualSort(type);
-    dispatch(selectSorting(type));
+    setActualSort(sortType);
+    dispatch(selectSorting(sortType));
+    searchParams.set('sort', sortType);
+
+    browserHistory.push(`${location.pathname}?${searchParams.toString()}`);
   };
 
-  const handlerOrderChange = (order: string): void => {
+  const handlerOrderChange = (orderType: string): void => {
     if (actualSort === '') {
       setActualSort(SortKey.Price);
       dispatch(selectSorting(SortKey.Price));
     }
-    setActualOrder(order);
-    dispatch(selectOrder(order));
+    setActualOrder(orderType);
+    dispatch(selectOrder(orderType));
+    searchParams.set('order', orderType);
+
+    browserHistory.push(`${location.pathname}?${searchParams.toString()}`);
   };
 
   return (

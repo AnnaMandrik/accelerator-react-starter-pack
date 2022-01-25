@@ -1,11 +1,12 @@
 import {ChangeEvent, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useLocation} from 'react-router-dom';
 import {selectType, selectStrings, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 import {getUserType, getUserStrings} from '../../store/user-data/selectors';
 //import {fetchFilterUserAction} from '../../store/api-actions';
 import FilterPrice from '../filter-price/filter-price';
-import {AppRoute, DEFAULT_PAGE, CountOfPages, STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
-//import {getFilterTypeInfo, getFilterInfo} from '../../utils';
+import {TYPE_NAMES, AppRoute, DEFAULT_PAGE, CountOfPages, STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
+// import {getItemsPerPage} from '../../utils';
 import browserHistory from '../../browser-history';
 
 
@@ -19,12 +20,17 @@ const allTypes = (factTypes: string[], type: string): string[] => {
 
 
 function Filter(): JSX.Element {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
   const userType = useSelector(getUserType);
   const userStrings = useSelector(getUserStrings);
+  //const filterInfo = useSelector(collectFilterInfo);
 
   const [types, setTypes] = useState<boolean[]>(new Array(TYPES_QUANTITY).fill(false));
   const [strings, setStrings] = useState<boolean[]>(new Array(STRINGS_QUANTITY).fill(false));
   const [availableStrings, setAvailableStrings] = useState<number[]>(STRINGS);
+  const [availableTypes, setAvailableTypes] = useState<string[]>(TYPE_NAMES);
 
   const dispatch = useDispatch();
 
@@ -35,16 +41,52 @@ function Filter(): JSX.Element {
       return;
     }
 
-    const guitarsHadStrings: number[] = [];
+    const guitarsHasStrings: number[] = [];
 
     types.forEach((isAvailable, index): void => {
       if (isAvailable) {
-        guitarsHadStrings.push(...FILTER_OF_TYPES_STRINGS[index].stringsCount);
+        guitarsHasStrings.push(...FILTER_OF_TYPES_STRINGS[index].stringsCount);
       }
     });
 
-    setAvailableStrings(guitarsHadStrings);
+    setAvailableStrings(guitarsHasStrings);
   }, [types]);
+
+  useEffect(() => {
+    if (!strings.some((string) => string)) {
+      setAvailableTypes(TYPE_NAMES);
+      return;
+    }
+
+    const stringsHasGuitars: string[] = [];
+
+    strings.forEach((isAvailable, index): void => {
+      if (isAvailable) {
+        FILTER_OF_TYPES_STRINGS.forEach((guitar, guitarIndex): void => {
+          if (guitar.stringsCount.includes(STRINGS[index])) {
+            stringsHasGuitars.push(FILTER_OF_TYPES_STRINGS[guitarIndex].name);
+          }
+        });
+      }
+    });
+
+    setAvailableTypes(stringsHasGuitars);
+  }, [strings]);
+
+  const handleTypeChange = (items: string[]) => {
+    searchParams.delete('type');
+    items.map((item: string) => searchParams.append('type', item));
+
+    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
+  };
+
+  const handleStringCountChange = (items: string[]) => {
+    searchParams.delete('stringCount');
+    items.map((item: string) => searchParams.append('stringCount', item));
+
+    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
+  };
+
 
   const handlerPagesChange = () => {
     dispatch(selectFirstPage(CountOfPages.First));
@@ -76,8 +118,9 @@ function Filter(): JSX.Element {
                     const value = target.checked;
                     setTypes([...types.slice(0, index), value, ...types.slice(index + 1)]);
                     dispatch(selectType(allTypes(userType, name)));
-                    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}`));
+                    handleTypeChange((allTypes(userType, name)));
                   }}
+                  disabled={!availableTypes.includes(name)}
                 />
                 <label htmlFor={name}>{type}</label>
               </div>
@@ -104,7 +147,7 @@ function Filter(): JSX.Element {
                     handlerPagesChange();
                     setStrings([...strings.slice(0, index), value, ...strings.slice(index + 1)]);
                     dispatch(selectStrings(allTypes(userStrings, String(countOfString))));
-                    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}`));
+                    handleStringCountChange(allTypes(userStrings, String(countOfString)));
                   }}
                   disabled={!availableStrings.includes(countOfString)}
                 />

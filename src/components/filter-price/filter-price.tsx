@@ -1,10 +1,13 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {useRef, FormEvent} from 'react';
+import { useLocation } from 'react-router-dom';
 import {getDefaultMinPrice, getDefaultMaxPrice} from '../../store/main-data/selectors';
 import {getMaxUserPrice, getMinUserPrice} from '../../store/user-data/selectors';
 import {FilterOfPrices, DIGIT_ZERO, DEFAULT_PAGE, CountOfPages, AppRoute} from '../../const';
 import {selectMaxPrice, selectMinPrice, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 import browserHistory from '../../browser-history';
+import {getItems} from '../../utils';
+//import { toast } from 'react-toastify';
 
 
 function FilterPrice(): JSX.Element {
@@ -12,9 +15,10 @@ function FilterPrice(): JSX.Element {
   const maxDefaultPrice = useSelector(getDefaultMaxPrice);
   const maxUserPrice = useSelector(getMaxUserPrice);
   const minUserPrice = useSelector(getMinUserPrice);
+  //const filterInfo = useSelector(collectFilterInfo);
 
-  // const [, setPriceMin] = useState<string>('');
-  // const [, setPriceMax] = useState<string>('');
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
 
   const minDefaultPriceRef = useRef(null);
   const maxDefaultPriceRef = useRef(null);
@@ -42,7 +46,7 @@ function FilterPrice(): JSX.Element {
     const max = Number(maxUserPrice);
 
     switch (evt.currentTarget.name) {
-      case FilterOfPrices.PRICE_MIN.name:
+      case FilterOfPrices.PRICE_MIN.name: {
         if (min < minDefaultPrice || min === DIGIT_ZERO) {
           dispatch(selectMinPrice(String(minDefaultPrice)));
         }
@@ -50,16 +54,21 @@ function FilterPrice(): JSX.Element {
         if (min > maxDefaultPrice) {
           dispatch(selectMaxPrice(String(maxDefaultPrice)));
         }
+        searchParams.has('price_gte')
+          ? searchParams.set('price_gte', (String(minDefaultPrice)))
+          : searchParams.append('price_gte', (String(minDefaultPrice)));
         break;
-      case FilterOfPrices.PRICE_MAX.name:
+      }
+      case FilterOfPrices.PRICE_MAX.name: {
         if (max > maxDefaultPrice || max === DIGIT_ZERO) {
           dispatch(selectMaxPrice(String(maxDefaultPrice)));
         }
 
-        if (max < maxDefaultPrice) {
-          dispatch(selectMaxPrice(String(minDefaultPrice)));
-        }
+        searchParams.has('price_lte')
+          ? searchParams.set('price_lte', (String(maxDefaultPrice)))
+          : searchParams.append('price_lte', (String(maxDefaultPrice)));
         break;
+      }
       default:
         break;
     }
@@ -67,7 +76,16 @@ function FilterPrice(): JSX.Element {
     dispatch(selectFirstPage(CountOfPages.First));
     dispatch(selectLastPage(CountOfPages.Last));
     dispatch(selectActualPage(DEFAULT_PAGE));
-    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}`));
+    const actualItemsOnPage = getItems(DEFAULT_PAGE);
+
+    searchParams.has('price_gte')
+      ? searchParams.set('_start', String(actualItemsOnPage.firstItem))
+      : searchParams.append('_start', String(actualItemsOnPage.firstItem));
+    searchParams.has('_end')
+      ? searchParams.set('_end', String(actualItemsOnPage.lastItem))
+      : searchParams.append('_end', String(actualItemsOnPage.lastItem));
+
+    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
   };
 
   //   switch (evt.currentTarget.id) {
