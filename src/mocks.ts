@@ -1,60 +1,27 @@
-const GUITARS = [
-  {
-    id: 1,
-    name: 'Честер Bass',
-    vendorCode: 'SO757575',
-    type: 'electric',
-    description: 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
-    previewImg: 'img/content/guitar-1.jpg',
-    stringCount: 7,
-    rating: 4,
-    price: 17500,
-  },
-  {
-    id: 2,
-    name: 'СURT Z30 Plus Acoustics',
-    vendorCode: 'SO7568698',
-    type: 'acustic',
-    description: 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
-    previewImg: 'img/content/guitar-2.jpg',
-    stringCount: 6,
-    rating: 9,
-    price: 129500,
-  },
-  {
-    id: 3,
-    name: 'СURT Z30 Plus',
-    vendorCode: 'SO7898989',
-    type: 'electric',
-    description: 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
-    previewImg: 'img/content/guitar-3.jpg',
-    stringCount: 7,
-    rating: 4,
-    price: 17500,
-  },
-  {
-    id: 4,
-    name: 'Честер Bass',
-    vendorCode: 'SO757575',
-    type: 'electric',
-    description: 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
-    previewImg: 'img/content/guitar-5.jpg',
-    stringCount: 7,
-    rating: 10,
-    price: 15000,
-  },
-  {
-    id: 5,
-    name: 'СURT Z30 Acoustics',
-    vendorCode: 'SO757575',
-    type: 'acustic',
-    description: 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
-    previewImg: 'img/content/guitar-6.jpg',
-    stringCount: 6,
-    rating: 2,
-    price: 200000,
-  },
+import {Guitar, Guitars} from './types/guitar';
+import {image, music, name} from 'faker';
 
-];
+enum Count {
+  GuitarsTest = 5,
+  CommentsTest = 15,
+}
 
-export {GUITARS};
+export enum HttpCode {
+  Ok = 200,
+  NoContent = 204,
+  NoAuth = 401,
+}
+
+const makeFakeGuitar = (): Guitar => ({
+  'id': 1,
+  'name': name.firstName(),
+  'vendorCode': 'SO7568698',
+  'type': music.genre(),
+  'description': 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
+  'previewImg': image.image(),
+  'stringCount': 12,
+  'rating': 5,
+  'price': 1500,
+} as Guitar);
+
+export const makeFakeGuitars = (): Guitars => new Array(Count.GuitarsTest).fill(undefined).map(() => makeFakeGuitar());
