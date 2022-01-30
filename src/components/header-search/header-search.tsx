@@ -1,16 +1,17 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {FormEvent, useState, useRef} from 'react';
+import {FormEvent, useState, useRef, ChangeEvent} from 'react';
+import {useHistory} from 'react-router-dom';
 import {getUserSearching} from '../../store/user-data/selectors';
 import {fetchSearchingProductsUserAction} from '../../store/api-actions';
+import {AppRoute} from '../../const';
 
 function HeaderSearch(): JSX.Element {
   const [searchString, setSearchString] = useState<string>('');
-
   const searchRef = useRef<HTMLInputElement | null>(null);
   const guitarsList = useSelector(getUserSearching);
   const dispatch = useDispatch();
-
-  const handleSearchChange = (evt: FormEvent<HTMLInputElement>) => {
+  const history = useHistory();
+  const handleSearchChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setSearchString(evt.currentTarget.value);
     dispatch(fetchSearchingProductsUserAction(evt.currentTarget.value));
   };
@@ -38,19 +39,39 @@ function HeaderSearch(): JSX.Element {
         />
         <label className="visually-hidden" htmlFor="search">Поиск</label>
       </form>
-      <ul style={{zIndex: 1}} className={`form-search__select-list ${!searchString ? 'hidden' : ''}`}>
+      <ul style={{zIndex: 1}} data-testid="search-suggestion-list"
+        className={`form-search__select-list ${!searchString ? 'hidden' : ''}`}
+      >
         {
           (!searchString && guitarsList.length !== 0)
             ? ''
             : guitarsList.map((guitar) => {
               const key = `${guitar.id}-${guitar.name}`;
+
               return (
-                <li className="form-search__select-item" tabIndex={0} key={key}>{guitar.name}</li>
+                <li className="form-search__select-item"
+                  tabIndex={0}
+                  key={key}
+                  onClick={() => {
+                    history.push(`${AppRoute.Product}${guitar.id}`);
+                    setSearchString('');
+                  }}
+                  onKeyPress={(evt) => {
+                    evt.preventDefault();
+                    if (evt.key === 'Enter') {
+                      history.push(`${AppRoute.Product}${guitar.id}`);
+                      setSearchString('');
+                    }
+                  }}
+                  data-testid="search-suggestion-item"
+                >
+                  {guitar.name}
+                </li>
               );})
         }
       </ul>
     </div>
   );
 }
-
+export {HeaderSearch};
 export default HeaderSearch;

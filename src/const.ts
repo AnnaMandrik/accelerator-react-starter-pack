@@ -4,6 +4,7 @@ const DIGIT_ZERO = 0;
 const enum AppRoute {
   Main = '/',
   Page = '/catalog/:page',
+  Product = 'product/:id',
 }
 
 const enum APIRoute {
@@ -76,13 +77,32 @@ const enum CountOfPages {
 const RATING_NUMBERS: number[] = [1, 2, 3, 4, 5];
 
 const enum ErrorText {
-  // MinPrice = 'Цена не может быть нулевой или отрицательной',
-  // MaxPrice = 'Цена не может быть больше максимального значения',
   LoadData = 'Не загрузились данные. Попробуйте позже!!!',
 }
+
+const FOOTER_NAV = [ 'Где купить?', 'Блог', 'Вопрос - ответ', 'Возврат', 'Сервис-центры' ];
+
+const socialsNets = [
+  {
+    ariaLabel: 'facebook',
+    href: 'https://www.facebook.com/',
+    xlinkHref: '#icon-facebook',
+  },
+  {
+    ariaLabel: 'instagram',
+    href: 'https://www.instagram.com/',
+    xlinkHref: '#icon-instagram',
+  },
+  {
+    ariaLabel: 'twitter',
+    href: 'https://www.twitter.com/',
+    xlinkHref: '#icon-twitter',
+  },
+];
 
 export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO, STRINGS,
   TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS,
-  DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, RATING_NUMBERS, ErrorText, TYPE_NAMES};
+  DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, RATING_NUMBERS, ErrorText, TYPE_NAMES,
+  FOOTER_NAV, socialsNets};
 

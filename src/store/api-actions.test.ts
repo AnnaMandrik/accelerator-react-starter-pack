@@ -6,7 +6,7 @@ import {createAPI} from '../services/api';
 import {State} from '../types/state';
 import {APIRoute} from '../const';
 import {fetchProductCardsListAction} from './api-actions';
-import {loadProductCardsList, loadPageCount} from './action';
+import {loadPageCount, loadProductCardsList} from './action';
 import {HttpCode, makeFakeGuitars} from '../mocks';
 
 describe('Async actions', () => {

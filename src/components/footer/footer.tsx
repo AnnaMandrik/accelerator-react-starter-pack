@@ -1,30 +1,26 @@
+import {FOOTER_NAV, socialsNets} from '../../const';
+
 function Footer(): JSX.Element {
   return (
     <footer className="footer">
       <div className="footer__container container"><a className="footer__logo logo"><img className="logo__img" width="70" height="70" src="./img/svg/logo.svg" alt="Логотип" /></a>
         <div className="socials footer__socials">
           <ul className="socials__list">
-            <li className="socials-item">
-              <a className="socials__link" href="https://www.facebook.com/" aria-label="facebook">
-                <svg className="socials__icon" width="24" height="24" aria-hidden="true">
-                  <use xlinkHref="#icon-facebook"></use>
-                </svg>
-              </a>
-            </li>
-            <li className="socials-item">
-              <a className="socials__link" href="https://www.instagram.com/" aria-label="instagram">
-                <svg className="socials__icon" width="24" height="24" aria-hidden="true">
-                  <use xlinkHref="#icon-instagram"></use>
-                </svg>
-              </a>
-            </li>
-            <li className="socials-item">
-              <a className="socials__link" href="https://www.twitter.com/" aria-label="twitter">
-                <svg className="socials__icon" width="24" height="24" aria-hidden="true">
-                  <use xlinkHref="#icon-twitter"></use>
-                </svg>
-              </a>
-            </li>
+            {
+              socialsNets.map((net) => {
+                const key = `${net.ariaLabel}`;
+
+                return (
+                  <li key={key} className="socials-item">
+                    <a className="socials__link" href={net.href} aria-label={net.ariaLabel}>
+                      <svg className="socials__icon" width="24" height="24" aria-hidden="true">
+                        <use xlinkHref={net.xlinkHref}></use>
+                      </svg>
+                    </a>
+                  </li>
+                );
+              })
+            }
           </ul>
         </div>
         <section className="footer__nav-section footer__nav-section--info">
@@ -34,16 +30,15 @@ function Footer(): JSX.Element {
         <section className="footer__nav-section footer__nav-section--links">
           <h2 className="footer__nav-title">Информация</h2>
           <ul className="footer__nav-list">
-            <li className="footer__nav-list-item"><a className="link" href="#top">Где купить?</a>
-            </li>
-            <li className="footer__nav-list-item"><a className="link" href="#top">Блог</a>
-            </li>
-            <li className="footer__nav-list-item"><a className="link" href="#top">Вопрос - ответ</a>
-            </li>
-            <li className="footer__nav-list-item"><a className="link" href="#top">Возврат</a>
-            </li>
-            <li className="footer__nav-list-item"><a className="link" href="#top">Сервис-центры</a>
-            </li>
+            {
+              FOOTER_NAV.map((nav) => {
+                const key = `${nav}`;
+
+                return (
+                  <li key={key} className="footer__nav-list-item"><a className="link" href="#top">{nav}</a></li>
+                );
+              })
+            }
           </ul>
         </section>
         <section className="footer__nav-section footer__nav-section--contacts">

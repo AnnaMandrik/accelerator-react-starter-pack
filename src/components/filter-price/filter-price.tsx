@@ -1,5 +1,5 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {useRef, FormEvent} from 'react';
+import {useRef, ChangeEvent} from 'react';
 import { useLocation } from 'react-router-dom';
 import {getDefaultMinPrice, getDefaultMaxPrice} from '../../store/main-data/selectors';
 import {getMaxUserPrice, getMinUserPrice} from '../../store/user-data/selectors';
@@ -7,7 +7,6 @@ import {FilterOfPrices, DIGIT_ZERO, DEFAULT_PAGE, CountOfPages, AppRoute} from '
 import {selectMaxPrice, selectMinPrice, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 import browserHistory from '../../browser-history';
 import {getItems} from '../../utils';
-//import { toast } from 'react-toastify';
 
 
 function FilterPrice(): JSX.Element {
@@ -15,7 +14,6 @@ function FilterPrice(): JSX.Element {
   const maxDefaultPrice = useSelector(getDefaultMaxPrice);
   const maxUserPrice = useSelector(getMaxUserPrice);
   const minUserPrice = useSelector(getMinUserPrice);
-  //const filterInfo = useSelector(collectFilterInfo);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -25,54 +23,23 @@ function FilterPrice(): JSX.Element {
 
   const dispatch = useDispatch();
 
+  const min = Number(minUserPrice);
+  const max = Number(maxUserPrice);
 
-  const handlerMinPriceChange = (evt: FormEvent<HTMLInputElement>) => {
-    const priceValue = evt.currentTarget.value;
-    dispatch(selectMinPrice(priceValue));
-  };
 
-  const handlerMaxPriceChange = (evt: FormEvent<HTMLInputElement>) => {
-    const priceValue = evt.currentTarget.value;
-    dispatch(selectMaxPrice(priceValue));
-  };
-
-  const handlerEmptyPlaceChange = (evt: FormEvent<HTMLInputElement>) => {
-    if (evt.currentTarget.value === '') {
-      dispatch(selectMinPrice(evt.currentTarget.value));
-      dispatch(selectMaxPrice(evt.currentTarget.value));
-      return;
+  const handleInputMinBlur = (evt: ChangeEvent<HTMLInputElement>) => {
+    let price = evt.target.value;
+    if (+price === min && +price < minDefaultPrice) {
+      price = minDefaultPrice.toString();
     }
-    const min = Number(minUserPrice);
-    const max = Number(maxUserPrice);
-
-    switch (evt.currentTarget.name) {
-      case FilterOfPrices.PRICE_MIN.name: {
-        if (min < minDefaultPrice || min === DIGIT_ZERO) {
-          dispatch(selectMinPrice(String(minDefaultPrice)));
-        }
-
-        if (min > maxDefaultPrice) {
-          dispatch(selectMaxPrice(String(maxDefaultPrice)));
-        }
-        searchParams.has('price_gte')
-          ? searchParams.set('price_gte', (String(minDefaultPrice)))
-          : searchParams.append('price_gte', (String(minDefaultPrice)));
-        break;
-      }
-      case FilterOfPrices.PRICE_MAX.name: {
-        if (max > maxDefaultPrice || max === DIGIT_ZERO) {
-          dispatch(selectMaxPrice(String(maxDefaultPrice)));
-        }
-
-        searchParams.has('price_lte')
-          ? searchParams.set('price_lte', (String(maxDefaultPrice)))
-          : searchParams.append('price_lte', (String(maxDefaultPrice)));
-        break;
-      }
-      default:
-        break;
+    if (+price === max && +price > maxDefaultPrice) {
+      price = maxDefaultPrice.toString();
+    }
+    if (+price === DIGIT_ZERO) {
+      price = minDefaultPrice.toString();
     }
 
+    dispatch(selectMinPrice(price));
     dispatch(selectFirstPage(CountOfPages.First));
     dispatch(selectLastPage(CountOfPages.Last));
     dispatch(selectActualPage(DEFAULT_PAGE));
@@ -88,48 +55,84 @@ function FilterPrice(): JSX.Element {
     browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
   };
 
-  //   switch (evt.currentTarget.id) {
-  //     case FilterOfPrices.PRICE_MIN.id: {
-  //       let priceOfUser = Number(evt.currentTarget.value);
 
-  //       if (priceOfUser < minDefaultPrice) {
-  //         priceOfUser = minDefaultPrice;
+  const handleInputMaxBlur = (evt: ChangeEvent<HTMLInputElement>) => {
+    let price = evt.target.value;
+    if (+price === max && +price < minDefaultPrice) {
+      price = minDefaultPrice.toString();
+    }
+    if (+price === max && +price > maxDefaultPrice) {
+      price = maxDefaultPrice.toString();
+    }
+    if (+price === DIGIT_ZERO) {
+      price = maxDefaultPrice.toString();
+    }
+
+    dispatch(selectMaxPrice(price));
+  };
+
+
+  const handlerMinPriceChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const price = evt.target.value;
+    dispatch(selectMinPrice(price));
+  };
+
+  const handlerMaxPriceChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const price = evt.target.value;
+    dispatch(selectMaxPrice(price));
+  };
+
+  // const handlerEmptyPlaceChange = (evt: FormEvent<HTMLInputElement>) => {
+  //   if (evt.currentTarget.value === '') {
+  //     dispatch(selectMinPrice(evt.currentTarget.value));
+  //     dispatch(selectMaxPrice(evt.currentTarget.value));
+  //     return;
+  //   }
+  //   const min = Number(minUserPrice);
+  //   const max = Number(maxUserPrice);
+
+  //   switch (evt.currentTarget.name) {
+  //     case FilterOfPrices.PRICE_MIN.name: {
+  //       if (min < minDefaultPrice || min === DIGIT_ZERO) {
+  //         dispatch(selectMinPrice(String(minDefaultPrice)));
   //       }
 
-  //       // if (priceOfUser > maxDefaultPrice) {
-  //       //   priceOfUser = maxDefaultPrice;
-  //       // }
-
-  //       if (priceOfUser < DIGIT_ZERO) {
-  //         priceOfUser = minDefaultPrice;
+  //       if (min > maxDefaultPrice) {
+  //         dispatch(selectMaxPrice(String(maxDefaultPrice)));
   //       }
-  //       setPriceMin(String(priceOfUser));
-  //       dispatch(selectMinPrice(String(priceOfUser)));
+  //       searchParams.has('price_gte')
+  //         ? searchParams.set('price_gte', (String(minDefaultPrice)))
+  //         : searchParams.append('price_gte', (String(minDefaultPrice)));
   //       break;
   //     }
-  //     case FilterOfPrices.PRICE_MAX.id: {
-  //       let priceOfUser = Number(evt.currentTarget.value);
-
-  //       if (priceOfUser > maxDefaultPrice) {
-  //         priceOfUser = maxDefaultPrice;
+  //     case FilterOfPrices.PRICE_MAX.name: {
+  //       if (max > maxDefaultPrice || max === DIGIT_ZERO) {
+  //         dispatch(selectMaxPrice(String(maxDefaultPrice)));
   //       }
 
-  //       // if (priceOfUser < minDefaultPrice) {
-  //       //   priceOfUser = minDefaultPrice;
-  //       // }
-
-  //       if (priceOfUser < DIGIT_ZERO) {
-  //         priceOfUser = maxDefaultPrice;
-  //       }
-
-  //       setPriceMax(String(priceOfUser));
-  //       dispatch(selectMaxPrice(String(priceOfUser)));
+  //       searchParams.has('price_lte')
+  //         ? searchParams.set('price_lte', (String(maxDefaultPrice)))
+  //         : searchParams.append('price_lte', (String(maxDefaultPrice)));
   //       break;
   //     }
   //     default:
   //       break;
   //   }
-  //  };
+
+  //   dispatch(selectFirstPage(CountOfPages.First));
+  //   dispatch(selectLastPage(CountOfPages.Last));
+  //   dispatch(selectActualPage(DEFAULT_PAGE));
+  //   const actualItemsOnPage = getItems(DEFAULT_PAGE);
+
+  //   searchParams.has('price_gte')
+  //     ? searchParams.set('_start', String(actualItemsOnPage.firstItem))
+  //     : searchParams.append('_start', String(actualItemsOnPage.firstItem));
+  //   searchParams.has('_end')
+  //     ? searchParams.set('_end', String(actualItemsOnPage.lastItem))
+  //     : searchParams.append('_end', String(actualItemsOnPage.lastItem));
+
+  //   browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
+  // };
 
   return (
     <fieldset className="catalog-filter__block">
@@ -145,7 +148,7 @@ function FilterPrice(): JSX.Element {
             ref={minDefaultPriceRef}
             onChange={handlerMinPriceChange}
             value={minUserPrice}
-            onBlur={handlerEmptyPlaceChange}
+            onBlur={handleInputMinBlur}
           />
         </div>
         <div className="form-input">
@@ -158,7 +161,7 @@ function FilterPrice(): JSX.Element {
             ref={maxDefaultPriceRef}
             onChange={handlerMaxPriceChange}
             value={maxUserPrice}
-            onBlur={handlerEmptyPlaceChange}
+            onBlur={handleInputMaxBlur}
           />
         </div>
       </div>
