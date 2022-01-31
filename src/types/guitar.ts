@@ -10,11 +10,6 @@ export type Guitar = {
   price: number,
 };
 
-// export type GuitarTypeStrings = {
-//   name: string,
-//   type: string,
-//   stringsCount: number[],
-// }
 
 export type Guitars = Guitar[];
 

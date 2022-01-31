@@ -13,6 +13,7 @@
     "reselect": "4.0.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.16.7",
     "@jedmao/redux-mock-store": "3.0.5",
     "@testing-library/dom": "7.21.4",
     "@testing-library/jest-dom": "5.11.0",

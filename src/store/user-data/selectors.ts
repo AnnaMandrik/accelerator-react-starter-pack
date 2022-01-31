@@ -10,6 +10,7 @@ const getUserStrings = (state: State): string[] => state[NameDataList.UserData].
 const getUserSorting = (state: State): string => state[NameDataList.UserData].sorting;
 const getUserOrder = (state: State): string => state[NameDataList.UserData].order;
 const getUserActualPage = (state: State): number => state[NameDataList.UserData].actualPage;
+
 const getIsFilterChecked = (state: State): boolean => {
   if (state[NameDataList.UserData].minPrice === ''
     && state[NameDataList.UserData].maxPrice === ''
@@ -20,6 +21,7 @@ const getIsFilterChecked = (state: State): boolean => {
 
   return true;
 };
+
 const getUserActualPageCount = (state: State): number => state[NameDataList.UserData].actualPageCount;
 const getUserFirstPage = (state: State): number => state[NameDataList.UserData].firstPage;
 const getUserLastPage = (state: State): number => state[NameDataList.UserData].lastPage;

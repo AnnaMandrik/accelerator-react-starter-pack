@@ -43,9 +43,9 @@ function HeaderSearch(): JSX.Element {
         className={`form-search__select-list ${!searchString ? 'hidden' : ''}`}
       >
         {
-          (!searchString && guitarsList.length !== 0)
+          (!searchString && guitarsList.length)
             ? ''
-            : guitarsList.map((guitar) => {
+            : guitarsList?.map((guitar) => {
               const key = `${guitar.id}-${guitar.name}`;
 
               return (
@@ -63,7 +63,7 @@ function HeaderSearch(): JSX.Element {
                       setSearchString('');
                     }
                   }}
-                  data-testid="search-suggestion-item"
+
                 >
                   {guitar.name}
                 </li>
@@ -73,5 +73,5 @@ function HeaderSearch(): JSX.Element {
     </div>
   );
 }
-export {HeaderSearch};
+
 export default HeaderSearch;

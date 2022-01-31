@@ -89,7 +89,7 @@ describe('Reducer: user-data', () => {
 
   // it('should select previous before first page', () => {
   //   expect(userData(state, prevFirstPage()))
-  //     .toEqual({...state, firstPage: 7});
+  //     .toEqual({...state, firstPage: 0});
   // });
 
   // it('should select previous before last page', () => {

@@ -11,7 +11,6 @@ import {selectOrder, selectSorting, selectStrings, selectType, selectActualPage,
 import {fetchFilterUserAction} from '../../store/api-actions';
 import {getUserActualPageCount, collectFilterInfo} from '../../store/user-data/selectors';
 import {getItemsPerPage, getItems} from '../../utils';
-//import {GUITARS} from '../../mocks';
 import Header from '../header/header';
 import Footer from '../footer/footer';
 import {CountOfPages, STEP_OF_COUNT} from '../../const';
@@ -24,7 +23,6 @@ type CatalogPageProps = {
 
 function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
   const guitarsList = useSelector(getGuitars);
-  //const page = useSelector(getUserActualPage);
   const pageCount = useSelector(getUserActualPageCount);
   const filter = useSelector(collectFilterInfo);
   const isLoaded = useSelector(getIsLoaded);

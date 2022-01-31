@@ -29,10 +29,10 @@ function ProductCard({guitar}: ProductCardProps): JSX.Element {
           <span className="rate__message"></span>
         </div>
         <p className="product-card__title">{name}</p>
-        <p className="product-card__price"><span className="visually-hidden">Цена:</span>{`${price}`} ₽</p>
+        <p className="product-card__price"><span className="visually-hidden">Цена:</span>{price} ₽</p>
       </div>
       <div className="product-card__buttons">
-        <a className="button button--mini" href="#">Подробнее</a>
+        <a className="button button--mini" href="#" data-testid="more">Подробнее</a>
         <a className="button button--red button--mini button--add-to-cart" href="#">Купить</a>
       </div>
     </div>

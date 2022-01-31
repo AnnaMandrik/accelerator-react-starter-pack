@@ -5,10 +5,11 @@ import {configureMockStore} from '@jedmao/redux-mock-store';
 import {createAPI} from '../services/api';
 import {State} from '../types/state';
 import {APIRoute} from '../const';
-import {fetchProductCardsListAction} from './api-actions';
-import {loadPageCount, loadProductCardsList} from './action';
+import {fetchProductCardsListAction, fetchSearchingProductsUserAction} from './api-actions';
+import {loadPageCount, loadProductCardsList, searchingProducts} from './action';
 import {HttpCode, makeFakeGuitars} from '../mocks';
 
+const fakeGuitar = makeFakeGuitars();
 describe('Async actions', () => {
   const api = createAPI();
   const mockAPI = new MockAdapter(api);
@@ -21,7 +22,7 @@ describe('Async actions', () => {
     >(middlewares);
 
   it('should dispatch loadProductCardsList when GET /guitars', async () => {
-    const fakeGuitar = makeFakeGuitars();
+
 
     mockAPI
       .onGet(APIRoute.Guitars)
@@ -34,5 +35,18 @@ describe('Async actions', () => {
       loadProductCardsList(fakeGuitar),
       loadPageCount(1),
     ]);
+  });
+
+
+  it('should dispatch Search suggestions when GET /guitars?_sort=price&_order=desc&_start=0&_limit=1', async () => {
+
+    mockAPI
+      .onGet(`${APIRoute.Guitars}?name_like=Чест`)
+      .reply(HttpCode.Ok, fakeGuitar);
+
+    const store = mockStore();
+    await store.dispatch(fetchSearchingProductsUserAction('Чест'));
+
+    expect(store.getActions()).toEqual([searchingProducts(fakeGuitar)]);
   });
 });

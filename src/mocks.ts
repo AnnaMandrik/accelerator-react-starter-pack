@@ -1,5 +1,5 @@
-import {Guitar, Guitars} from './types/guitar';
-import {image, music, name} from 'faker';
+import {Guitars} from './types/guitar';
+import {image, music} from 'faker';
 
 enum Count {
   GuitarsTest = 5,
@@ -12,9 +12,9 @@ export enum HttpCode {
   NoAuth = 401,
 }
 
-const makeFakeGuitar = (): Guitar => ({
+export const makeFakeGuitar = () => ({
   'id': 1,
-  'name': name.firstName(),
+  'name': 'Честер Plus',
   'vendorCode': 'SO7568698',
   'type': music.genre(),
   'description': 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
@@ -22,6 +22,6 @@ const makeFakeGuitar = (): Guitar => ({
   'stringCount': 12,
   'rating': 5,
   'price': 1500,
-} as Guitar);
+});
 
 export const makeFakeGuitars = (): Guitars => new Array(Count.GuitarsTest).fill(undefined).map(() => makeFakeGuitar());
