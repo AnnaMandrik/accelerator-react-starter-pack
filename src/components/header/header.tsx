@@ -11,7 +11,7 @@ function Header(): JSX.Element {
         </Link>
         <nav className="main-nav">
           <ul className="main-nav__list">
-            <li><Link className="link main-nav__link link--current" href="#" to={AppRoute.Main}>Каталог</Link></li>
+            <li><Link className="link main-nav__link link--current" to={AppRoute.Main}>Каталог</Link></li>
             <li><Link className="link main-nav__link" to={AppRoute.Stub}>Где купить?</Link></li>
             <li><Link className="link main-nav__link" to={AppRoute.Stub}>О компании</Link></li>
           </ul>

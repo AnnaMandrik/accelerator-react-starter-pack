@@ -6,10 +6,14 @@ import {loadProductCardsList, loadPageCount, selectActualPageCount, searchingPro
 
 export const fetchProductCardsListAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    const {data} = await api.get<Guitars>(APIRoute.Guitars);
-    const pageCount = Math.ceil(data.length / ITEMS_PER_PAGE);
-    dispatch(loadProductCardsList(data));
-    dispatch(loadPageCount(pageCount));
+    try {
+      const {data} = await api.get<Guitars>(APIRoute.Guitars);
+      const pageCount = Math.ceil(data.length / ITEMS_PER_PAGE);
+      dispatch(loadProductCardsList(data));
+      dispatch(loadPageCount(pageCount));
+    } catch {
+      toast.info(ErrorText.LoadData);
+    }
   };
 
 export const fetchSearchingProductsUserAction = (text: string): ThunkActionResult =>

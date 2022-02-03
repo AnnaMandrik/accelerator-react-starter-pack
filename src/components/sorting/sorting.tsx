@@ -4,9 +4,8 @@ import { useLocation } from 'react-router-dom';
 import browserHistory from '../../browser-history';
 import {SortKey, OrderKey} from '../../const';
 import {selectSorting, selectOrder} from '../../store/action';
-// import {fetchFilterUserAction} from '../../store/api-actions';
 import {getUserOrder, getUserSorting} from '../../store/user-data/selectors';
-
+import './sorting.css';
 
 function Sorting():JSX.Element {
   const location = useLocation();
@@ -72,14 +71,16 @@ function Sorting():JSX.Element {
       </div>
       <div className="catalog-sort__order">
         <button
-          className={`catalog-sort__order-button catalog-sort__order-button--up${(actualOrder === OrderKey.Asc) ? ' catalog-sort__order-button--active' : ''}`}
+          className={`catalog-sort__order-button catalog-sort__order-button--up${(actualOrder === OrderKey.Asc) ?
+            ' catalog-sort__order-button--active' : ''}`}
           aria-label="По возрастанию"
           tabIndex={(actualOrder === OrderKey.Asc) ? -1 : 0}
           onClick={()=> handleOrderChange(OrderKey.Asc)}
         >
         </button>
         <button
-          className={`catalog-sort__order-button catalog-sort__order-button--down${(actualOrder === OrderKey.Desc) ? ' catalog-sort__order-button--active' : ''}`}
+          className={`catalog-sort__order-button catalog-sort__order-button--down${(actualOrder === OrderKey.Desc) ?
+            ' catalog-sort__order-button--active' : ''}`}
           aria-label="По убыванию"
           tabIndex={(actualOrder === OrderKey.Desc) ? -1 : 0}
           onClick={()=> handleOrderChange(OrderKey.Desc)}

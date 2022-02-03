@@ -68,10 +68,10 @@ function Pagination(): JSX.Element {
             const key = `${page}-page`;
 
             return (
-              <li key={key} className="pagination__page">
+              <li key={key} className={`pagination__page${(page === actualPage) ? ' pagination__page--active' : ''}`}>
                 <a
                   href="##"
-                  className={`link pagination__page-link${(page === actualPage) ? 'pagination__page--active' : ''}`}
+                  className= "link pagination__page-link"
                   onClick={(evt) => {
                     evt.preventDefault();
                     dispatch(selectActualPage(page));

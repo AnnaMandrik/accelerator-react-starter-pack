@@ -75,7 +75,6 @@ const enum CountOfPages {
   Last = 3,
 }
 
-const RATING_NUMBERS: number[] = [1, 2, 3, 4, 5];
 
 const enum ErrorText {
   LoadData = 'Не загрузились данные. Попробуйте позже!!!',
@@ -104,6 +103,6 @@ const socialsNets = [
 export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO, STRINGS,
   TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS,
-  DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, RATING_NUMBERS, ErrorText, TYPE_NAMES,
+  DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, ErrorText, TYPE_NAMES,
   FOOTER_NAV, socialsNets};
 

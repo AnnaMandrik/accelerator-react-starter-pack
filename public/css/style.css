@@ -1822,6 +1822,7 @@ button,
   pointer-events: none;
 }
 
+
 .catalog-sort__order-button:hover {
   border-top-color: #c90606;
 }

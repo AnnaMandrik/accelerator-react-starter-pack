@@ -5,6 +5,7 @@ import {getUserSearching} from '../../store/user-data/selectors';
 import {fetchSearchingProductsUserAction} from '../../store/api-actions';
 import {AppRoute} from '../../const';
 
+
 function HeaderSearch(): JSX.Element {
   const [searchString, setSearchString] = useState<string>('');
   const searchRef = useRef<HTMLInputElement | null>(null);
@@ -12,8 +13,8 @@ function HeaderSearch(): JSX.Element {
   const dispatch = useDispatch();
   const history = useHistory();
   const handleSearchChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setSearchString(evt.currentTarget.value);
-    dispatch(fetchSearchingProductsUserAction(evt.currentTarget.value));
+    setSearchString(evt.target.value);
+    dispatch(fetchSearchingProductsUserAction(evt.target.value));
   };
 
   return (
@@ -26,7 +27,8 @@ function HeaderSearch(): JSX.Element {
         <button className="form-search__submit" type="submit">
           <svg className="form-search__icon" width="14" height="15" aria-hidden="true">
             <use xlinkHref="#icon-search"></use>
-          </svg><span className="visually-hidden">Начать поиск</span>
+          </svg>
+          <span className="visually-hidden">Начать поиск</span>
         </button>
         <input className="form-search__input"
           id="search"
@@ -45,7 +47,7 @@ function HeaderSearch(): JSX.Element {
         {
           (!searchString && guitarsList.length)
             ? ''
-            : guitarsList?.map((guitar) => {
+            : guitarsList.map((guitar) => {
               const key = `${guitar.id}-${guitar.name}`;
 
               return (
