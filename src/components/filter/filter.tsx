@@ -88,7 +88,7 @@ function Filter(): JSX.Element {
   };
 
 
-  const handlerPagesChange = () => {
+  const handlePagesChange = () => {
     dispatch(selectFirstPage(CountOfPages.First));
     dispatch(selectLastPage(CountOfPages.Last));
     dispatch(selectActualPage(DEFAULT_PAGE));
@@ -114,7 +114,7 @@ function Filter(): JSX.Element {
                   name={name}
                   checked={isChecked}
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
-                    handlerPagesChange();
+                    handlePagesChange();
                     const value = target.checked;
                     setTypes([...types.slice(0, index), value, ...types.slice(index + 1)]);
                     dispatch(selectType(allTypes(userType, name)));
@@ -144,7 +144,7 @@ function Filter(): JSX.Element {
                   checked={userStrings.includes(String(countOfString))}
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
                     const value = target.checked;
-                    handlerPagesChange();
+                    handlePagesChange();
                     setStrings([...strings.slice(0, index), value, ...strings.slice(index + 1)]);
                     dispatch(selectStrings(allTypes(userStrings, String(countOfString))));
                     handleStringCountChange(allTypes(userStrings, String(countOfString)));

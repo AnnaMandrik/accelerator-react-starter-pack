@@ -5,6 +5,7 @@ const enum AppRoute {
   Main = '/',
   Page = '/catalog/:page',
   Product = 'product/:id',
+  Stub = '/stub',
 }
 
 const enum APIRoute {

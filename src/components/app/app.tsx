@@ -5,6 +5,7 @@ import CatalogPage from '../catalog-page/catalog-page';
 import ErrorPage from '../error-page/error-page';
 import Spinner from '../spinner/spinner';
 import {getIsLoaded} from '../../store/main-data/selectors';
+import StubPage from '../stub-page/stub-page';
 
 function App(): JSX.Element {
 
@@ -25,6 +26,9 @@ function App(): JSX.Element {
           return <CatalogPage actualPage={page} />;
         }}
       >
+      </Route>
+      <Route exact path={AppRoute.Stub}>
+        <StubPage />
       </Route>
       <Route>
         <ErrorPage />

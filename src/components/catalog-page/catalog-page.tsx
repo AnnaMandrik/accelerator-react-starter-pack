@@ -1,6 +1,7 @@
 import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import {Link} from 'react-router-dom';
 import Filter from '../filter/filter';
 import Sorting from '../sorting/sorting';
 import ErrorPage from '../error-page/error-page';
@@ -15,6 +16,7 @@ import Header from '../header/header';
 import Footer from '../footer/footer';
 import {CountOfPages, STEP_OF_COUNT} from '../../const';
 import {getIsLoaded} from '../../store/main-data/selectors';
+import {AppRoute} from '../../const';
 
 
 type CatalogPageProps = {
@@ -110,8 +112,12 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
         <div className="container">
           <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
           <ul className="breadcrumbs page-content__breadcrumbs">
-            <li className="breadcrumbs__item"><a className="link" href="./main.html">Главная</a></li>
-            <li className="breadcrumbs__item"><a className="link" >Каталог</a></li>
+            <li className="breadcrumbs__item">
+              <Link className="link" to={AppRoute.Stub}>Главная</Link>
+            </li>
+            <li className="breadcrumbs__item">
+              <Link className="link" to={AppRoute.Main}>Каталог</Link>
+            </li>
           </ul>
           <div className="catalog">
             <Filter />

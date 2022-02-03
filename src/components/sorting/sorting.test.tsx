@@ -4,6 +4,7 @@ import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import Sorting from './sorting';
+import {SortKey, OrderKey} from '../../const';
 
 const mockStore = configureMockStore();
 
@@ -11,7 +12,10 @@ describe('Component: Sorting', () => {
   it('should render correctly', () => {
     const store = mockStore({
       GUITARS: {},
-      USER: {},
+      USER: {
+        sorting: SortKey.Price,
+        order: OrderKey.Asc,
+      },
     });
 
     const history = createMemoryHistory();

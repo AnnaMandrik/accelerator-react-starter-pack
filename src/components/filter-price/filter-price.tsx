@@ -72,12 +72,12 @@ function FilterPrice(): JSX.Element {
   };
 
 
-  const handlerMinPriceChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleMinPriceChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const price = evt.target.value;
     dispatch(selectMinPrice(price));
   };
 
-  const handlerMaxPriceChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleMaxPriceChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const price = evt.target.value;
     dispatch(selectMaxPrice(price));
   };
@@ -146,7 +146,7 @@ function FilterPrice(): JSX.Element {
             id={FilterOfPrices.PRICE_MIN.id}
             name={FilterOfPrices.PRICE_MIN.name}
             ref={minDefaultPriceRef}
-            onChange={handlerMinPriceChange}
+            onChange={handleMinPriceChange}
             value={minUserPrice}
             onBlur={handleInputMinBlur}
           />
@@ -159,7 +159,7 @@ function FilterPrice(): JSX.Element {
             id={FilterOfPrices.PRICE_MAX.id}
             name={FilterOfPrices.PRICE_MAX.name}
             ref={maxDefaultPriceRef}
-            onChange={handlerMaxPriceChange}
+            onChange={handleMaxPriceChange}
             value={maxUserPrice}
             onBlur={handleInputMaxBlur}
           />
