@@ -17,12 +17,12 @@ describe('Component: FilterPrice', () => {
   const maxPrice = 15000;
 
   const store = mockStore({
-    GUITARS: {
+    MainData: {
       productsList: fakeGuitars,
       pageCount: 3,
       isDataLoaded: true,
     },
-    USER: {
+    UserData: {
       minPrice: String(minPrice),
       maxPrice: String(maxPrice),
       types: [],

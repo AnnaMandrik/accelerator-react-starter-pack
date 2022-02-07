@@ -13,10 +13,10 @@ const fakeGuitars = makeFakeGuitars();
 describe('Component: Header', () => {
   it('should render correctly', () => {
     const store = mockStore({
-      GUITARS: {
+      MainData: {
         isDataLoaded: true,
       },
-      USER: {
+      UserData: {
         searching: fakeGuitars,
       },
     });

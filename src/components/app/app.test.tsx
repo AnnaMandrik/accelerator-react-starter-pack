@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import * as Redux from 'react-redux';
 import thunk from 'redux-thunk';
 import App from './app';
 import { AppRoute } from '../../const';
@@ -11,16 +10,14 @@ import {makeFakeGuitars} from '../../mocks';
 
 const fakeGuitars = makeFakeGuitars();
 const mockStore = configureMockStore([thunk]);
-const dispatch = jest.fn();
-const useSelector = jest.spyOn(Redux, 'useSelector');
 
 const store = mockStore({
-  GUITARS: {
+  MainData: {
     productsList: fakeGuitars,
     isDataLoaded: true,
     pageCount: 3,
   },
-  USER: {
+  UserData: {
     minPrice: '2000',
     maxPrice: '15000',
     types: [],
@@ -46,17 +43,22 @@ const fakeApp = (
 
 describe('Application Routing', () => {
   it('should render "CatalogPage" when user navigate to "/"', () => {
-    useSelector.mockReturnValue(dispatch);
     history.push(AppRoute.Main);
     render(fakeApp);
     expect(screen.getByText(/каталог гитар/i)).toBeInTheDocument();
   });
   it('should render "ErrorPage" when user navigate to non-existent route', () => {
-    useSelector.mockReturnValue(dispatch);
     history.push('/non-existent-route');
     render(fakeApp);
 
-    expect(screen.getByText('404. Страница не найдена')).toBeInTheDocument();
-    expect(screen.getByText('Вернуться в каталог')).toBeInTheDocument();
+    expect(screen.getByText(/404 страница не найдена/i)).toBeInTheDocument();
+    expect(screen.getByText(/Вернуться в каталог/)).toBeInTheDocument();
+  });
+  it('should render "StubPage" when user navigate to "/stub"', () => {
+    history.push(AppRoute.Stub);
+    render(fakeApp);
+
+    expect(screen.getByText(/Страница находится в разработке!/)).toBeInTheDocument();
+    expect(screen.getByText(/Вернуться в каталог/)).toBeInTheDocument();
   });
 });

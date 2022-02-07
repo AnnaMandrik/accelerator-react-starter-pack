@@ -14,12 +14,12 @@ const history = createMemoryHistory();
 
 describe('Component: Filter', () => {
   const store = mockStore({
-    GUITARS: {
+    MainData: {
       productsList: mockGuitars,
       pageCount: 3,
       isDataLoaded: true,
     },
-    USER: {
+    UserData: {
       minPrice: '5000',
       maxPrice: '15000',
       types: [],

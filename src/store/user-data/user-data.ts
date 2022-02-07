@@ -1,6 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {UserData} from '../../types/state';
-import {searchingProducts, selectStrings, selectType, selectMaxPrice, selectMinPrice, selectSorting, selectOrder, selectActualPage, selectActualPageCount, selectFirstPage, selectLastPage, prevFirstPage, prevLastPage, nextFirstPage, nextLastPage} from '../action';
+import {searchingProducts, selectStrings, selectType, selectMaxPrice,
+  selectMinPrice, selectSorting, selectOrder, selectActualPage,
+  selectActualPageCount, selectFirstPage, selectLastPage, prevFirstPage,
+  prevLastPage, nextFirstPage, nextLastPage} from '../action';
 import {CountOfPages, STEP_OF_COUNT} from '../../const';
 
 const initialState: UserData = {

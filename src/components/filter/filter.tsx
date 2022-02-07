@@ -121,6 +121,7 @@ function Filter(): JSX.Element {
                     handleTypeChange((allTypes(userType, name)));
                   }}
                   disabled={!availableTypes.includes(name)}
+                  data-testid={name}
                 />
                 <label htmlFor={name}>{type}</label>
               </div>
@@ -150,6 +151,7 @@ function Filter(): JSX.Element {
                     handleStringCountChange(allTypes(userStrings, String(countOfString)));
                   }}
                   disabled={!availableStrings.includes(countOfString)}
+                  data-testid={countOfString}
                 />
                 <label htmlFor={`${countOfString}-strings`}>{countOfString}</label>
               </div>

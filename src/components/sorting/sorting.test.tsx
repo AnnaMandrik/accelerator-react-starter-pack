@@ -11,8 +11,8 @@ const mockStore = configureMockStore();
 describe('Component: Sorting', () => {
   it('should render correctly', () => {
     const store = mockStore({
-      GUITARS: {},
-      USER: {
+      MainData: {},
+      UserData: {
         sorting: SortKey.Price,
         order: OrderKey.Asc,
       },

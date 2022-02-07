@@ -19,10 +19,10 @@ const getFakeApp = (store: any) => (
 describe('Component: Pagination', () => {
   it('should render correctly pagination for three pages (the first is actual page)', () => {
     const store = mockStore({
-      GUITARS: {
+      MainData: {
         pageCount: 3,
       },
-      USER: {
+      UserData: {
         actualPage: 1,
         actualPageCount: 3,
         firstPage: 0,
@@ -42,10 +42,10 @@ describe('Component: Pagination', () => {
 
   it('should render correctly pagination for five pages (the five is actual page)', () => {
     const store = mockStore({
-      GUITARS: {
+      MainData: {
         pageCount: 5,
       },
-      USER: {
+      UserData: {
         actualPage: 5,
         actualPageCount: 5,
         firstPage: 3,
@@ -64,10 +64,10 @@ describe('Component: Pagination', () => {
 
   it('should render correctly pagination for five pages (the two is actual page)', () => {
     const store = mockStore({
-      GUITARS: {
+      MainData: {
         pageCount: 5,
       },
-      USER: {
+      UserData: {
         actualPage: 2,
         actualPageCount: 5,
         firstPage: 0,

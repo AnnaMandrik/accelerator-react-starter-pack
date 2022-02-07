@@ -4,6 +4,7 @@ import {useHistory} from 'react-router-dom';
 import {getUserSearching} from '../../store/user-data/selectors';
 import {fetchSearchingProductsUserAction} from '../../store/api-actions';
 import {AppRoute} from '../../const';
+import {getSortedResult} from '../../utils';
 
 
 function HeaderSearch(): JSX.Element {
@@ -12,10 +13,13 @@ function HeaderSearch(): JSX.Element {
   const guitarsList = useSelector(getUserSearching);
   const dispatch = useDispatch();
   const history = useHistory();
+
   const handleSearchChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setSearchString(evt.target.value);
     dispatch(fetchSearchingProductsUserAction(evt.target.value));
   };
+
+  const sortedResult = guitarsList && getSortedResult(guitarsList, searchString);
 
   return (
     <div className="form-search">
@@ -45,11 +49,10 @@ function HeaderSearch(): JSX.Element {
         className={`form-search__select-list ${!searchString ? 'hidden' : ''}`}
       >
         {
-          (!searchString && guitarsList.length)
+          (!searchString && sortedResult.length)
             ? ''
-            : guitarsList.map((guitar) => {
+            : sortedResult.map((guitar) => {
               const key = `${guitar.id}-${guitar.name}`;
-
               return (
                 <li className="form-search__select-item"
                   tabIndex={0}
@@ -69,7 +72,8 @@ function HeaderSearch(): JSX.Element {
                 >
                   {guitar.name}
                 </li>
-              );})
+              );
+            })
         }
       </ul>
     </div>

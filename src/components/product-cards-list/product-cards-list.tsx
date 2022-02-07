@@ -8,7 +8,7 @@ type ProductCardsListProps = {
 
 function ProductCardsList({productsList}: ProductCardsListProps): JSX.Element {
   return (
-    <div className="cards catalog__cards">
+    <div className="cards catalog__cards" data-testid="load-ok">
       {productsList.slice(0, ITEMS_PER_PAGE).map((guitar) => (
         <ProductCard key={guitar.id} guitar={guitar} /> ))}
     </div>

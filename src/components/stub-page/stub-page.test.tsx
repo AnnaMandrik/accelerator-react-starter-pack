@@ -4,12 +4,12 @@ import {Router} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { createMemoryHistory } from 'history';
-import ErrorPage from './error-page';
+import StubPage from './stub-page';
 
 const mockStore = configureMockStore();
 const history = createMemoryHistory();
 
-describe('Component: ErrorPage', () => {
+describe('Component: StubPage', () => {
   it('should render correctly', () => {
     const store = mockStore({
       MainData: {},
@@ -21,12 +21,12 @@ describe('Component: ErrorPage', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <ErrorPage />
+          <StubPage />
         </Router>
       </Provider>,
     );
 
-    expect(screen.getByText(/404 страница не найдена/)).toBeInTheDocument();
+    expect(screen.getByText(/Страница находится в разработке!/)).toBeInTheDocument();
     expect(screen.getByText(/Вернуться в каталог/)).toBeInTheDocument();
     expect(screen.getByTestId('go-back')).toBeInTheDocument();
   });

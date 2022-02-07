@@ -15,12 +15,12 @@ const history = createMemoryHistory();
 describe('Component: CatalogPage', () => {
   it('should render correctly', () => {
     const store = mockStore({
-      GUITARS: {
+      MainData: {
         productsList: fakeGuitars,
         pageCount: 3,
         isDataLoaded: true,
       },
-      USER: {
+      UserData: {
         minPrice: '5000',
         maxPrice: '15000',
         types: [],
@@ -31,7 +31,7 @@ describe('Component: CatalogPage', () => {
         actualPageCount: 0,
         firstPage: 1,
         lastPage: 3,
-        searchingGuitars: fakeGuitars,
+        searching: fakeGuitars,
       },
     });
 

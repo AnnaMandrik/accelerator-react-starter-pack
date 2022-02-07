@@ -34,6 +34,10 @@ const collectFilterInfo = (state: State): string => getFilterInfo(
   getSortingOrderInfo(state[NameDataList.UserData].sorting, state[NameDataList.UserData].order),
 );
 
-export {collectFilterInfo, getUserSearching, getIsFilterChecked, getUserActualPageCount, getUserFirstPage, getUserLastPage, getUserActualPage, getMinUserPrice, getMaxUserPrice, getUserType, getUserStrings, getUserSorting, getUserOrder};
+
+export {collectFilterInfo, getUserSearching,
+  getIsFilterChecked, getUserActualPageCount, getUserFirstPage,
+  getUserLastPage, getUserActualPage, getMinUserPrice, getMaxUserPrice,
+  getUserType, getUserStrings, getUserSorting, getUserOrder};
 
 

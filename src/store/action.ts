@@ -23,6 +23,7 @@ export const searchingProducts = createAction(
   }),
 );
 
+
 export const selectMinPrice = createAction(
   ActionType.SelectMinPrice,
   (minPrice: string) => ({

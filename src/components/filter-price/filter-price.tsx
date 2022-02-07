@@ -149,6 +149,7 @@ function FilterPrice(): JSX.Element {
             onChange={handleMinPriceChange}
             value={minUserPrice}
             onBlur={handleInputMinBlur}
+            data-testid="min-price"
           />
         </div>
         <div className="form-input">
@@ -162,6 +163,7 @@ function FilterPrice(): JSX.Element {
             onChange={handleMaxPriceChange}
             value={maxUserPrice}
             onBlur={handleInputMaxBlur}
+            data-testid="max-price"
           />
         </div>
       </div>
