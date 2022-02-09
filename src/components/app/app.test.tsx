@@ -14,6 +14,8 @@ const mockStore = configureMockStore([thunk]);
 const store = mockStore({
   MainData: {
     productsList: fakeGuitars,
+    minDefaultPrice: 1500,
+    maxDefaultPrice: 55000,
     isDataLoaded: true,
     pageCount: 3,
   },

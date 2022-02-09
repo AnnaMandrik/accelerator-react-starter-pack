@@ -1,4 +1,4 @@
-import {Parameter, ITEMS_PER_PAGE} from './const';
+import {Parameter, ITEMS_PER_PAGE, DIGIT_ZERO} from './const';
 import {Guitars, Guitar} from './types/guitar';
 
 export const getItemsPerPage = (page: number): string => {
@@ -62,4 +62,49 @@ export const getSortedResult = (data: Guitar[], searchTerm: string) => {
         : notMatchGuitars.push(item));
   }
   return [...matchGuitars, ...notMatchGuitars.sort(compareFunc)];
+};
+
+export const getCheckingMinPrice = (userPrice: number, minPrice: number, maxPrice: number, maxUserPrice: string): string => {
+  let price = userPrice;
+
+  if (price < minPrice || price === DIGIT_ZERO) {
+    price = minPrice;
+  }
+
+  if (price > maxPrice) {
+    price = maxPrice;
+  }
+
+  if (maxUserPrice !== '') {
+    const max = Number(maxUserPrice);
+
+    if (price > max) {
+      price = max;
+    }
+  }
+
+  return String(price);
+};
+
+
+export const getCheckingMaxPrice = (userPrice: number, minPrice: number, maxPrice: number, minUserPrice: string): string => {
+  let price = userPrice;
+
+  if (price < minPrice || price === DIGIT_ZERO) {
+    price = minPrice;
+  }
+
+  if (price > maxPrice) {
+    price = maxPrice;
+  }
+
+  if (minUserPrice !== '') {
+    const min = Number(minUserPrice);
+
+    if (price < min) {
+      price = min;
+    }
+  }
+
+  return String(price);
 };

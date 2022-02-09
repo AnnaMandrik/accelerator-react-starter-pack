@@ -9,6 +9,20 @@ export const loadProductCardsList = createAction(
   }),
 );
 
+export const loadMinDefaultPrice = createAction(
+  ActionType.LoadMinDefaultPrice,
+  (minPrice: number) => ({
+    payload: minPrice,
+  }),
+);
+
+export const loadMaxDefaultPrice = createAction(
+  ActionType.LoadMaxDefaultPrice,
+  (maxPrice: number) => ({
+    payload: maxPrice,
+  }),
+);
+
 export const loadPageCount = createAction(
   ActionType.LoadPageCount,
   (count: number) => ({

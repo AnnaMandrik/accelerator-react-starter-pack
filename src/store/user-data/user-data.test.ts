@@ -3,7 +3,8 @@ import {searchingProducts, selectMinPrice, selectMaxPrice, selectType, selectStr
   selectSorting, selectOrder, selectActualPage, selectActualPageCount, selectFirstPage,
   selectLastPage} from '../action';
 import {makeFakeGuitars} from '../../mocks';
-//prevFirstPage, prevLastPage, nextFirstPage, nextLastPage}
+
+
 const fakeGuitars = makeFakeGuitars();
 
 describe('Reducer: user-data', () => {
@@ -86,24 +87,4 @@ describe('Reducer: user-data', () => {
     expect(userData(state, selectLastPage(6)))
       .toEqual({...state, lastPage: 6});
   });
-
-  // it('should select previous before first page', () => {
-  //   expect(userData(state, prevFirstPage()))
-  //     .toEqual({...state, firstPage: 0});
-  // });
-
-  // it('should select previous before last page', () => {
-  //   expect(userData(state, prevLastPage()))
-  //     .toEqual({...state, lastPage: 9});
-  // });
-
-  // it('should select next from first page', () => {
-  //   expect(userData(state, nextFirstPage()))
-  //     .toEqual({...state, firstPage: 13});
-  // });
-
-  // it('should select next from last page', () => {
-  //   expect(userData(state, nextLastPage()))
-  //     .toEqual({...state, lastPage: 15});
-  // });
 });

@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router';
+import {Route, Switch} from 'react-router';
 import {useSelector} from 'react-redux';
 import {AppRoute, DEFAULT_PAGE} from '../../const';
 import CatalogPage from '../catalog-page/catalog-page';

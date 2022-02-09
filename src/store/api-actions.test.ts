@@ -6,7 +6,7 @@ import {createAPI} from '../services/api';
 import {State} from '../types/state';
 import {APIRoute} from '../const';
 import {fetchProductCardsListAction, fetchSearchingProductsUserAction} from './api-actions';
-import {loadPageCount, loadProductCardsList, searchingProducts} from './action';
+import {loadMaxDefaultPrice, loadMinDefaultPrice, loadPageCount, searchingProducts} from './action';
 import {HttpCode, makeFakeGuitars} from '../mocks';
 
 const fakeGuitar = makeFakeGuitars();
@@ -32,7 +32,8 @@ describe('Async actions', () => {
     await store.dispatch(fetchProductCardsListAction());
 
     expect(store.getActions()).toEqual([
-      loadProductCardsList(fakeGuitar),
+      loadMinDefaultPrice(1500),
+      loadMaxDefaultPrice(1500),
       loadPageCount(1),
     ]);
   });

@@ -5,6 +5,8 @@ import {AxiosInstance} from 'axios';
 export const enum ActionType {
   LoadProductCardsList = 'data/loadProductCardsList',
   LoadPageCount = 'data/loadPageCount',
+  LoadMinDefaultPrice = 'data/loadMinDefaultPrice',
+  LoadMaxDefaultPrice = 'data/loadMaxDefaultPrice',
   SearchingProducts = 'user/searchingProducts',
   SelectMinPrice ='user/selectMinPrice',
   SelectMaxPrice ='user/selectMaxPrice',

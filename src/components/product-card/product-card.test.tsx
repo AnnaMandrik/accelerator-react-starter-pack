@@ -16,8 +16,6 @@ describe('Component: ProductCard', () => {
       </Router>,
     );
 
-    expect(screen.getByAltText('Честер Plus')).toBeInTheDocument();
-    expect(screen.getByText('Честер Plus')).toBeInTheDocument();
     expect(screen.getByText('1500 ₽')).toBeInTheDocument();
     expect(screen.getByTestId('more')).toBeInTheDocument();
   });

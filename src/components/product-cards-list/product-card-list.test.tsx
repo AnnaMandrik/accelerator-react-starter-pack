@@ -17,6 +17,8 @@ describe('Component: ProductCardsList', () => {
     const store = mockStore({
       MainData: {
         productsList: fakeGuitars,
+        minDefaultPrice: 1500,
+        maxDefaultPrice: 15000,
         pageCount: 3,
         isDataLoaded: true,
       },

@@ -5,8 +5,8 @@ import {State} from '../../types/state';
 
 const getGuitars = (state: State): Guitars => state[NameDataList.MainData].productsList;
 const getIsLoaded = (state: State): boolean => state[NameDataList.MainData].isDataLoaded;
-const getDefaultMinPrice = (state: State): number => Math.min(...state[NameDataList.MainData].productsList.map((guitar) => guitar.price));
-const getDefaultMaxPrice = (state: State): number => Math.max(...state[NameDataList.MainData].productsList.map((guitar) => guitar.price));
+const getDefaultMinPrice = (state: State): number => state[NameDataList.MainData].minDefaultPrice;
+const getDefaultMaxPrice = (state: State): number => state[NameDataList.MainData].maxDefaultPrice;
 const getPagesCount = (state: State): number => state[NameDataList.MainData].pageCount;
 
 

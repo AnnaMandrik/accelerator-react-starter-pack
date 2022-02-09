@@ -1,7 +1,6 @@
 import {useSelector, useDispatch} from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import {Link} from 'react-router-dom';
+import {useEffect} from 'react';
+import {Link, useLocation} from 'react-router-dom';
 import Filter from '../filter/filter';
 import Sorting from '../sorting/sorting';
 import ErrorPage from '../error-page/error-page';

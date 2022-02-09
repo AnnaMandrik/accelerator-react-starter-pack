@@ -4,6 +4,8 @@ import {Guitars} from './guitar';
 export type MainData = {
   productsList: Guitars,
   isDataLoaded: boolean,
+  minDefaultPrice: number,
+  maxDefaultPrice: number,
   pageCount: number,
 };
 

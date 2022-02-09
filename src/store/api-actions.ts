@@ -2,14 +2,18 @@ import {toast} from 'react-toastify';
 import {ThunkActionResult} from '../types/action';
 import {APIRoute, ITEMS_PER_PAGE, ErrorText} from '../const';
 import {Guitars} from '../types/guitar';
-import {loadProductCardsList, loadPageCount, selectActualPageCount, searchingProducts} from './action';
+import {loadProductCardsList, loadPageCount, selectActualPageCount, searchingProducts, loadMinDefaultPrice, loadMaxDefaultPrice} from './action';
 
 export const fetchProductCardsListAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     try {
       const {data} = await api.get<Guitars>(APIRoute.Guitars);
+      const minPrice = Math.min(...data.map((guitar) => guitar.price));
+      const maxPrice = Math.max(...data.map((guitar) => guitar.price));
       const pageCount = Math.ceil(data.length / ITEMS_PER_PAGE);
-      dispatch(loadProductCardsList(data));
+
+      dispatch(loadMinDefaultPrice(minPrice));
+      dispatch(loadMaxDefaultPrice(maxPrice));
       dispatch(loadPageCount(pageCount));
     } catch {
       toast.info(ErrorText.LoadData);

@@ -17,6 +17,8 @@ describe('Component: CatalogPage', () => {
     const store = mockStore({
       MainData: {
         productsList: fakeGuitars,
+        minDefaultPrice: 1500,
+        maxDefaultPrice: 45000,
         pageCount: 3,
         isDataLoaded: true,
       },

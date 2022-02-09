@@ -3,10 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useLocation} from 'react-router-dom';
 import {selectType, selectStrings, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 import {getUserType, getUserStrings} from '../../store/user-data/selectors';
-//import {fetchFilterUserAction} from '../../store/api-actions';
 import FilterPrice from '../filter-price/filter-price';
 import {TYPE_NAMES, AppRoute, DEFAULT_PAGE, CountOfPages, STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
-// import {getItemsPerPage} from '../../utils';
 import browserHistory from '../../browser-history';
 
 
@@ -25,7 +23,6 @@ function Filter(): JSX.Element {
 
   const userType = useSelector(getUserType);
   const userStrings = useSelector(getUserStrings);
-  //const filterInfo = useSelector(collectFilterInfo);
 
   const [types, setTypes] = useState<boolean[]>(new Array(TYPES_QUANTITY).fill(false));
   const [strings, setStrings] = useState<boolean[]>(new Array(STRINGS_QUANTITY).fill(false));
