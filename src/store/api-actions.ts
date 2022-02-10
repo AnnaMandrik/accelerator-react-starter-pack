@@ -12,19 +12,10 @@ export const fetchProductCardsListAction = (): ThunkActionResult =>
       const maxPrice = Math.max(...data.map((guitar) => guitar.price));
       const pageCount = Math.ceil(data.length / ITEMS_PER_PAGE);
 
+      dispatch(loadProductCardsList(data));
       dispatch(loadMinDefaultPrice(minPrice));
       dispatch(loadMaxDefaultPrice(maxPrice));
       dispatch(loadPageCount(pageCount));
-    } catch {
-      toast.info(ErrorText.LoadData);
-    }
-  };
-
-export const fetchSearchingProductsUserAction = (text: string): ThunkActionResult =>
-  async (dispatch, _getState, api): Promise<void> => {
-    try {
-      const {data} = await api.get<Guitars>(`${APIRoute.Guitars}?name_like=${text}`);
-      dispatch(searchingProducts(data));
     } catch {
       toast.info(ErrorText.LoadData);
     }
@@ -38,6 +29,16 @@ export const fetchFilterUserAction = (pageItems: string, filter: string): ThunkA
       const {data} = await api.get<Guitars>(`${APIRoute.Guitars}?${pageItems}${filter}`);
       dispatch(loadProductCardsList(data));
       dispatch(selectActualPageCount(actualPageCount));
+    } catch {
+      toast.info(ErrorText.LoadData);
+    }
+  };
+
+export const fetchSearchingProductsUserAction = (text: string): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    try {
+      const {data} = await api.get<Guitars>(`${APIRoute.Guitars}?name_like=${text}`);
+      dispatch(searchingProducts(data));
     } catch {
       toast.info(ErrorText.LoadData);
     }

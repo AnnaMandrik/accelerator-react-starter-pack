@@ -31,7 +31,7 @@ function Sorting():JSX.Element {
     }
     setActualSort(sortType);
     dispatch(selectSorting(sortType));
-    searchParams.set('sort', sortType);
+    // searchParams.set('sort', sortType);
 
     browserHistory.push(`${location.pathname}?${searchParams.toString()}`);
   };
@@ -43,7 +43,7 @@ function Sorting():JSX.Element {
     }
     setActualOrder(orderType);
     dispatch(selectOrder(orderType));
-    searchParams.set('order', orderType);
+    // searchParams.set('order', orderType);
 
     browserHistory.push(`${location.pathname}?${searchParams.toString()}`);
   };

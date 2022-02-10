@@ -5,7 +5,7 @@ import {getPagesCount} from '../../store/main-data/selectors';
 import {getUserActualPage, getIsFilterChecked, getUserActualPageCount, getUserFirstPage, getUserLastPage} from '../../store/user-data/selectors';
 import {selectActualPage, nextFirstPage, nextLastPage, prevFirstPage, prevLastPage} from '../../store/action';
 import browserHistory from '../../browser-history';
-import {getItems} from '../../utils';
+
 
 function Pagination(): JSX.Element {
   const isFilter = useSelector(getIsFilterChecked);
@@ -24,18 +24,6 @@ function Pagination(): JSX.Element {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
-  const handlePageChange = (page: number): void => {
-    const actualItemsOnPage = getItems(page);
-
-    searchParams.has('_start')
-      ? searchParams.set('_start', String(actualItemsOnPage.firstItem))
-      : searchParams.append('_start', String(actualItemsOnPage.firstItem));
-    searchParams.has('_end')
-      ? searchParams.set('_end', String(actualItemsOnPage.lastItem))
-      : searchParams.append('_end', String(actualItemsOnPage.lastItem));
-
-    browserHistory.push(AppRoute.Page.replace(':page', `page_${page}/?${searchParams.toString()}`));
-  };
 
   return (
     <div className="pagination page-content__pagination">
@@ -55,8 +43,8 @@ function Pagination(): JSX.Element {
                   dispatch(prevLastPage());
                 }
 
-                dispatch(selectActualPage(currentPage - 1));
-                handlePageChange(currentPage - 1);
+                dispatch(selectActualPage(currentPage));
+                browserHistory.push(AppRoute.Page.replace(':page', `page_${currentPage}/?${searchParams.toString()}`));
               }}
             >
               Назад
@@ -75,7 +63,7 @@ function Pagination(): JSX.Element {
                   onClick={(evt) => {
                     evt.preventDefault();
                     dispatch(selectActualPage(page));
-                    handlePageChange(page);
+                    browserHistory.push(AppRoute.Page.replace(':page', `page_${page}/?${searchParams.toString()}`));
                   }}
                 >
                   {page}
@@ -101,7 +89,7 @@ function Pagination(): JSX.Element {
                 }
 
                 dispatch(selectActualPage(currentPage));
-                handlePageChange(currentPage);
+                browserHistory.push(AppRoute.Page.replace(':page', `page_${currentPage}/?${searchParams.toString()}`));
               }}
             >
               Далее
