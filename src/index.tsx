@@ -8,7 +8,6 @@ import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import App from './components/app/app';
 import {createAPI} from './services/api';
-import {fetchProductCardsListAction} from './store/api-actions';
 import browserHistory from './browser-history';
 
 
@@ -24,7 +23,6 @@ const store = configureStore({
     }),
 });
 
-store.dispatch(fetchProductCardsListAction());
 
 ReactDOM.render(
   <React.StrictMode>

@@ -69,6 +69,7 @@ const FILTER_OF_TYPES_STRINGS = [FilterOfTypesStrings.ACOUSTIC, FilterOfTypesStr
 const TYPE_NAMES = ['acoustic', 'electric', 'ukulele'];
 const DEFAULT_PAGE = 1;
 const STEP_OF_COUNT = 3;
+const HEADER_TOTAL_COUNT = 'x-total-count';
 
 const enum CountOfPages {
   First = 0,
@@ -104,5 +105,5 @@ export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO, STRINGS,
   TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS,
   DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, ErrorText, TYPE_NAMES,
-  FOOTER_NAV, socialsNets};
+  FOOTER_NAV, socialsNets, HEADER_TOTAL_COUNT};
 

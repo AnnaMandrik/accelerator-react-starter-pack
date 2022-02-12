@@ -5,6 +5,7 @@ import {getPagesCount} from '../../store/main-data/selectors';
 import {getUserActualPage, getIsFilterChecked, getUserActualPageCount, getUserFirstPage, getUserLastPage} from '../../store/user-data/selectors';
 import {selectActualPage, nextFirstPage, nextLastPage, prevFirstPage, prevLastPage} from '../../store/action';
 import browserHistory from '../../browser-history';
+import { memo } from 'react';
 
 
 function Pagination(): JSX.Element {
@@ -56,10 +57,10 @@ function Pagination(): JSX.Element {
             const key = `${page}-page`;
 
             return (
-              <li key={key} className={`pagination__page${(page === actualPage) ? ' pagination__page--active' : ''}`}>
+              <li key={key} className="pagination__page">
                 <a
                   href="##"
-                  className= "link pagination__page-link"
+                  className= {`link pagination__page-link${(page === actualPage) ? ' pagination__page--active' : ''}`}
                   onClick={(evt) => {
                     evt.preventDefault();
                     dispatch(selectActualPage(page));
@@ -73,7 +74,7 @@ function Pagination(): JSX.Element {
           })
         }
         {
-          (actualPage !== actualPageCount) &&
+          (actualPage !== actualPageCount && actualPageCount !== 0) &&
 
           <li className="pagination__page pagination__page--next" id="next">
             <a
@@ -101,4 +102,4 @@ function Pagination(): JSX.Element {
   );
 }
 
-export default Pagination;
+export default memo(Pagination);

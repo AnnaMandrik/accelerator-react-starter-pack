@@ -11,15 +11,15 @@ export const loadProductCardsList = createAction(
 
 export const loadMinDefaultPrice = createAction(
   ActionType.LoadMinDefaultPrice,
-  (minPrice: number) => ({
-    payload: minPrice,
+  (min: number) => ({
+    payload: min,
   }),
 );
 
 export const loadMaxDefaultPrice = createAction(
   ActionType.LoadMaxDefaultPrice,
-  (maxPrice: number) => ({
-    payload: maxPrice,
+  (max: number) => ({
+    payload: max,
   }),
 );
 
@@ -32,8 +32,8 @@ export const loadPageCount = createAction(
 
 export const searchingProducts = createAction(
   ActionType.SearchingProducts,
-  (searching: Guitars) => ({
-    payload: searching,
+  (productsList: Guitars) => ({
+    payload: productsList,
   }),
 );
 

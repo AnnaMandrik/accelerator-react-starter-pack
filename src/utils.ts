@@ -1,5 +1,6 @@
-import {Parameter, ITEMS_PER_PAGE, DIGIT_ZERO} from './const';
+import {ITEMS_PER_PAGE, DIGIT_ZERO, Parameter} from './const';
 import {Guitars, Guitar} from './types/guitar';
+
 
 export const getItemsPerPage = (page: number): string => {
   const firstItem = page * ITEMS_PER_PAGE - ITEMS_PER_PAGE;

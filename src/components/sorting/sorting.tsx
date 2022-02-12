@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, memo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import browserHistory from '../../browser-history';
@@ -6,6 +6,7 @@ import {SortKey, OrderKey} from '../../const';
 import {selectSorting, selectOrder} from '../../store/action';
 import {getUserOrder, getUserSorting} from '../../store/user-data/selectors';
 import './sorting.css';
+
 
 function Sorting():JSX.Element {
   const location = useLocation();
@@ -31,7 +32,7 @@ function Sorting():JSX.Element {
     }
     setActualSort(sortType);
     dispatch(selectSorting(sortType));
-    // searchParams.set('sort', sortType);
+    searchParams.set('sort', sortType);
 
     browserHistory.push(`${location.pathname}?${searchParams.toString()}`);
   };
@@ -43,7 +44,7 @@ function Sorting():JSX.Element {
     }
     setActualOrder(orderType);
     dispatch(selectOrder(orderType));
-    // searchParams.set('order', orderType);
+    searchParams.set('order', orderType);
 
     browserHistory.push(`${location.pathname}?${searchParams.toString()}`);
   };
@@ -91,4 +92,4 @@ function Sorting():JSX.Element {
   );
 }
 
-export default Sorting;
+export default memo(Sorting);

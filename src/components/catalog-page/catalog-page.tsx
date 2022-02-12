@@ -8,7 +8,7 @@ import ProductCardsList from '../product-cards-list/product-cards-list';
 import Pagination from '../pagination/pagination';
 import {getGuitars} from '../../store/main-data/selectors';
 import {selectOrder, selectSorting, selectStrings, selectType, selectActualPage, selectFirstPage, selectLastPage, selectMinPrice, selectMaxPrice} from '../../store/action';
-import {fetchFilterUserAction} from '../../store/api-actions';
+import {fetchFilterUserAction, fetchDefaultMinPriceAction} from '../../store/api-actions';
 import {getUserActualPageCount, collectFilterInfo} from '../../store/user-data/selectors';
 import {getItemsPerPage, getItems} from '../../utils';
 import Header from '../header/header';
@@ -16,6 +16,7 @@ import Footer from '../footer/footer';
 import {CountOfPages, STEP_OF_COUNT} from '../../const';
 import {getIsLoaded} from '../../store/main-data/selectors';
 import {AppRoute} from '../../const';
+import Spinner from '../spinner/spinner';
 
 
 type CatalogPageProps = {
@@ -24,7 +25,7 @@ type CatalogPageProps = {
 
 function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
   const guitarsList = useSelector(getGuitars);
-  const pageCount = useSelector(getUserActualPageCount);
+  const actualPageCount = useSelector(getUserActualPageCount);
   const filter = useSelector(collectFilterInfo);
   const isLoaded = useSelector(getIsLoaded);
 
@@ -32,6 +33,7 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+
 
   useEffect(() => {
     const searchAllParams = {
@@ -98,9 +100,14 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
   useEffect(() => {
     const pageItems = getItemsPerPage(actualPage);
     dispatch(fetchFilterUserAction(pageItems, filter));
-  }, [actualPage, pageCount, filter, dispatch]);
+    dispatch(fetchDefaultMinPriceAction());
+  }, [actualPage, filter, dispatch]);
 
-  if (isLoaded && (actualPage > pageCount) && (pageCount !== 0)) {
+  if (!isLoaded) {
+    return <Spinner/>;
+  }
+
+  if (isLoaded && (actualPage > actualPageCount) && (actualPageCount !== 0)) {
     return <ErrorPage />;
   }
 

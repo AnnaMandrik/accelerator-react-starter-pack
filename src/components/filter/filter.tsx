@@ -139,6 +139,7 @@ function Filter(): JSX.Element {
                   type="checkbox"
                   id={`${countOfString}-strings`}
                   name={`${countOfString}-strings`}
+                  value={countOfString}
                   checked={userStrings.includes(String(countOfString))}
                   onChange={({target}: ChangeEvent<HTMLInputElement>) => {
                     const value = target.checked;

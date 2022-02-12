@@ -1,34 +1,46 @@
 import {toast} from 'react-toastify';
 import {ThunkActionResult} from '../types/action';
-import {APIRoute, ITEMS_PER_PAGE, ErrorText} from '../const';
+import {APIRoute, ITEMS_PER_PAGE, ErrorText, HEADER_TOTAL_COUNT, DIGIT_ZERO} from '../const';
 import {Guitars} from '../types/guitar';
 import {loadProductCardsList, loadPageCount, selectActualPageCount, searchingProducts, loadMinDefaultPrice, loadMaxDefaultPrice} from './action';
 
-export const fetchProductCardsListAction = (): ThunkActionResult =>
+
+export const fetchFilterUserAction = (pageItems: string, filter: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     try {
-      const {data} = await api.get<Guitars>(APIRoute.Guitars);
-      const minPrice = Math.min(...data.map((guitar) => guitar.price));
-      const maxPrice = Math.max(...data.map((guitar) => guitar.price));
-      const pageCount = Math.ceil(data.length / ITEMS_PER_PAGE);
+      const {data, headers} = await api.get<Guitars>(`${APIRoute.Guitars}?${pageItems}${filter}`);
+      const productCardItems = headers[HEADER_TOTAL_COUNT];
+      const pageCount = Math.ceil(productCardItems / ITEMS_PER_PAGE);
+      const actualPageCount = Math.ceil(productCardItems / ITEMS_PER_PAGE);
 
       dispatch(loadProductCardsList(data));
-      dispatch(loadMinDefaultPrice(minPrice));
-      dispatch(loadMaxDefaultPrice(maxPrice));
+      dispatch(selectActualPageCount(actualPageCount));
       dispatch(loadPageCount(pageCount));
     } catch {
       toast.info(ErrorText.LoadData);
     }
   };
 
-export const fetchFilterUserAction = (pageItems: string, filter: string): ThunkActionResult =>
+export const fetchDefaultMinPriceAction =(): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     try {
-      const allData = (await api.get<Guitars>(`${APIRoute.Guitars}?${filter}`)).data;
-      const actualPageCount = Math.ceil(allData.length / ITEMS_PER_PAGE);
-      const {data} = await api.get<Guitars>(`${APIRoute.Guitars}?${pageItems}${filter}`);
-      dispatch(loadProductCardsList(data));
-      dispatch(selectActualPageCount(actualPageCount));
+      const {data, headers} = await api.get<Guitars>(
+        `${APIRoute.Guitars}?_sort=price&_start=${DIGIT_ZERO}&_end=${DIGIT_ZERO + 1}`);
+
+      dispatch(loadMinDefaultPrice(data[DIGIT_ZERO].price));
+      dispatch(fetchDefaultMaxPriceAction(headers[HEADER_TOTAL_COUNT]));
+    } catch {
+      toast.info(ErrorText.LoadData);
+    }
+  };
+
+export const fetchDefaultMaxPriceAction =(productsCount: number): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    try {
+      const {data} = await api.get<Guitars>(
+        `${APIRoute.Guitars}?_sort=price&_start=${productsCount - 1}&_end=${productsCount}`);
+
+      dispatch(loadMaxDefaultPrice(data[DIGIT_ZERO].price));
     } catch {
       toast.info(ErrorText.LoadData);
     }

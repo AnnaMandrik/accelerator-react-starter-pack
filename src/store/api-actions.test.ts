@@ -5,11 +5,13 @@ import {configureMockStore} from '@jedmao/redux-mock-store';
 import {createAPI} from '../services/api';
 import {State} from '../types/state';
 import {APIRoute} from '../const';
-import {fetchProductCardsListAction, fetchSearchingProductsUserAction} from './api-actions';
-import {loadMaxDefaultPrice, loadMinDefaultPrice, loadPageCount, searchingProducts} from './action';
+import {fetchFilterUserAction, fetchSearchingProductsUserAction} from './api-actions';
+import {loadProductCardsList, searchingProducts} from './action';
 import {HttpCode, makeFakeGuitars} from '../mocks';
 
 const fakeGuitar = makeFakeGuitars();
+const pageItems = '';
+const filter = '';
 describe('Async actions', () => {
   const api = createAPI();
   const mockAPI = new MockAdapter(api);
@@ -25,16 +27,14 @@ describe('Async actions', () => {
 
 
     mockAPI
-      .onGet(APIRoute.Guitars)
+      .onGet(`${APIRoute.Guitars}?${pageItems}${filter}`)
       .reply(HttpCode.Ok, fakeGuitar);
 
     const store = mockStore();
-    await store.dispatch(fetchProductCardsListAction());
+    await store.dispatch(fetchFilterUserAction(pageItems, filter));
 
     expect(store.getActions()).toEqual([
-      loadMinDefaultPrice(1500),
-      loadMaxDefaultPrice(1500),
-      loadPageCount(1),
+      loadProductCardsList(fakeGuitar),
     ]);
   });
 

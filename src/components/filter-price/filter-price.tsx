@@ -1,12 +1,12 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {useRef, FormEvent, useEffect, useState} from 'react';
+import {useRef, FormEvent, useEffect, useState, memo} from 'react';
 import {useLocation} from 'react-router-dom';
 import {getDefaultMinPrice, getDefaultMaxPrice} from '../../store/main-data/selectors';
 import {getMaxUserPrice, getMinUserPrice} from '../../store/user-data/selectors';
 import {FilterOfPrices, DEFAULT_PAGE, CountOfPages, AppRoute} from '../../const';
 import {selectMaxPrice, selectMinPrice, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 import browserHistory from '../../browser-history';
-import {getCheckingMinPrice, getCheckingMaxPrice} from '../../utils';
+import {getCheckingMinPrice, getCheckingMaxPrice, getItems} from '../../utils';
 
 
 function FilterPrice(): JSX.Element {
@@ -33,27 +33,37 @@ function FilterPrice(): JSX.Element {
 
 
   const handleInputBlur = (evt: FormEvent<HTMLInputElement>) => {
-    const userPrice = Number(evt.currentTarget.value);
-
     switch (evt.currentTarget.id) {
       case FilterOfPrices.PRICE_MIN.id: {
+        if (evt.currentTarget.value) {
+          setMinPrice(evt.currentTarget.value);
+          dispatch(selectMinPrice(evt.currentTarget.value));
+          searchParams.delete('price_gte');
+        }
+        const userPrice = Number(evt.currentTarget.value);
         const checkedMinPrice = getCheckingMinPrice(userPrice, minDefaultPrice, maxDefaultPrice, maxPrice);
         setMinPrice(checkedMinPrice);
         dispatch(selectMinPrice(checkedMinPrice));
 
-        // searchParams.has('price_gte')
-        //   ? searchParams.set('price_gte', checkedMinPrice)
-        //   : searchParams.append('price_gte', checkedMinPrice);
+        searchParams.has('price_gte')
+          ? searchParams.set('price_gte', checkedMinPrice)
+          : searchParams.append('price_gte', checkedMinPrice);
         break;
       }
       case FilterOfPrices.PRICE_MAX.id: {
+        if (evt.currentTarget.value) {
+          setMaxPrice(evt.currentTarget.value);
+          dispatch(selectMaxPrice(evt.currentTarget.value));
+          searchParams.delete('price_gte');
+        }
+        const userPrice = Number(evt.currentTarget.value);
         const checkedMaxPrice = getCheckingMaxPrice(userPrice, minDefaultPrice, maxDefaultPrice, minPrice);
         setMaxPrice(checkedMaxPrice);
         dispatch(selectMaxPrice(checkedMaxPrice));
 
-        // searchParams.has('price_lte')
-        //   ? searchParams.set('price_lte', checkedMaxPrice)
-        //   : searchParams.append('price_lte', checkedMaxPrice);
+        searchParams.has('price_lte')
+          ? searchParams.set('price_lte', checkedMaxPrice)
+          : searchParams.append('price_lte', checkedMaxPrice);
         break;
       }
       default:
@@ -63,14 +73,14 @@ function FilterPrice(): JSX.Element {
     dispatch(selectFirstPage(CountOfPages.First));
     dispatch(selectLastPage(CountOfPages.Last));
     dispatch(selectActualPage(DEFAULT_PAGE));
-    //const actualItemsOnPage = getItems(DEFAULT_PAGE);
+    const actualItemsOnPage = getItems(DEFAULT_PAGE);
 
-    // searchParams.has('price_gte')
-    //   ? searchParams.set('_start', String(actualItemsOnPage.firstItem))
-    //   : searchParams.append('_start', String(actualItemsOnPage.firstItem));
-    // searchParams.has('_end')
-    //   ? searchParams.set('_end', String(actualItemsOnPage.lastItem))
-    //   : searchParams.append('_end', String(actualItemsOnPage.lastItem));
+    searchParams.has('_start')
+      ? searchParams.set('_start', String(actualItemsOnPage.firstItem))
+      : searchParams.append('_start', String(actualItemsOnPage.firstItem));
+    searchParams.has('_end')
+      ? searchParams.set('_end', String(actualItemsOnPage.lastItem))
+      : searchParams.append('_end', String(actualItemsOnPage.lastItem));
 
     browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
   };
@@ -113,4 +123,4 @@ function FilterPrice(): JSX.Element {
   );
 }
 
-export default FilterPrice;
+export default memo(FilterPrice);
