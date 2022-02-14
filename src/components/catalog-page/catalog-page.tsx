@@ -8,7 +8,7 @@ import ProductCardsList from '../product-cards-list/product-cards-list';
 import Pagination from '../pagination/pagination';
 import {getGuitars} from '../../store/main-data/selectors';
 import {selectOrder, selectSorting, selectStrings, selectType, selectActualPage, selectFirstPage, selectLastPage, selectMinPrice, selectMaxPrice} from '../../store/action';
-import {fetchFilterUserAction, fetchDefaultMinPriceAction} from '../../store/api-actions';
+import {fetchFilterUserAction, fetchDefaultMinPriceAction, fetchCatalogPageAction} from '../../store/api-actions';
 import {getUserActualPageCount, collectFilterInfo} from '../../store/user-data/selectors';
 import {getItemsPerPage, getItems} from '../../utils';
 import Header from '../header/header';
@@ -42,8 +42,8 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
       max: searchParams.get('price_lte'),
       types: searchParams.getAll('type'),
       strings: searchParams.getAll('stringCount'),
-      sortingType: searchParams.get('sort'),
-      sortingOrder: searchParams.get('order'),
+      sortingType: searchParams.get('_sort'),
+      sortingOrder: searchParams.get('_order'),
     };
 
     if (searchAllParams.min !== null) {
@@ -96,12 +96,19 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
     }
   });
 
-
   useEffect(() => {
     const pageItems = getItemsPerPage(actualPage);
     dispatch(fetchFilterUserAction(pageItems, filter));
+  }, [filter, dispatch]);
+
+  useEffect(() => {
+    const pageItems = getItemsPerPage(actualPage);
+    dispatch (fetchCatalogPageAction(pageItems, filter));
+  }, [actualPage, dispatch]);
+
+  useEffect(() => {
     dispatch(fetchDefaultMinPriceAction());
-  }, [actualPage, filter, dispatch]);
+  }, []);
 
   if (!isLoaded) {
     return <Spinner/>;

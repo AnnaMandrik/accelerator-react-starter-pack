@@ -32,7 +32,7 @@ function Sorting():JSX.Element {
     }
     setActualSort(sortType);
     dispatch(selectSorting(sortType));
-    searchParams.set('sort', sortType);
+    searchParams.set('_sort', sortType);
 
     browserHistory.push(`${location.pathname}?${searchParams.toString()}`);
   };
@@ -41,10 +41,11 @@ function Sorting():JSX.Element {
     if (actualSort === '') {
       setActualSort(SortKey.Price);
       dispatch(selectSorting(SortKey.Price));
+      searchParams.set('sort', SortKey.Price);
     }
     setActualOrder(orderType);
     dispatch(selectOrder(orderType));
-    searchParams.set('order', orderType);
+    searchParams.set('_order', orderType);
 
     browserHistory.push(`${location.pathname}?${searchParams.toString()}`);
   };

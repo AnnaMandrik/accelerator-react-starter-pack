@@ -5,9 +5,10 @@ import {configureMockStore} from '@jedmao/redux-mock-store';
 import {createAPI} from '../services/api';
 import {State} from '../types/state';
 import {APIRoute} from '../const';
-import {fetchFilterUserAction, fetchSearchingProductsUserAction} from './api-actions';
+import {fetchCatalogPageAction, fetchSearchingProductsUserAction} from './api-actions';
 import {loadProductCardsList, searchingProducts} from './action';
 import {HttpCode, makeFakeGuitars} from '../mocks';
+
 
 const fakeGuitar = makeFakeGuitars();
 const pageItems = '';
@@ -31,7 +32,7 @@ describe('Async actions', () => {
       .reply(HttpCode.Ok, fakeGuitar);
 
     const store = mockStore();
-    await store.dispatch(fetchFilterUserAction(pageItems, filter));
+    await store.dispatch(fetchCatalogPageAction(pageItems, filter));
 
     expect(store.getActions()).toEqual([
       loadProductCardsList(fakeGuitar),

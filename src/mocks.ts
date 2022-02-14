@@ -2,7 +2,7 @@ import {Guitars, Guitar} from './types/guitar';
 import {image, music, name} from 'faker';
 
 enum Count {
-  GuitarsTest = 5,
+  GuitarsTest = 18,
   CommentsTest = 15,
 }
 

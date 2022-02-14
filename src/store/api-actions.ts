@@ -4,6 +4,17 @@ import {APIRoute, ITEMS_PER_PAGE, ErrorText, HEADER_TOTAL_COUNT, DIGIT_ZERO} fro
 import {Guitars} from '../types/guitar';
 import {loadProductCardsList, loadPageCount, selectActualPageCount, searchingProducts, loadMinDefaultPrice, loadMaxDefaultPrice} from './action';
 
+export const fetchCatalogPageAction = (pageItems: string, filter: string): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    try {
+      const {data} = await api.get<Guitars>(`${APIRoute.Guitars}?${pageItems}${filter}`);
+      dispatch(loadProductCardsList(data));
+
+    } catch {
+      toast.info(ErrorText.LoadData);
+    }
+  };
+
 
 export const fetchFilterUserAction = (pageItems: string, filter: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {

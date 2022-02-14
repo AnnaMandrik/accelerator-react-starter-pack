@@ -1,4 +1,4 @@
-import {ITEMS_PER_PAGE, DIGIT_ZERO, Parameter} from './const';
+import {ITEMS_PER_PAGE, DIGIT_ZERO} from './const';
 import {Guitars, Guitar} from './types/guitar';
 
 
@@ -13,33 +13,41 @@ export const getItems = (page: number) => ({
   lastItem: page * ITEMS_PER_PAGE,
 });
 
-export const getFilterInfo = (min: string, max: string, types: string[], strings: string[], sorting: string): string => {
-  let filterRange = '';
+export const getFilterInfo = (min: string, max: string, types: string[], strings: string[], sorting: string, order: string): string => {
+  let priceGteQuery = '';
+  let priceLteQuery = '';
+  let sortingQuery = '';
+  let orderQuery = '';
+  let typeQuery = '';
+  let stringsQuery = '';
 
   if (min !== '') {
-    filterRange += `&price_gte=${min}`;
+    priceGteQuery += `price_gte=${min}`;
   }
 
   if (max !== '') {
-    filterRange += `&price_lte=${max}`;
+    priceLteQuery += `price_lte=${max}`;
   }
 
   if (sorting !== '') {
-    filterRange += sorting;
+    sortingQuery +=  `_sort=${sorting}`;
+  }
+
+  if (order !== '') {
+    orderQuery +=  `_order=${order}`;
   }
 
   if (types.length !== 0) {
-    filterRange += `&type=${types.join('&type=')}`;
+    typeQuery += `type=${types.join('&type=')}`;
   }
   if (strings.length !== 0) {
-    filterRange += `&stringCount=${strings.join('&stringCount=')}`;
+    stringsQuery += `stringCount=${strings.join('stringCount=')}`;
   }
 
-  return filterRange;
+  const fullQuery = [priceGteQuery, priceLteQuery, sortingQuery, orderQuery, typeQuery, stringsQuery].filter((query) => query !== '').join('&');
+  return `&${fullQuery}`;
 };
 
-
-export const getSortingOrderInfo = (sort: string, order: string): string => `${sort && `&_${Parameter.Sort}=${sort}`}${order && `&_${Parameter.Order}=${order}`}`;
 
 export const compareFunc = (guitarA: Guitar, guitarB: Guitar) => {
   if (guitarA.name < guitarB.name) {

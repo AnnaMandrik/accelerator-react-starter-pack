@@ -1,6 +1,6 @@
 import {State} from '../../types/state';
 import {NameDataList} from '../root-reducer';
-import {getFilterInfo, getSortingOrderInfo} from '../../utils';
+import {getFilterInfo} from '../../utils';
 
 const getUserSearching = (state: State) => state[NameDataList.UserData].searching;
 const getMinUserPrice = (state: State): string => state[NameDataList.UserData].minPrice;
@@ -31,7 +31,8 @@ const collectFilterInfo = (state: State): string => getFilterInfo(
   state[NameDataList.UserData].maxPrice,
   state[NameDataList.UserData].types,
   state[NameDataList.UserData].strings,
-  getSortingOrderInfo(state[NameDataList.UserData].sorting, state[NameDataList.UserData].order),
+  state[NameDataList.UserData].sorting,
+  state[NameDataList.UserData].order,
 );
 
 

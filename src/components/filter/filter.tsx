@@ -1,20 +1,24 @@
-import {ChangeEvent, useEffect, useState} from 'react';
+import {ChangeEvent, memo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation} from 'react-router-dom';
 import {selectType, selectStrings, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 import {getUserType, getUserStrings} from '../../store/user-data/selectors';
 import FilterPrice from '../filter-price/filter-price';
-import {TYPE_NAMES, AppRoute, DEFAULT_PAGE, CountOfPages, STRINGS, TYPES_QUANTITY, STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
+import {DEFAULT_PAGE, CountOfPages, AppRoute} from '../../const';
 import browserHistory from '../../browser-history';
+import {GuitarsType, StringCount} from '../../const';
+import useUncheck from '../../hooks/use-uncheck/use-uncheck';
+import useDisable from '../../hooks/use-disable/use-disable';
+import {GuitarType, StringType} from '../../types/guitar';
 
 
-const allTypes = (factTypes: string[], type: string): string[] => {
-  if (factTypes.includes(type)) {
-    return factTypes.filter((factType) => factType !== type);
-  }
+// const allTypes = (factTypes: string[], type: string): string[] => {
+//   if (factTypes.includes(type)) {
+//     return factTypes.filter((factType) => factType !== type);
+//   }
 
-  return [...factTypes, type];
-};
+//   return [...factTypes, type];
+// };
 
 
 function Filter(): JSX.Element {
@@ -24,60 +28,61 @@ function Filter(): JSX.Element {
   const userType = useSelector(getUserType);
   const userStrings = useSelector(getUserStrings);
 
-  const [types, setTypes] = useState<boolean[]>(new Array(TYPES_QUANTITY).fill(false));
-  const [strings, setStrings] = useState<boolean[]>(new Array(STRINGS_QUANTITY).fill(false));
-  const [availableStrings, setAvailableStrings] = useState<number[]>(STRINGS);
-  const [availableTypes, setAvailableTypes] = useState<string[]>(TYPE_NAMES);
+  // const [types, setTypes] = useState<boolean[]>(new Array(TYPES_QUANTITY).fill(false));
+  // const [strings, setStrings] = useState<boolean[]>(new Array(STRINGS_QUANTITY).fill(false));
+  // const [availableStrings, setAvailableStrings] = useState<number[]>(STRINGS);
+  // const [availableTypes, setAvailableTypes] = useState<string[]>(TYPE_NAMES);
 
   const dispatch = useDispatch();
+  const setUnchecked = useUncheck();
+  const checkIsDisable = useDisable();
 
+  // useEffect(() => {
+  //   if (!types.some((type) => type)) {
+  //     setAvailableStrings(STRINGS);
+  //     return;
+  //   }
 
-  useEffect(() => {
-    if (!types.some((type) => type)) {
-      setAvailableStrings(STRINGS);
-      return;
-    }
+  //   const guitarsHasStrings: number[] = [];
 
-    const guitarsHasStrings: number[] = [];
+  //   types.forEach((isAvailable, index): void => {
+  //     if (isAvailable) {
+  //       guitarsHasStrings.push(...FILTER_OF_TYPES_STRINGS[index].stringsCount);
+  //     }
+  //   });
 
-    types.forEach((isAvailable, index): void => {
-      if (isAvailable) {
-        guitarsHasStrings.push(...FILTER_OF_TYPES_STRINGS[index].stringsCount);
-      }
-    });
+  //   setAvailableStrings(guitarsHasStrings);
+  // }, [types]);
 
-    setAvailableStrings(guitarsHasStrings);
-  }, [types]);
+  // useEffect(() => {
+  //   if (!strings.some((string) => string)) {
+  //     setAvailableTypes(TYPE_NAMES);
+  //     return;
+  //   }
 
-  useEffect(() => {
-    if (!strings.some((string) => string)) {
-      setAvailableTypes(TYPE_NAMES);
-      return;
-    }
+  //   const stringsHasGuitars: string[] = [];
 
-    const stringsHasGuitars: string[] = [];
+  //   strings.forEach((isAvailable, index): void => {
+  //     if (isAvailable) {
+  //       FILTER_OF_TYPES_STRINGS.forEach((guitar, guitarIndex): void => {
+  //         if (guitar.stringsCount.includes(STRINGS[index])) {
+  //           stringsHasGuitars.push(FILTER_OF_TYPES_STRINGS[guitarIndex].name);
+  //         }
+  //       });
+  //     }
+  //   });
 
-    strings.forEach((isAvailable, index): void => {
-      if (isAvailable) {
-        FILTER_OF_TYPES_STRINGS.forEach((guitar, guitarIndex): void => {
-          if (guitar.stringsCount.includes(STRINGS[index])) {
-            stringsHasGuitars.push(FILTER_OF_TYPES_STRINGS[guitarIndex].name);
-          }
-        });
-      }
-    });
+  //   setAvailableTypes(stringsHasGuitars);
+  // }, [strings]);
 
-    setAvailableTypes(stringsHasGuitars);
-  }, [strings]);
-
-  const handleTypeChange = (items: string[]) => {
+  const getQueryTypes = (items: string[]) => {
     searchParams.delete('type');
     items.map((item: string) => searchParams.append('type', item));
 
     browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
   };
 
-  const handleStringCountChange = (items: string[]) => {
+  const getQueryStrings = (items: string[]) => {
     searchParams.delete('stringCount');
     items.map((item: string) => searchParams.append('stringCount', item));
 
@@ -85,10 +90,39 @@ function Filter(): JSX.Element {
   };
 
 
-  const handlePagesChange = () => {
+  // const handlePagesChange = () => {
+  //   dispatch(selectFirstPage(CountOfPages.First));
+  //   dispatch(selectLastPage(CountOfPages.Last));
+  //   dispatch(selectActualPage(DEFAULT_PAGE));
+  // };
+
+
+  const handleTypeChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const currentType = evt.target.value;
+    const actualTypes = userType.includes(currentType)
+      ? userType.filter((value) => value !== currentType)
+      : [...userType, currentType];
+    const actualCounts = setUnchecked(actualTypes);
+    dispatch(selectType(actualTypes));
+    dispatch(selectStrings(actualCounts));
     dispatch(selectFirstPage(CountOfPages.First));
     dispatch(selectLastPage(CountOfPages.Last));
     dispatch(selectActualPage(DEFAULT_PAGE));
+    getQueryTypes(actualTypes);
+  };
+
+  const handleStringCountChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const stringCount = evt.target.value;
+    const actualCounts = userStrings.includes(stringCount)
+      ? userStrings.filter((value) => value !== stringCount)
+      : [...userStrings, stringCount];
+    const actualTypes = setUnchecked(actualCounts);
+    dispatch(selectStrings(actualCounts));
+    dispatch(selectType(actualTypes));
+    dispatch(selectFirstPage(CountOfPages.First));
+    dispatch(selectLastPage(CountOfPages.Last));
+    dispatch(selectActualPage(DEFAULT_PAGE));
+    getQueryStrings(actualCounts);
   };
 
   return (
@@ -98,29 +132,22 @@ function Filter(): JSX.Element {
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">Тип гитар</legend>
         {
-          FILTER_OF_TYPES_STRINGS.map((guitar, index) => {
-            const key = `type-${guitar.name}`;
-            const {name, type} = guitar;
-            const isChecked = userType.includes(name);
+          [...GuitarsType.keys()].map((key) => {
+            const { id, title } = GuitarsType.get(key) as GuitarType;
+
             return (
-              <div key={key} className="form-checkbox catalog-filter__block-item">
+              <div key={id} className='form-checkbox catalog-filter__block-item'>
                 <input
-                  className="visually-hidden"
-                  type="checkbox"
-                  id={name}
-                  name={name}
-                  checked={isChecked}
-                  onChange={({target}: ChangeEvent<HTMLInputElement>) => {
-                    handlePagesChange();
-                    const value = target.checked;
-                    setTypes([...types.slice(0, index), value, ...types.slice(index + 1)]);
-                    dispatch(selectType(allTypes(userType, name)));
-                    handleTypeChange((allTypes(userType, name)));
-                  }}
-                  disabled={!availableTypes.includes(name)}
-                  data-testid={name}
+                  checked={userType.includes(id)}
+                  className='visually-hidden'
+                  type='checkbox'
+                  id={id}
+                  name={id}
+                  value={id}
+                  onChange={handleTypeChange}
+                  data-testid='id'
                 />
-                <label htmlFor={name}>{type}</label>
+                <label htmlFor={id}>{title}</label>
               </div>
             );
           })
@@ -129,29 +156,22 @@ function Filter(): JSX.Element {
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">Количество струн</legend>
         {
-          STRINGS.map((countOfString, index) => {
-            const key = `string-${countOfString}`;
-
+          [...StringCount.keys()].map((key) => {
+            const { id, stringCount } = StringCount.get(key) as StringType;
             return (
-              <div key={key} className="form-checkbox catalog-filter__block-item">
+              <div key={id} className='form-checkbox catalog-filter__block-item'>
                 <input
-                  className="visually-hidden"
-                  type="checkbox"
-                  id={`${countOfString}-strings`}
-                  name={`${countOfString}-strings`}
-                  value={countOfString}
-                  checked={userStrings.includes(String(countOfString))}
-                  onChange={({target}: ChangeEvent<HTMLInputElement>) => {
-                    const value = target.checked;
-                    handlePagesChange();
-                    setStrings([...strings.slice(0, index), value, ...strings.slice(index + 1)]);
-                    dispatch(selectStrings(allTypes(userStrings, String(countOfString))));
-                    handleStringCountChange(allTypes(userStrings, String(countOfString)));
-                  }}
-                  disabled={!availableStrings.includes(countOfString)}
-                  data-testid={countOfString}
+                  className='visually-hidden'
+                  type='checkbox'
+                  id={id}
+                  name={id}
+                  value={stringCount}
+                  checked={userStrings.includes(stringCount)&&!checkIsDisable(stringCount)}
+                  disabled={checkIsDisable(stringCount)}
+                  onChange={handleStringCountChange}
+                  data-testid = 'id'
                 />
-                <label htmlFor={`${countOfString}-strings`}>{countOfString}</label>
+                <label htmlFor={id}>{stringCount}</label>
               </div>
             );
           })
@@ -161,4 +181,4 @@ function Filter(): JSX.Element {
   );
 }
 
-export default Filter;
+export default memo(Filter);

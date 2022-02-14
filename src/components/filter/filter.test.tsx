@@ -4,7 +4,7 @@ import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import {makeFakeGuitars} from '../../mocks';
-import {SortKey, STRINGS, FILTER_OF_TYPES_STRINGS} from '../../const';
+import {SortKey, StringCount, GuitarsType} from '../../const';
 import Filter from './filter';
 import thunk from 'redux-thunk';
 
@@ -45,7 +45,7 @@ describe('Component: Filter', () => {
 
   it('should render correctly', () => {
     render(fakeApp);
-    FILTER_OF_TYPES_STRINGS.map((guitar) => expect(screen.getByTestId(guitar.name)).toBeInTheDocument());
-    STRINGS.map((string) => expect(screen.getByTestId(string)).toBeInTheDocument());
+    [...GuitarsType.keys()].map((id) => expect(screen.getByTestId(id)).toBeInTheDocument());
+    [...StringCount.keys()].map((id) => expect(screen.getByTestId(id)).toBeInTheDocument());
   });
 });
