@@ -97,15 +97,18 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
   useEffect(() => {
     const pageItems = getItemsPerPage(actualPage);
     dispatch(fetchFilterUserAction(pageItems, filter));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, dispatch]);
 
   useEffect(() => {
     const pageItems = getItemsPerPage(actualPage);
     dispatch (fetchCatalogPageAction(pageItems, filter));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actualPage, dispatch]);
 
   useEffect(() => {
     dispatch(fetchDefaultMinPriceAction());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!isLoaded) {
