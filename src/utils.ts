@@ -1,3 +1,4 @@
+import queryString from 'query-string';
 import {ITEMS_PER_PAGE, DIGIT_ZERO} from './const';
 import {Guitars, Guitar} from './types/guitar';
 
@@ -13,13 +14,21 @@ export const getItems = (page: number) => ({
   lastItem: page * ITEMS_PER_PAGE,
 });
 
+
+const createTypesStringsQuery = (types: string[], strings: string[]) =>
+  queryString.stringify(
+    {
+      type: types,
+      stringCount: strings,
+    },
+    {skipEmptyString: true, skipNull: true},
+  );
+
 export const getFilterInfo = (min: string, max: string, types: string[], strings: string[], sorting: string, order: string): string => {
   let priceGteQuery = '';
   let priceLteQuery = '';
   let sortingQuery = '';
   let orderQuery = '';
-  let typeQuery = '';
-  let stringsQuery = '';
 
   if (min !== '') {
     priceGteQuery += `price_gte=${min}`;
@@ -37,14 +46,9 @@ export const getFilterInfo = (min: string, max: string, types: string[], strings
     orderQuery +=  `_order=${order}`;
   }
 
-  if (types.length !== 0) {
-    typeQuery += `type=${types.join('&type=')}`;
-  }
-  if (strings.length !== 0) {
-    stringsQuery += `stringCount=${strings.join('stringCount=')}`;
-  }
+  const typesStringsQuery = createTypesStringsQuery(types,strings);
 
-  const fullQuery = [priceGteQuery, priceLteQuery, sortingQuery, orderQuery, typeQuery, stringsQuery].filter((query) => query !== '').join('&');
+  const fullQuery = [priceGteQuery, priceLteQuery, sortingQuery, orderQuery, typesStringsQuery].filter((query) => query !== '').join('&');
   return `&${fullQuery}`;
 };
 

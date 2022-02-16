@@ -6,16 +6,14 @@ import Sorting from '../sorting/sorting';
 import ErrorPage from '../error-page/error-page';
 import ProductCardsList from '../product-cards-list/product-cards-list';
 import Pagination from '../pagination/pagination';
-import {getGuitars} from '../../store/main-data/selectors';
+import {getGuitars, getIsLoaded} from '../../store/main-data/selectors';
 import {selectOrder, selectSorting, selectStrings, selectType, selectActualPage, selectFirstPage, selectLastPage, selectMinPrice, selectMaxPrice} from '../../store/action';
 import {fetchFilterUserAction, fetchDefaultMinPriceAction, fetchCatalogPageAction} from '../../store/api-actions';
 import {getUserActualPageCount, collectFilterInfo} from '../../store/user-data/selectors';
 import {getItemsPerPage, getItems} from '../../utils';
 import Header from '../header/header';
 import Footer from '../footer/footer';
-import {CountOfPages, STEP_OF_COUNT} from '../../const';
-import {getIsLoaded} from '../../store/main-data/selectors';
-import {AppRoute} from '../../const';
+import {CountOfPages, STEP_OF_COUNT, AppRoute} from '../../const';
 import Spinner from '../spinner/spinner';
 
 

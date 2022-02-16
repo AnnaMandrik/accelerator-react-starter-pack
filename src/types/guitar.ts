@@ -14,16 +14,3 @@ export type Guitar = {
 export type Guitars = Guitar[];
 
 
-export type StringType = {
-  id: string;
-  stringCount: string;
-};
-
-
-export type GuitarType = {
-  id: string;
-  title: string;
-  type: string
-};
-
-
