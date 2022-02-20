@@ -4,8 +4,8 @@ import {useLocation} from 'react-router-dom';
 import {selectType, selectStrings, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 import {getUserType, getUserStrings} from '../../store/user-data/selectors';
 import FilterPrice from '../filter-price/filter-price';
-import {DEFAULT_PAGE, CountOfPages, GuitarsType, StringCount, AppRoute} from '../../const';
-import browserHistory from '../../browser-history';
+import {DEFAULT_PAGE, CountOfPages, GuitarsType, StringCount} from '../../const';
+//import browserHistory from '../../browser-history';
 import useUncheck from '../../hooks/use-uncheck/use-uncheck';
 import useDisable from '../../hooks/use-disable/use-disable';
 import {GuitarType, StringType} from '../../types/guitar';
@@ -40,7 +40,7 @@ function Filter(): JSX.Element {
     handlePagesChange();
     searchParams.delete('type');
     actualTypes.map((item) => searchParams.append('type', item));
-    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
+    //browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
   };
 
   const handleStringCountChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +50,7 @@ function Filter(): JSX.Element {
     handlePagesChange();
     searchParams.delete('stringCount');
     actualCounts.map((item) => searchParams.append('stringCount', item));
-    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
+    //browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
   };
 
   const handlePagesChange = () => {
