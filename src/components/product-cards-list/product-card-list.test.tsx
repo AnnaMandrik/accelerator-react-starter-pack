@@ -4,11 +4,11 @@ import { Provider } from 'react-redux';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import ProductCardsList from './product-cards-list';
-import {makeFakeGuitars} from '../../mocks';
+import {fakeProducts} from '../../mocks';
 import thunk from 'redux-thunk';
 
 const history = createMemoryHistory();
-const fakeGuitars = makeFakeGuitars();
+const fakeGuitars = fakeProducts;
 const mockStore = configureMockStore([thunk]);
 
 
@@ -28,7 +28,7 @@ describe('Component: ProductCardsList', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <ProductCardsList productsList={fakeGuitars}  />
+          <ProductCardsList />
         </Router>
       </Provider>,
     );

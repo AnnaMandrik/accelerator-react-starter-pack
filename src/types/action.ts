@@ -7,6 +7,8 @@ export const enum ActionType {
   LoadPageCount = 'data/loadPageCount',
   LoadMinDefaultPrice = 'data/loadMinDefaultPrice',
   LoadMaxDefaultPrice = 'data/loadMaxDefaultPrice',
+  LoadCurrentProduct = 'data/loadCurrentProduct',
+  LoadCurrentComments = 'data/loadCurrentComments',
   SearchingProducts = 'user/searchingProducts',
   SelectMinPrice ='user/selectMinPrice',
   SelectMaxPrice ='user/selectMaxPrice',

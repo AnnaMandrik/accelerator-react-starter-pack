@@ -1,35 +1,31 @@
 import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const';
-import {Guitar} from '../../types/guitar';
+import {AppRoute, RATING_NUMBERS} from '../../const';
+import {Product} from '../../types/guitar';
 
 type ProductCardProps = {
-  guitar: Guitar;
+  guitar: Product;
 }
 
 function ProductCard({guitar}: ProductCardProps): JSX.Element {
-  const {previewImg, rating, name, price} = guitar;
+  const {previewImg, rating, name, price, comments} = guitar;
   return (
     <div className="product-card">
       <img src={previewImg.replace('img', 'img/content')} width="75" height="190" alt={name} />
       <div className="product-card__info">
         <div className="rate product-card__rate" aria-hidden="true">
           <span className="visually-hidden">Рейтинг:</span>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-          <span className="rate__count">{rating}</span>
+          {
+            RATING_NUMBERS.map((item, index) => {
+              const key = `${index}-${item}`;
+              return (
+                <svg key={key} width="12" height="11" aria-hidden="true">
+                  <use xlinkHref={item <= rating ? '#icon-full-star' : '#icon-star'}>
+                  </use>
+                </svg>
+              );
+            })
+          }
+          <span className="rate__count">{comments.length}</span>
           <span className="rate__message"></span>
         </div>
         <p className="product-card__title">{name}</p>

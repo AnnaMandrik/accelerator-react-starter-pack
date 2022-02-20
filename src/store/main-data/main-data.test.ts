@@ -1,9 +1,10 @@
-import {makeFakeGuitars} from '../../mocks';
+import {fakeProduct, fakeProducts, fakeComments} from '../../mocks';
 import {mainData} from '../main-data/main-data';
-import {loadProductCardsList, loadPageCount, loadMaxDefaultPrice, loadMinDefaultPrice} from '../action';
+import {loadCurrentComments, loadProductCardsList, loadPageCount, loadMaxDefaultPrice, loadMinDefaultPrice, loadCurrentProduct} from '../action';
+import { Guitar } from '../../types/guitar';
 
 
-const fakeGuitars = makeFakeGuitars();
+const fakeGuitars = fakeProducts;
 
 describe('Reducer: main-data', () => {
 
@@ -13,6 +14,8 @@ describe('Reducer: main-data', () => {
     minDefaultPrice: 0,
     maxDefaultPrice: 0,
     pageCount: 0,
+    currentProduct: {} as Guitar,
+    currentComments: [],
   };
 
   it('without additional parameters should return initial state', () => {
@@ -38,6 +41,16 @@ describe('Reducer: main-data', () => {
   it('should set all page count', () => {
     expect(mainData(state, loadPageCount(3)))
       .toEqual({...state, pageCount: 3});
+  });
+
+  it('should load currentProduct from all productList', () => {
+    expect(mainData(state, loadCurrentProduct(fakeProduct)))
+      .toEqual({ ...state, currentProduct: fakeProduct,  isDataLoaded: true});
+  });
+
+  it('should load currentComments from all productList', () => {
+    expect(mainData(state, loadCurrentComments(fakeComments)))
+      .toEqual({ ...state, currentComments: fakeComments});
   });
 
 });

@@ -1,10 +1,11 @@
 import {createAction} from '@reduxjs/toolkit';
 import {ActionType} from '../types/action';
-import {Guitars} from '../types/guitar';
+import {Guitars, Guitar, Product} from '../types/guitar';
+import {Comment} from '../types/comment';
 
 export const loadProductCardsList = createAction(
   ActionType.LoadProductCardsList,
-  (productsList: Guitars) => ({
+  (productsList: Product[]) => ({
     payload: productsList,
   }),
 );
@@ -27,6 +28,20 @@ export const loadPageCount = createAction(
   ActionType.LoadPageCount,
   (count: number) => ({
     payload: count,
+  }),
+);
+
+export const loadCurrentProduct = createAction(
+  ActionType.LoadCurrentProduct,
+  (currentProduct: Guitar) => ({
+    payload: currentProduct,
+  }),
+);
+
+export const loadCurrentComments = createAction(
+  ActionType.LoadCurrentComments,
+  (currentComments: Comment[]) => ({
+    payload: currentComments,
   }),
 );
 

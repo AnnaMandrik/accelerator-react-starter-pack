@@ -3,12 +3,12 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
-import { makeFakeGuitars } from '../../mocks';
+import {fakeProducts} from '../../mocks';
 import CatalogPage from './catalog-page';
 import {DEFAULT_PAGE, SortKey} from '../../const';
 import thunk from 'redux-thunk';
 
-const fakeGuitars = makeFakeGuitars();
+const fakeGuitars = fakeProducts;
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 

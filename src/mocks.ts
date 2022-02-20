@@ -1,10 +1,12 @@
-import {Guitars, Guitar} from './types/guitar';
-import {image, music, name} from 'faker';
+import {Guitar} from './types/guitar';
+import {name, image, datatype, lorem, date, random, commerce} from 'faker';
+import {Comment} from './types/comment';
 
-enum Count {
-  GuitarsTest = 18,
-  CommentsTest = 15,
-}
+const STRINGS: number[] = [4, 6, 7, 12];
+const TYPES: string[] = ['ukulele', 'acoustic', 'electric'];
+
+const COMMENTS_LENGTH = 5;
+const PRODUCTS_LENGTH = 10;
 
 export enum HttpCode {
   Ok = 200,
@@ -12,16 +14,43 @@ export enum HttpCode {
   NoAuth = 401,
 }
 
-export const makeFakeGuitar = (): Guitar => ({
-  'id': Math.floor(Math.random() * 100000),
-  'name':  name.firstName(),
-  'vendorCode': 'SO7568698',
-  'type': music.genre(),
-  'description': 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
-  'previewImg': image.image(),
-  'stringCount': 12,
-  'rating': 5,
-  'price': 1500,
-}as Guitar);
+export const MakeFakeGuitar = (): Guitar => ({
+  id: 1,
+  name:  name.firstName(),
+  vendorCode: lorem.word(),
+  type: random.arrayElement(TYPES),
+  description:  lorem.sentences(datatype.number(3)),
+  previewImg: image.imageUrl(),
+  stringCount: random.arrayElement(STRINGS),
+  rating: datatype.float({ max: 5 }),
+  price: Number(commerce.price()),
+});
 
-export const makeFakeGuitars = (): Guitars => new Array(Count.GuitarsTest).fill(undefined).map(() => makeFakeGuitar());
+export const makeFakeGuitars = new Array(PRODUCTS_LENGTH)
+  .fill(null)
+  .map(MakeFakeGuitar);
+
+
+export const MakeFakeComment = (): Comment => ({
+  id: '1',
+  userName: name.firstName(),
+  advantage: lorem.word(),
+  disadvantage: lorem.word(),
+  comment: lorem.sentences(datatype.number(3)),
+  rating: datatype.float({ max: 5 }),
+  createAt: date.past().toString(),
+  guitarId: 1,
+});
+
+
+export const fakeComments = new Array(COMMENTS_LENGTH)
+  .fill(null)
+  .map(MakeFakeComment);
+
+
+export const fakeProducts = new Array(PRODUCTS_LENGTH)
+  .fill(null)
+  .map((element) => element = { ...MakeFakeGuitar(), comments: fakeComments });
+
+
+export const fakeProduct = { ...MakeFakeGuitar(), comments: fakeComments };

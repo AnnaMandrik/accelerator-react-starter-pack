@@ -5,13 +5,13 @@ import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import HeaderSearch from './header-search';
-import {makeFakeGuitars} from '../../mocks';
+import {fakeProducts} from '../../mocks';
 import thunk from 'redux-thunk';
 
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
-const fakeGuitars = makeFakeGuitars();
+const fakeGuitars = fakeProducts;
 
 describe('Component: HeaderSearch', () => {
   it('should render correctly', () => {

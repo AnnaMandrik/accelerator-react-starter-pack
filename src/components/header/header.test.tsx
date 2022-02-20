@@ -5,10 +5,10 @@ import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import Header from './header';
-import {makeFakeGuitars} from '../../mocks';
+import {fakeProducts} from '../../mocks';
 
 const mockStore = configureMockStore([thunk]);
-const fakeGuitars = makeFakeGuitars();
+const fakeGuitars = fakeProducts;
 
 describe('Component: Header', () => {
   it('should render correctly', () => {

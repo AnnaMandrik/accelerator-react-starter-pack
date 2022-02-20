@@ -2,10 +2,10 @@ import {userData} from '../user-data/user-data';
 import {searchingProducts, selectMinPrice, selectMaxPrice, selectType, selectStrings,
   selectSorting, selectOrder, selectActualPage, selectActualPageCount, selectFirstPage,
   selectLastPage} from '../action';
-import {makeFakeGuitars} from '../../mocks';
+import {fakeProducts} from '../../mocks';
 
 
-const fakeGuitars = makeFakeGuitars();
+const fakeGuitars = fakeProducts;
 
 describe('Reducer: user-data', () => {
 

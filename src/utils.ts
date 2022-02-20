@@ -49,7 +49,7 @@ export const getFilterInfo = (min: string, max: string, types: string[], strings
   const typesStringsQuery = createTypesStringsQuery(types,strings);
 
   const fullQuery = [priceGteQuery, priceLteQuery, sortingQuery, orderQuery, typesStringsQuery].filter((query) => query !== '').join('&');
-  return `&${fullQuery}`;
+  return `&${fullQuery}&_embed=comments`;
 };
 
 
@@ -80,7 +80,7 @@ export const getSortedResult = (data: Guitar[], searchTerm: string) => {
 export const getCheckingMinPrice = (userPrice: number, minPrice: number, maxPrice: number, maxUserPrice: string): string => {
   let price = userPrice;
 
-  if (price < minPrice || price === DIGIT_ZERO) {
+  if (price < minPrice || price < DIGIT_ZERO) {
     price = minPrice;
   }
 
@@ -103,11 +103,11 @@ export const getCheckingMinPrice = (userPrice: number, minPrice: number, maxPric
 export const getCheckingMaxPrice = (userPrice: number, minPrice: number, maxPrice: number, minUserPrice: string): string => {
   let price = userPrice;
 
-  if (price < minPrice || price === DIGIT_ZERO) {
+  if (price < minPrice) {
     price = minPrice;
   }
 
-  if (price > maxPrice) {
+  if (price > maxPrice || price < DIGIT_ZERO) {
     price = maxPrice;
   }
 

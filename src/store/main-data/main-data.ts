@@ -1,6 +1,7 @@
 import {MainData} from '../../types/state';
 import {createReducer} from '@reduxjs/toolkit';
-import {loadProductCardsList, loadPageCount, loadMinDefaultPrice, loadMaxDefaultPrice} from '../action';
+import {loadCurrentComments, loadProductCardsList, loadPageCount, loadMinDefaultPrice, loadMaxDefaultPrice, loadCurrentProduct} from '../action';
+import {Guitar} from '../../types/guitar';
 
 const initialState: MainData = {
   productsList: [],
@@ -8,6 +9,8 @@ const initialState: MainData = {
   pageCount: 0,
   minDefaultPrice: 0,
   maxDefaultPrice: 0,
+  currentProduct: {} as Guitar,
+  currentComments: [],
 };
 
 const mainData = createReducer (initialState, (builder) => {
@@ -24,6 +27,13 @@ const mainData = createReducer (initialState, (builder) => {
     })
     .addCase(loadPageCount, (state, action) => {
       state.pageCount = action.payload;
+    })
+    .addCase(loadCurrentProduct, (state, action) => {
+      state.currentProduct = action.payload;
+      state.isDataLoaded = true;
+    })
+    .addCase(loadCurrentComments, (state, action) => {
+      state.currentComments = action.payload;
     });
 });
 

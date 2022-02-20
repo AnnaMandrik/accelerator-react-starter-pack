@@ -6,9 +6,9 @@ import { Router } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import App from './app';
 import { AppRoute } from '../../const';
-import {makeFakeGuitars} from '../../mocks';
+import {fakeProducts} from '../../mocks';
 
-const fakeGuitars = makeFakeGuitars();
+const fakeGuitars = fakeProducts;
 const mockStore = configureMockStore([thunk]);
 
 const store = mockStore({

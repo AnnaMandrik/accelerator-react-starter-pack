@@ -3,12 +3,12 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
-import {makeFakeGuitars} from '../../mocks';
-import {SortKey, STRINGS, FILTER_OF_TYPES_STRINGS} from '../../const';
+import {fakeProducts} from '../../mocks';
+import {SortKey, StringCount, GuitarsType} from '../../const';
 import Filter from './filter';
 import thunk from 'redux-thunk';
 
-const mockGuitars = makeFakeGuitars();
+const mockGuitars = fakeProducts;
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 
@@ -45,7 +45,7 @@ describe('Component: Filter', () => {
 
   it('should render correctly', () => {
     render(fakeApp);
-    FILTER_OF_TYPES_STRINGS.map((guitar) => expect(screen.getByTestId(guitar.name)).toBeInTheDocument());
-    STRINGS.map((string) => expect(screen.getByTestId(string)).toBeInTheDocument());
+    [...GuitarsType.keys()].map((id) => expect(screen.getByTestId(id)).toBeInTheDocument());
+    [...StringCount.keys()].map((id) => expect(screen.getByTestId(id)).toBeInTheDocument());
   });
 });

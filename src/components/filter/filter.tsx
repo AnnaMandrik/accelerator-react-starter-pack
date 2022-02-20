@@ -1,84 +1,55 @@
-import {ChangeEvent, memo, useEffect, useState} from 'react';
+import {ChangeEvent, memo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation} from 'react-router-dom';
 import {selectType, selectStrings, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
 import {getUserType, getUserStrings} from '../../store/user-data/selectors';
 import FilterPrice from '../filter-price/filter-price';
-import {TYPE_NAMES, AppRoute, DEFAULT_PAGE, CountOfPages, STRINGS, TYPES_QUANTITY,
-  STRINGS_QUANTITY, FILTER_OF_TYPES_STRINGS} from '../../const';
+import {DEFAULT_PAGE, CountOfPages, GuitarsType, StringCount, AppRoute} from '../../const';
 import browserHistory from '../../browser-history';
+import useUncheck from '../../hooks/use-uncheck/use-uncheck';
+import useDisable from '../../hooks/use-disable/use-disable';
+import {GuitarType, StringType} from '../../types/guitar';
 
 
-const allTypes = (factTypes: string[], type: string): string[] => {
-  if (factTypes.includes(type)) {
-    return factTypes.filter((factType) => factType !== type);
+const allItems = (factItems: string[], item: string): string[] => {
+  if (factItems.includes(item)) {
+    return factItems.filter((value) => value !== item);
   }
-  return [...factTypes, type];
+  return [...factItems, item];
 };
 
 
 function Filter(): JSX.Element {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+
   const userType = useSelector(getUserType);
-  const userStrings = useSelector(getUserStrings);
-  const [types, setTypes] = useState<boolean[]>(new Array(TYPES_QUANTITY).fill(false));
-  const [strings, setStrings] = useState<boolean[]>(new Array(STRINGS_QUANTITY).fill(false));
-  const [availableStrings, setAvailableStrings] = useState<number[]>(STRINGS);
-  const [availableTypes, setAvailableTypes] = useState<string[]>(TYPE_NAMES);
+  const userString = useSelector(getUserStrings);
+
   const dispatch = useDispatch();
+  const setUnchecked = useUncheck(userType);
+  const checkIsDisable = useDisable(userString);
 
 
-  useEffect(() => {
-    if (!types.some((type) => type)) {
-      setAvailableStrings(STRINGS);
-      return;
-    }
-    const guitarsHasStrings: number[] = [];
-    types.forEach((isAvailable, index): void => {
-      if (isAvailable) {
-        guitarsHasStrings.push(...FILTER_OF_TYPES_STRINGS[index].stringsCount);
-      }
-    });
-    setAvailableStrings(guitarsHasStrings);
-  }, [types]);
-
-
-  useEffect(() => {
-    if (!strings.some((string) => string)) {
-      setAvailableTypes(TYPE_NAMES);
-      return;
-    }
-    const stringsHasGuitars: string[] = [];
-    strings.forEach((isAvailable, index): void => {
-      if (isAvailable) {
-        FILTER_OF_TYPES_STRINGS.forEach((guitar, guitarIndex): void => {
-          if (guitar.stringsCount.includes(STRINGS[index])) {
-            stringsHasGuitars.push(FILTER_OF_TYPES_STRINGS[guitarIndex].name);
-          }
-        });
-      }
-    });
-    setAvailableTypes(stringsHasGuitars);
-  }, [strings]);
-
-
-  const handleTypeChange = (items: string[], isChecked: boolean) => {
+  const handleTypeChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const currentType = evt.target.value;
+    const actualTypes = allItems(userType, currentType);
+    const actualCounts = setUnchecked(actualTypes);
+    dispatch(selectType(actualTypes));
+    dispatch(selectStrings(actualCounts));
+    handlePagesChange();
     searchParams.delete('type');
-    items.map((item: string) => searchParams.append('type', item));
-    if (isChecked) {
-      searchParams.delete('type');
-    }
+    actualTypes.map((item) => searchParams.append('type', item));
     browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
   };
 
-
-  const handleStringCountChange = (items: string[], isChecked: boolean) => {
+  const handleStringCountChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const stringCount = evt.target.value;
+    const actualCounts = allItems(userString, stringCount);
+    dispatch(selectStrings(actualCounts));
+    handlePagesChange();
     searchParams.delete('stringCount');
-    items.map((item: string) => searchParams.append('stringCount', item));
-    if (isChecked) {
-      searchParams.delete('stringCount');
-    }
+    actualCounts.map((item) => searchParams.append('stringCount', item));
     browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
   };
 
@@ -88,6 +59,7 @@ function Filter(): JSX.Element {
     dispatch(selectActualPage(DEFAULT_PAGE));
   };
 
+
   return (
     <form className="catalog-filter">
       <h2 className="title title--bigger catalog-filter__title">Фильтр</h2>
@@ -95,29 +67,22 @@ function Filter(): JSX.Element {
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">Тип гитар</legend>
         {
-          FILTER_OF_TYPES_STRINGS.map((guitar, index) => {
-            const key = `type-${guitar.name}`;
-            const {name, type} = guitar;
-            const isChecked = userType.includes(name);
+          [...GuitarsType.keys()].map((key) => {
+            const { id, title } = GuitarsType.get(key) as GuitarType;
+
             return (
-              <div key={key} className="form-checkbox catalog-filter__block-item">
+              <div key={id} className="form-checkbox catalog-filter__block-item">
                 <input
-                  className="visually-hidden"
-                  type="checkbox"
-                  id={name}
-                  name={name}
-                  checked={isChecked}
-                  onChange={({target}: ChangeEvent<HTMLInputElement>) => {
-                    handlePagesChange();
-                    const value = target.checked;
-                    setTypes([...types.slice(0, index), value, ...types.slice(index + 1)]);
-                    dispatch(selectType(allTypes(userType, name)));
-                    handleTypeChange((allTypes(userType, name)), isChecked);
-                  }}
-                  disabled={!availableTypes.includes(name)}
-                  data-testid={name}
+                  checked={userType.includes(id)}
+                  className='visually-hidden'
+                  type='checkbox'
+                  id={id}
+                  name={id}
+                  value={id}
+                  onChange={handleTypeChange}
+                  data-testid={id}
                 />
-                <label htmlFor={name}>{type}</label>
+                <label htmlFor={id}>{title}</label>
               </div>
             );
           })
@@ -126,28 +91,22 @@ function Filter(): JSX.Element {
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">Количество струн</legend>
         {
-          STRINGS.map((countOfString, index) => {
-            const key = `string-${countOfString}`;
-            const isChecked = userStrings.includes(String(countOfString));
+          [...StringCount.keys()].map((key) => {
+            const { id, stringCount } = StringCount.get(key) as StringType;
             return (
-              <div key={key} className="form-checkbox catalog-filter__block-item">
+              <div key={id} className="form-checkbox catalog-filter__block-item">
                 <input
-                  className="visually-hidden"
-                  type="checkbox"
-                  id={`${countOfString}-strings`}
-                  name={`${countOfString}-strings`}
-                  checked={isChecked}
-                  onChange={({target}: ChangeEvent<HTMLInputElement>) => {
-                    const value = target.checked;
-                    handlePagesChange();
-                    setStrings([...strings.slice(0, index), value, ...strings.slice(index + 1)]);
-                    dispatch(selectStrings(allTypes(userStrings, String(countOfString))));
-                    handleStringCountChange(allTypes(userStrings, String(countOfString)), isChecked);
-                  }}
-                  disabled={!availableStrings.includes(countOfString)}
-                  data-testid={countOfString}
+                  className='visually-hidden'
+                  type='checkbox'
+                  id={id}
+                  name={id}
+                  value={stringCount}
+                  checked={userString.includes(stringCount)&&!checkIsDisable(stringCount)}
+                  disabled={checkIsDisable(stringCount)}
+                  onChange={handleStringCountChange}
+                  data-testid={id}
                 />
-                <label htmlFor={`${countOfString}-strings`}>{countOfString}</label>
+                <label htmlFor={id}>{stringCount}</label>
               </div>
             );
           })

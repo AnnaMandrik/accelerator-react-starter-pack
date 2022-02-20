@@ -6,8 +6,8 @@ import Sorting from '../sorting/sorting';
 import ErrorPage from '../error-page/error-page';
 import ProductCardsList from '../product-cards-list/product-cards-list';
 import Pagination from '../pagination/pagination';
-import {getGuitars, getIsLoaded} from '../../store/main-data/selectors';
-import {selectOrder, selectSorting, selectStrings, selectType, selectActualPage, selectFirstPage, selectLastPage, selectMinPrice, selectMaxPrice} from '../../store/action';
+import {getIsLoaded} from '../../store/main-data/selectors';
+import {selectOrder, selectSorting, selectActualPage, selectFirstPage, selectLastPage, selectMinPrice, selectMaxPrice} from '../../store/action';
 import {fetchFilterUserAction, fetchDefaultMinPriceAction, fetchCatalogPageAction} from '../../store/api-actions';
 import {getUserActualPageCount, collectFilterInfo} from '../../store/user-data/selectors';
 import {getItemsPerPage, getItems} from '../../utils';
@@ -22,7 +22,6 @@ type CatalogPageProps = {
 }
 
 function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
-  const guitarsList = useSelector(getGuitars);
   const actualPageCount = useSelector(getUserActualPageCount);
   const filter = useSelector(collectFilterInfo);
   const isLoaded = useSelector(getIsLoaded);
@@ -38,8 +37,6 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
       start: searchParams.get('_start'),
       min: searchParams.get('price_gte'),
       max: searchParams.get('price_lte'),
-      types: searchParams.getAll('type'),
-      strings: searchParams.getAll('stringCount'),
       sortingType: searchParams.get('_sort'),
       sortingOrder: searchParams.get('_order'),
     };
@@ -49,12 +46,6 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
     }
     if (searchAllParams.max !== null) {
       dispatch(selectMaxPrice(searchAllParams.max));
-    }
-    if (searchAllParams.types !== null) {
-      dispatch(selectType(searchAllParams.types));
-    }
-    if (searchAllParams.strings !== null) {
-      dispatch(selectStrings(searchAllParams.strings));
     }
     if (searchAllParams.sortingType !== null) {
       dispatch(selectSorting(searchAllParams.sortingType));
@@ -136,7 +127,7 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
           <div className="catalog">
             <Filter />
             <Sorting />
-            <ProductCardsList productsList={guitarsList} />
+            <ProductCardsList />
             <Pagination />
           </div>
         </div>

@@ -5,10 +5,10 @@ import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import FilterPrice from './filter-price';
-import {makeFakeGuitars} from '../../mocks';
+import {fakeProducts} from '../../mocks';
 import {SortKey} from '../../const';
 
-const fakeGuitars = makeFakeGuitars();
+const fakeGuitars = fakeProducts;
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 

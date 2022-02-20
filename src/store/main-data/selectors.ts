@@ -1,13 +1,16 @@
 import {NameDataList} from '../root-reducer';
-import {Guitars} from '../../types/guitar';
+import {Product, Guitar} from '../../types/guitar';
+import {Comment} from '../../types/comment';
 import {State} from '../../types/state';
 
 
-const getGuitars = (state: State): Guitars => state[NameDataList.MainData].productsList;
+const getGuitars = (state: State): Product[] => state[NameDataList.MainData].productsList;
 const getIsLoaded = (state: State): boolean => state[NameDataList.MainData].isDataLoaded;
 const getDefaultMinPrice = (state: State): number => state[NameDataList.MainData].minDefaultPrice;
 const getDefaultMaxPrice = (state: State): number => state[NameDataList.MainData].maxDefaultPrice;
 const getPagesCount = (state: State): number => state[NameDataList.MainData].pageCount;
+const getCurrentProduct = (state: State): Guitar => state[NameDataList.MainData].currentProduct;
+const getCurrentComments = (state:State): Comment[] => state[NameDataList.MainData].currentComments;
 
 
-export {getGuitars, getIsLoaded, getDefaultMinPrice, getDefaultMaxPrice, getPagesCount};
+export {getCurrentComments, getCurrentProduct, getGuitars, getIsLoaded, getDefaultMinPrice, getDefaultMaxPrice, getPagesCount};

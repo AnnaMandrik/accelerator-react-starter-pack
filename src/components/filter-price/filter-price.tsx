@@ -35,10 +35,11 @@ function FilterPrice(): JSX.Element {
   const handleInputBlur = (evt: FormEvent<HTMLInputElement>) => {
     switch (evt.currentTarget.id) {
       case FilterOfPrices.PRICE_MIN.id: {
-        if (evt.currentTarget.value) {
+        if (evt.currentTarget.value === '') {
           setMinPrice(evt.currentTarget.value);
           dispatch(selectMinPrice(evt.currentTarget.value));
           searchParams.delete('price_gte');
+          break;
         }
         const userPrice = Number(evt.currentTarget.value);
         const checkedMinPrice = getCheckingMinPrice(userPrice, minDefaultPrice, maxDefaultPrice, maxPrice);
@@ -51,10 +52,11 @@ function FilterPrice(): JSX.Element {
         break;
       }
       case FilterOfPrices.PRICE_MAX.id: {
-        if (evt.currentTarget.value) {
+        if (evt.currentTarget.value === '') {
           setMaxPrice(evt.currentTarget.value);
           dispatch(selectMaxPrice(evt.currentTarget.value));
-          searchParams.delete('price_gte');
+          searchParams.delete('price_lte');
+          break;
         }
         const userPrice = Number(evt.currentTarget.value);
         const checkedMaxPrice = getCheckingMaxPrice(userPrice, minDefaultPrice, maxDefaultPrice, minPrice);

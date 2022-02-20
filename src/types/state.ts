@@ -1,12 +1,15 @@
 import {RootState} from '../store/root-reducer';
-import {Guitars} from './guitar';
+import {Guitars, Guitar, Product} from './guitar';
+import {Comment} from './comment';
 
 export type MainData = {
-  productsList: Guitars,
+  productsList: Product[],
   isDataLoaded: boolean,
   minDefaultPrice: number,
   maxDefaultPrice: number,
   pageCount: number,
+  currentProduct: Guitar,
+  currentComments: Comment[],
 };
 
 export type UserData = {
