@@ -1,90 +1,67 @@
 import {userData} from '../user-data/user-data';
-import {searchingProducts, selectMinPrice, selectMaxPrice, selectType, selectStrings,
-  selectSorting, selectOrder, selectActualPage, selectActualPageCount, selectFirstPage,
-  selectLastPage} from '../action';
+import {clearFilter, clearSearchingProducts, clearSort, searchingProducts, selectFilter, selectSort} from '../action';
 import {fakeProducts} from '../../mocks';
+import { OrderKey, ProductType, SortKey } from '../../const';
+import { UserData } from '../../types/state';
 
 
 const fakeGuitars = fakeProducts;
+const FAKE_SORT = {
+  sorting: SortKey.Price,
+  order: OrderKey.Asc,
+};
+const FAKE_FILTER = {
+  types: [ProductType.Acoustic, ProductType.Electric],
+  strings: ['4', '12'],
+  minPrice: '1',
+  maxPrice: '10',
+};
 
-describe('Reducer: user-data', () => {
 
-  const state = {
-    minPrice: '',
-    maxPrice: '',
-    types: [],
-    strings: [],
+const initialState: UserData = {
+  searching: [],
+  sort: {
     sorting: '',
     order: '',
-    actualPage: 1,
-    actualPageCount: 0,
-    firstPage: 0,
-    lastPage: 5,
-    searching: [],
-  };
+  },
+  filter: {
+    types: [],
+    strings: [],
+    minPrice: '',
+    maxPrice: '',
+  },
+};
 
+describe('Reducer: user-data', () => {
+  let state = initialState;
   it('should search guitars', () => {
     expect(userData(state, searchingProducts(fakeGuitars)))
       .toEqual({ ...state, searching: fakeGuitars});
   });
 
-  it('should select min price', () => {
-    expect(userData(state, selectMinPrice('50')))
-      .toEqual({...state, minPrice: '50'});
+  it('should clear search by clearSearchingProducts', () => {
+    state = { ...initialState, searching: fakeGuitars };
+    expect(userData(state, clearSearchingProducts())).toEqual(initialState);
   });
 
-  it('should select max price', () => {
-    expect(userData(state, selectMaxPrice('1000')))
-      .toEqual({...state, maxPrice: '1000'});
+  it('should update sort by setSort', () => {
+    expect(userData(state, selectSort(FAKE_SORT)))
+      .toEqual({...state, sort: FAKE_SORT});
   });
 
-  it('should select type of guitars', () => {
-    expect(userData(state, selectType(['type1', 'type2', 'type3'])))
-      .toEqual({...state, types: ['type1', 'type2', 'type3']});
+  it('should clear sort by clearSort', () => {
+    state = { ...state, sort: FAKE_SORT };
+    expect(userData(state, clearSort())).toEqual(initialState);
   });
 
-  it('should select strings for guitars', () => {
-    expect(userData(state, selectStrings(['4', '6', '7', '12'])))
-      .toEqual({...state, strings: ['4', '6', '7', '12']});
+  it('should update filter by setFilter', () => {
+    expect(userData(state, selectFilter(FAKE_FILTER)))
+      .toEqual({...state, filter: FAKE_FILTER});
   });
 
-  it('should select sorting type asc', () => {
-    expect(userData(state, selectSorting('asc')))
-      .toEqual({...state, sorting: 'asc'});
+  it('should clear filter by clearFilter', () => {
+    state = { ...initialState, filter: FAKE_FILTER };
+    expect(userData(state, clearFilter())).toEqual(initialState);
   });
 
-  it('should select sorting type desc', () => {
-    expect(userData(state, selectSorting('desc')))
-      .toEqual({...state, sorting: 'desc'});
-  });
-
-  it('should select order type price', () => {
-    expect(userData(state, selectOrder('price')))
-      .toEqual({...state, order: 'price'});
-  });
-
-  it('should select order type rating', () => {
-    expect(userData(state, selectOrder('rating')))
-      .toEqual({...state, order: 'rating'});
-  });
-
-  it('should select actual page of list', () => {
-    expect(userData(state, selectActualPage(5)))
-      .toEqual({...state, actualPage: 5});
-  });
-
-  it('should select quantity of pages', () => {
-    expect(userData(state, selectActualPageCount(10)))
-      .toEqual({...state, actualPageCount: 10});
-  });
-
-  it('should selectt first pagination page', () => {
-    expect(userData(state, selectFirstPage(4)))
-      .toEqual({...state, firstPage: 4});
-  });
-
-  it('should selectt last pagination page', () => {
-    expect(userData(state, selectLastPage(6)))
-      .toEqual({...state, lastPage: 6});
-  });
 });

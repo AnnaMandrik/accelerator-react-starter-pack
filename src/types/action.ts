@@ -4,27 +4,23 @@ import {AxiosInstance} from 'axios';
 
 export const enum ActionType {
   LoadProductCardsList = 'data/loadProductCardsList',
-  LoadPageCount = 'data/loadPageCount',
+  LoadPagesCount = 'data/loadPagesCount',
+  ClearPagesCount = 'data/clearPagesCount',
   LoadMinDefaultPrice = 'data/loadMinDefaultPrice',
   LoadMaxDefaultPrice = 'data/loadMaxDefaultPrice',
   LoadCurrentProduct = 'data/loadCurrentProduct',
+  ClearCurrentProduct = 'data/clearCurrentProduct',
   LoadCurrentComments = 'data/loadCurrentComments',
+  ClearCurrentComments = 'data/clearCurrentCoents',
+
   SearchingProducts = 'user/searchingProducts',
-  SelectMinPrice ='user/selectMinPrice',
-  SelectMaxPrice ='user/selectMaxPrice',
-  SelectType = 'user/selectType',
-  SelectStrings = 'user/selectStrings',
-  SelectSorting = 'user/selectSorting',
-  SelectOrder = 'user/selectOrder',
-  SelectActualPage = 'user/selectActualPage',
-  SelectActualPageCount = 'user/selectActualPageCount',
-  SelectFirstPage = 'user/selectFirstPage',
-  SelectLastPage = 'user/selectLastPage',
-  PrevFirstPage = 'user/prevFirstPage',
-  PrevLastPage = 'user/prevLastPage',
-  NextFirstPage = 'user/nextFirstPage',
-  NextLastPage = 'user/nextLastPage',
+  ClearSearchingProducts = 'user/clearSearchingProducts',
+  SelectFilter ='user/selectFilter',
+  ClearFilter ='user/clearFilter',
+  SelectSort = 'user/selectSort',
+  ClearSort = 'user/clearSort',
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;
 export type ThunkAppDispatch = ThunkDispatch<State, AxiosInstance, Action>;
+export type CallbackType = (thunkAction:ThunkActionResult<Promise<void>>) => void;

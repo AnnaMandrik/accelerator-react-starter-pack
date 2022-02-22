@@ -1,37 +1,83 @@
 import {toast} from 'react-toastify';
 import {ThunkActionResult} from '../types/action';
-import {APIRoute, ITEMS_PER_PAGE, ErrorText, HEADER_TOTAL_COUNT, DIGIT_ZERO, ERROR_RESPONSE} from '../const';
+import {APIRoute, ErrorText, HEADER_TOTAL_COUNT, DIGIT_ZERO, DEFAULT_PAGE, AppRoute} from '../const';
 import {Product, Guitars} from '../types/guitar';
 import {Comment, CommentPost} from '../types/comment';
-import {loadCurrentComments, loadCurrentProduct, loadProductCardsList, loadPageCount, selectActualPageCount, searchingProducts, loadMinDefaultPrice, loadMaxDefaultPrice} from './action';
+import {loadCurrentComments, loadCurrentProduct, loadProductCardsList, searchingProducts, loadMinDefaultPrice, loadMaxDefaultPrice, clearPagesCount, loadPagesCount, selectFilter, selectSort} from './action';
+import { createQuery } from '../utils';
+import { FilterState, SortState } from '../types/state';
+import { redirectToRoute } from './middlewares/middleware-action';
 
-export const fetchCatalogPageAction = (pageItems: string, filter: string): ThunkActionResult =>
-  async (dispatch, _getState, api): Promise<void> => {
+
+export const fetchCatalogPageAction = (page: number): ThunkActionResult =>
+  async (dispatch, getState, api): Promise<void> => {
+    const filter = getState().UserData.filter;
+    const sort = getState().UserData.sort;
+    const query = createQuery(page, filter, sort);
     try {
-      const {data} = await api.get<Product[]>(`${APIRoute.Guitars}?${pageItems}${filter}`);
+      const {data} = await api.get<Product[]>(`${APIRoute.Guitars}${query}`);
       dispatch(loadProductCardsList(data));
-
-    } catch {
-      toast.info(ErrorText.LoadData);
+    }catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+      }
     }
   };
 
 
-export const fetchFilterUserAction = (pageItems: string, filter: string): ThunkActionResult =>
-  async (dispatch, _getState, api): Promise<void> => {
+export const fetchFilterUserAction = (filter: FilterState, page: number, isSearchQuery?:boolean): ThunkActionResult =>
+  async (dispatch, getState, api): Promise<void> => {
+    dispatch(clearPagesCount());
+    const actualPage = isSearchQuery ? page : DEFAULT_PAGE;
+    const sort = getState().UserData.sort;
+    const query = createQuery(actualPage, filter, sort);
     try {
-      const {data, headers} = await api.get<Product[]>(`${APIRoute.Guitars}?${pageItems}${filter}`);
-      const productCardItems = headers[HEADER_TOTAL_COUNT];
-      const pageCount = Math.ceil(productCardItems / ITEMS_PER_PAGE);
-      const actualPageCount = Math.ceil(productCardItems / ITEMS_PER_PAGE);
-
+      const {data, headers} = await api.get<Product[]>(`${APIRoute.Guitars}${query}`);
+      const allProductCardItems = headers[HEADER_TOTAL_COUNT];
+      if ((data.length === 0)&&(isSearchQuery)) {
+        throw new Error(ErrorText.LoadData);
+      }
+      if (page !== DEFAULT_PAGE) {
+        dispatch(redirectToRoute(AppRoute.Main));
+      }
+      dispatch(loadPagesCount(allProductCardItems));
       dispatch(loadProductCardsList(data));
-      dispatch(selectActualPageCount(actualPageCount));
-      dispatch(loadPageCount(pageCount));
-    } catch {
-      toast.info(ErrorText.LoadData);
+      dispatch(selectFilter(filter));
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+        if (err.message === ErrorText.Redirect) {
+          dispatch(redirectToRoute(AppRoute.Error));
+        }
+      }
     }
   };
+
+
+export const fetchSortedUserAction = (page: number, sort: SortState): ThunkActionResult =>
+  async (dispatch, getState, api): Promise<void> => {
+    const filter = getState().UserData.filter;
+    const query = createQuery(page, filter, sort);
+    try {
+      const { data } = await api.get<Product[]>(`${APIRoute.Guitars}${query}`);
+      dispatch(loadProductCardsList(data));
+      dispatch(selectSort(sort));
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+      }
+    }
+  };
+
 
 export const fetchDefaultMinPriceAction =(): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
@@ -41,8 +87,13 @@ export const fetchDefaultMinPriceAction =(): ThunkActionResult =>
 
       dispatch(loadMinDefaultPrice(data[DIGIT_ZERO].price));
       dispatch(fetchDefaultMaxPriceAction(headers[HEADER_TOTAL_COUNT]));
-    } catch {
-      toast.info(ErrorText.LoadData);
+    }  catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+      }
     }
   };
 
@@ -53,8 +104,13 @@ export const fetchDefaultMaxPriceAction =(productsCount: number): ThunkActionRes
         `${APIRoute.Guitars}?_sort=price&_start=${productsCount - 1}&_end=${productsCount}`);
 
       dispatch(loadMaxDefaultPrice(data[DIGIT_ZERO].price));
-    } catch {
-      toast.info(ErrorText.LoadData);
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+      }
     }
   };
 
@@ -63,8 +119,13 @@ export const fetchSearchingProductsUserAction = (text: string): ThunkActionResul
     try {
       const {data} = await api.get<Guitars>(`${APIRoute.Guitars}?name_like=${text}`);
       dispatch(searchingProducts(data));
-    } catch {
-      toast.info(ErrorText.LoadData);
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+      }
     }
   };
 
@@ -76,13 +137,19 @@ export const fetchCurrentProductAction = (id: string): ThunkActionResult =>
       const {comments, ...rest} = data;
       dispatch(loadCurrentProduct(rest));
       dispatch(loadCurrentComments(comments));
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      if (error?.response?.status === ERROR_RESPONSE) {
-        toast.info(ErrorText.LoadData);
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+        if (err.message === ErrorText.NotFound) {
+          dispatch(redirectToRoute(AppRoute.Error));
+        }
       }
     }
   };
+
 
 export const postCommentAction = (comment: CommentPost): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
@@ -90,11 +157,16 @@ export const postCommentAction = (comment: CommentPost): ThunkActionResult =>
       const { data } = await api.post<Comment>(`${APIRoute.Comments}`, comment);
       // eslint-disable-next-line no-console
       console.log(data);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      if (error?.response?.status === ERROR_RESPONSE) {
-        toast.info(ErrorText.LoadData);
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+        if (err.message === ErrorText.BadRequest) {
+          toast.warning(ErrorText.Attention);
+          toast.clearWaitingQueue();
+        }
       }
     }
   };
-

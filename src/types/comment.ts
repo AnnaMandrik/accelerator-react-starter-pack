@@ -10,13 +10,4 @@ export type Comment = {
 };
 
 
-export type CouponPost = {
-  coupon: string,
-}
-
-export type OrderPost = {
-  guitarsId: [],
-  coupon: string,
-};
-
 export type CommentPost = Omit<Comment, 'createAt' | 'id'>

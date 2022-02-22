@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import {HistoryRouter, useParams} from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
@@ -11,6 +11,9 @@ import {SortKey} from '../../const';
 const fakeGuitars = fakeProducts;
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const {number} = useParams();
+const page = Number(number);
 
 describe('Component: FilterPrice', () => {
   const minPrice = 5000;
@@ -40,9 +43,9 @@ describe('Component: FilterPrice', () => {
 
   const fakeApp = (
     <Provider store={store}>
-      <Router history={history}>
-        <FilterPrice />
-      </Router>
+      <HistoryRouter history={history}>
+        <FilterPrice page={page} />
+      </HistoryRouter>
     </Provider>
   );
 
@@ -53,3 +56,5 @@ describe('Component: FilterPrice', () => {
     expect(screen.getByTestId('max-price')).toBeInTheDocument();
   });
 });
+
+

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import {Router} from 'react-router-dom';
+import {HistoryRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { createMemoryHistory } from 'history';
@@ -20,9 +20,9 @@ describe('Component: StubPage', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
+        <HistoryRouter history={history}>
           <StubPage />
-        </Router>
+        </HistoryRouter>
       </Provider>,
     );
 

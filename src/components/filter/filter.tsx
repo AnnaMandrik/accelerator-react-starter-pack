@@ -1,69 +1,48 @@
 import {ChangeEvent, memo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useLocation} from 'react-router-dom';
-import {selectType, selectStrings, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
-import {getUserType, getUserStrings} from '../../store/user-data/selectors';
 import FilterPrice from '../filter-price/filter-price';
-import {DEFAULT_PAGE, CountOfPages, GuitarsType, StringCount} from '../../const';
-//import browserHistory from '../../browser-history';
+import {GuitarsType, StringCount} from '../../const';
 import useUncheck from '../../hooks/use-uncheck/use-uncheck';
 import useDisable from '../../hooks/use-disable/use-disable';
 import {GuitarType, StringType} from '../../types/guitar';
+import { getUserFilter } from '../../store/user-data/selectors';
+import { FilterState } from '../../types/state';
+import { fetchFilterUserAction } from '../../store/api-actions';
+import { allItems } from '../../utils';
 
 
-const allItems = (factItems: string[], item: string): string[] => {
-  if (factItems.includes(item)) {
-    return factItems.filter((value) => value !== item);
-  }
-  return [...factItems, item];
-};
+type FilterProps = {
+  page: number
+}
 
-
-function Filter(): JSX.Element {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-
-  const userType = useSelector(getUserType);
-  const userString = useSelector(getUserStrings);
-
+function Filter({page}: FilterProps): JSX.Element {
+  const filter = useSelector(getUserFilter);
+  const {types, strings} = filter;
   const dispatch = useDispatch();
-  const setUnchecked = useUncheck(userType);
-  const checkIsDisable = useDisable(userString);
+  const setUnchecked = useUncheck(filter);
+  const checkIsDisable = useDisable(filter);
 
 
   const handleTypeChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const currentType = evt.target.value;
-    const actualTypes = allItems(userType, currentType);
+    const actualTypes = allItems(types, currentType);
     const actualCounts = setUnchecked(actualTypes);
-    dispatch(selectType(actualTypes));
-    dispatch(selectStrings(actualCounts));
-    handlePagesChange();
-    searchParams.delete('type');
-    actualTypes.map((item) => searchParams.append('type', item));
-    //browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
+    const actualFilter = { ...filter, types: actualTypes, strings: actualCounts} as FilterState;
+    dispatch(fetchFilterUserAction(actualFilter, page));
   };
 
   const handleStringCountChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const stringCount = evt.target.value;
-    const actualCounts = allItems(userString, stringCount);
-    dispatch(selectStrings(actualCounts));
-    handlePagesChange();
-    searchParams.delete('stringCount');
-    actualCounts.map((item) => searchParams.append('stringCount', item));
-    //browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
-  };
-
-  const handlePagesChange = () => {
-    dispatch(selectFirstPage(CountOfPages.First));
-    dispatch(selectLastPage(CountOfPages.Last));
-    dispatch(selectActualPage(DEFAULT_PAGE));
+    const actualCounts = allItems(strings, stringCount);
+    const actualFilter = { ...filter, strings: actualCounts};
+    dispatch(fetchFilterUserAction(actualFilter, page));
   };
 
 
   return (
     <form className="catalog-filter">
       <h2 className="title title--bigger catalog-filter__title">Фильтр</h2>
-      <FilterPrice />
+      <FilterPrice page={page} />
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">Тип гитар</legend>
         {
@@ -73,7 +52,7 @@ function Filter(): JSX.Element {
             return (
               <div key={id} className="form-checkbox catalog-filter__block-item">
                 <input
-                  checked={userType.includes(id)}
+                  checked={types.includes(id)}
                   className='visually-hidden'
                   type='checkbox'
                   id={id}
@@ -101,7 +80,7 @@ function Filter(): JSX.Element {
                   id={id}
                   name={id}
                   value={stringCount}
-                  checked={userString.includes(stringCount)&&!checkIsDisable(stringCount)}
+                  checked={strings.includes(stringCount)&&!checkIsDisable(stringCount)}
                   disabled={checkIsDisable(stringCount)}
                   onChange={handleStringCountChange}
                   data-testid={id}

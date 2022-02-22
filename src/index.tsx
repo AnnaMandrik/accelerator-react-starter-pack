@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom';
 import {configureStore} from '@reduxjs/toolkit';
 import {rootReducer} from './store/root-reducer';
 import {Provider} from 'react-redux';
-import {Router as BrowserRouter} from 'react-router-dom';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import App from './components/app/app';
 import {createAPI} from './services/api';
 import browserHistory from './browser-history';
+import {HistoryRouter} from 'react-router-dom';
+import { redirect } from './store/middlewares/redirect';
+//import { HelmetProvider } from 'react-helmet-async';
 
 
 const api = createAPI();
@@ -20,17 +22,19 @@ const store = configureStore({
       thunk: {
         extraArgument: api,
       },
-    }),
+    }).concat(redirect),
 });
 
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter history={browserHistory}>
+      <HistoryRouter history={browserHistory}>
+
+          <App />
+
         <ToastContainer />
-        <App />
-      </BrowserRouter>
+      </HistoryRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'));

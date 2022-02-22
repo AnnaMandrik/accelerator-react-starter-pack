@@ -1,5 +1,5 @@
 import { render, screen  } from '@testing-library/react';
-import { Router} from 'react-router-dom';
+import { HistoryRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
@@ -27,9 +27,9 @@ describe('Component: ProductCardsList', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
+        <HistoryRouter history={history}>
           <ProductCardsList />
-        </Router>
+        </HistoryRouter>
       </Provider>,
     );
 

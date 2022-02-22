@@ -2,7 +2,7 @@ import { configureMockStore } from '@jedmao/redux-mock-store';
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { HistoryRouter} from 'react-router-dom';
 import thunk from 'redux-thunk';
 import App from './app';
 import { AppRoute } from '../../const';
@@ -37,9 +37,9 @@ const store = mockStore({
 const history = createMemoryHistory();
 const fakeApp = (
   <Provider store={store}>
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <App />
-    </Router>
+    </HistoryRouter>
   </Provider>
 );
 

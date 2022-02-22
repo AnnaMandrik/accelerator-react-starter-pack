@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import { HistoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import Footer from './footer';
 import {FOOTER_NAV} from '../../const';
@@ -9,9 +9,9 @@ describe('Component: Footer', () => {
     const history = createMemoryHistory();
 
     render(
-      <Router history={history}>
+      <HistoryRouter history={history}>
         <Footer />
-      </Router>,
+      </HistoryRouter>,
     );
 
     expect(screen.getByAltText(/Логотип/i)).toBeInTheDocument();

@@ -1,114 +1,81 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {useEffect} from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
+import queryString from 'query-string';
+import {useSearchParams} from 'react-router-dom';
 import Filter from '../filter/filter';
 import Sorting from '../sorting/sorting';
-import ErrorPage from '../error-page/error-page';
 import ProductCardsList from '../product-cards-list/product-cards-list';
 import Pagination from '../pagination/pagination';
 import {getIsLoaded} from '../../store/main-data/selectors';
-import {selectOrder, selectSorting, selectActualPage, selectFirstPage, selectLastPage, selectMinPrice, selectMaxPrice} from '../../store/action';
-import {fetchFilterUserAction, fetchDefaultMinPriceAction, fetchCatalogPageAction} from '../../store/api-actions';
-import {getUserActualPageCount, collectFilterInfo} from '../../store/user-data/selectors';
-import {getItemsPerPage, getItems} from '../../utils';
+import {fetchFilterUserAction, fetchDefaultMinPriceAction} from '../../store/api-actions';
 import Header from '../header/header';
 import Footer from '../footer/footer';
-import {CountOfPages, STEP_OF_COUNT, AppRoute} from '../../const';
+import {AppRoute} from '../../const';
 import Spinner from '../spinner/spinner';
+import { getUserFilter } from '../../store/user-data/selectors';
+import { clearFilter, clearSort } from '../../store/action';
 
 
-type CatalogPageProps = {
-  actualPage: number,
-}
-
-function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
-  const actualPageCount = useSelector(getUserActualPageCount);
-  const filter = useSelector(collectFilterInfo);
+function CatalogPage(): JSX.Element {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const filter = useSelector(getUserFilter);
+  const {types, strings, minPrice, maxPrice} = filter;
   const isLoaded = useSelector(getIsLoaded);
-
   const dispatch = useDispatch();
+  const {number} = useParams();
+  const page = Number(number);
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-
-
-  useEffect(() => {
-    const searchAllParams = {
-      start: searchParams.get('_start'),
-      min: searchParams.get('price_gte'),
-      max: searchParams.get('price_lte'),
-      sortingType: searchParams.get('_sort'),
-      sortingOrder: searchParams.get('_order'),
-    };
-
-    if (searchAllParams.min !== null) {
-      dispatch(selectMinPrice(searchAllParams.min));
-    }
-    if (searchAllParams.max !== null) {
-      dispatch(selectMaxPrice(searchAllParams.max));
-    }
-    if (searchAllParams.sortingType !== null) {
-      dispatch(selectSorting(searchAllParams.sortingType));
-    }
-    if (searchAllParams.sortingOrder !== null) {
-      dispatch(selectOrder(searchAllParams.sortingOrder));
-    }
-    if (searchAllParams.start !== null) {
-      let firstPage = CountOfPages.First;
-      let lastPage = CountOfPages.Last;
-
-      if (actualPage % STEP_OF_COUNT === 0) {
-        firstPage = actualPage - 3;
-        lastPage = actualPage;
-      }
-      if (actualPage % STEP_OF_COUNT === 1) {
-        firstPage = actualPage - 1;
-        lastPage = actualPage + 2;
-      }
-      if (actualPage % STEP_OF_COUNT === 2) {
-        firstPage = actualPage - 2;
-        lastPage = actualPage + 1;
-      }
-
-      const actualItemsOnPage = getItems(actualPage);
-
-      searchParams.has('_start')
-        ? searchParams.set('_start', String(actualItemsOnPage.firstItem))
-        : searchParams.append('_start', String(actualItemsOnPage.firstItem));
-      searchParams.has('_end')
-        ? searchParams.set('_end', String(actualItemsOnPage.lastItem))
-        : searchParams.append('_end', String(actualItemsOnPage.lastItem));
-
-      dispatch(selectFirstPage(firstPage));
-      dispatch(selectLastPage(lastPage));
-      dispatch(selectActualPage(actualPage));
-    }
-  });
 
   useEffect(() => {
-    const pageItems = getItemsPerPage(actualPage);
-    dispatch(fetchFilterUserAction(pageItems, filter));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, dispatch]);
-
-  useEffect(() => {
-    const pageItems = getItemsPerPage(actualPage);
-    dispatch (fetchCatalogPageAction(pageItems, filter));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actualPage, dispatch]);
-
-  useEffect(() => {
+    let actualFilter = filter;
+    const isSearchQuery = true;
+    const typesSearch = searchParams.getAll('type') || [];
+    const strigsSearch = searchParams.getAll('stringCount') || [];
+    const minPriceSearch = searchParams.get('price_gte') || '';
+    const maxPriceSearch = searchParams.get('price_lte') || '';
+    if (typesSearch.length !== 0) {
+      actualFilter = { ...actualFilter, types: typesSearch };
+    }
+    if (strigsSearch.length !== 0) {
+      actualFilter = { ...actualFilter, strings: strigsSearch };
+    }
+    if (minPriceSearch !== '') {
+      actualFilter = { ...actualFilter, minPrice: minPriceSearch };
+    }
+    if (maxPriceSearch !== '') {
+      actualFilter = { ...actualFilter, maxPrice: maxPriceSearch };
+    }
     dispatch(fetchDefaultMinPriceAction());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(fetchFilterUserAction(actualFilter, page, isSearchQuery));
+
+    return ()=>{
+      dispatch(clearFilter());
+      dispatch(clearSort());
+    };
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  []);
+
+
+  useEffect(() => {
+    const params = queryString.stringify(
+      {
+        'type': types,
+        'stringCount': strings,
+        'price_gte': minPrice,
+        'price_lte': maxPrice,
+      },
+      { skipEmptyString: true, skipNull: true },
+    );
+    setSearchParams(params);
+  }, [types, strings, minPrice, setSearchParams, maxPrice]);
+
 
   if (!isLoaded) {
     return <Spinner/>;
   }
 
-  if (isLoaded && (actualPage > actualPageCount) && (actualPageCount !== 0)) {
-    return <ErrorPage />;
-  }
 
   return (
     <div className="wrapper">
@@ -125,10 +92,10 @@ function CatalogPage({actualPage}: CatalogPageProps): JSX.Element {
             </li>
           </ul>
           <div className="catalog">
-            <Filter />
+            <Filter page={page} />
             <Sorting />
             <ProductCardsList />
-            <Pagination />
+            <Pagination page={page} />
           </div>
         </div>
       </main>

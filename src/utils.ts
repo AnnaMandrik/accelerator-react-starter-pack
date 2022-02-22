@@ -1,59 +1,56 @@
 import queryString from 'query-string';
-import {ITEMS_PER_PAGE, DIGIT_ZERO} from './const';
+import {ITEMS_PER_PAGE} from './const';
 import {Guitars, Guitar} from './types/guitar';
+import { FilterState, SortState } from './types/state';
 
 
-export const getItemsPerPage = (page: number): string => {
-  const firstItem = page * ITEMS_PER_PAGE - ITEMS_PER_PAGE;
-  const lastItem = page * ITEMS_PER_PAGE;
-  return `_start=${firstItem}&_end=${lastItem}`;
-};
-
-export const getItems = (page: number) => ({
-  firstItem: page * ITEMS_PER_PAGE - ITEMS_PER_PAGE,
-  lastItem: page * ITEMS_PER_PAGE,
-});
-
-
-const createTypesStringsQuery = (types: string[], strings: string[]) =>
-  queryString.stringify(
+const createFilterQuery = (filter: FilterState) : string =>  {
+  const {types, strings, minPrice, maxPrice} = filter;
+  return queryString.stringify(
     {
       type: types,
       stringCount: strings,
+      'price_gte': minPrice,
+      'price_lte': maxPrice,
     },
-    {skipEmptyString: true, skipNull: true},
+    { skipEmptyString: true, skipNull: true },
   );
+};
 
-export const getFilterInfo = (min: string, max: string, types: string[], strings: string[], sorting: string, order: string): string => {
-  let priceGteQuery = '';
-  let priceLteQuery = '';
-  let sortingQuery = '';
-  let orderQuery = '';
+const createSortQuery =  (sort: SortState) => {
+  const {sorting, order} = sort;
+  return queryString.stringify(
+    {
+      _sort: sorting,
+      _order: order,
+    },
+    { skipEmptyString: true, skipNull: true },
+  );
+};
 
-  if (min !== '') {
-    priceGteQuery += `price_gte=${min}`;
-  }
+const createPageQuery = (page: number | undefined): string => {
+  const lastItem = page ? + page * ITEMS_PER_PAGE : ITEMS_PER_PAGE;
+  const firstItem = lastItem - ITEMS_PER_PAGE;
+  return queryString.stringify(
+    {
+      _start: firstItem,
+      _end: lastItem,
+    },
+    { skipEmptyString: true, skipNull: true },
+  );
+};
 
-  if (max !== '') {
-    priceLteQuery += `price_lte=${max}`;
-  }
+export const createQuery = (page: number | undefined, filter: FilterState, sort: SortState):string => {
+  const pageQuery = createPageQuery(page);
+  const filterQuery = createFilterQuery(filter);
+  const sortQuery = createSortQuery(sort);
 
-  if (sorting !== '') {
-    sortingQuery +=  `_sort=${sorting}`;
-  }
-
-  if (order !== '') {
-    orderQuery +=  `_order=${order}`;
-  }
-
-  const typesStringsQuery = createTypesStringsQuery(types,strings);
-
-  const fullQuery = [priceGteQuery, priceLteQuery, sortingQuery, orderQuery, typesStringsQuery].filter((query) => query !== '').join('&');
-  return `&${fullQuery}&_embed=comments`;
+  const fullQuery = [pageQuery, filterQuery, sortQuery].filter((query) => query !== '').join('&');
+  return `/?${fullQuery}&_embed=comments`;
 };
 
 
-export const compareFunc = (guitarA: Guitar, guitarB: Guitar) => {
+const compareFunc = (guitarA: Guitar, guitarB: Guitar) => {
   if (guitarA.name < guitarB.name) {
     return -1;
   }
@@ -77,47 +74,10 @@ export const getSortedResult = (data: Guitar[], searchTerm: string) => {
   return [...matchGuitars, ...notMatchGuitars.sort(compareFunc)];
 };
 
-export const getCheckingMinPrice = (userPrice: number, minPrice: number, maxPrice: number, maxUserPrice: string): string => {
-  let price = userPrice;
 
-  if (price < minPrice || price < DIGIT_ZERO) {
-    price = minPrice;
+export const allItems = (factItems: string[], item: string): string[] => {
+  if (factItems.includes(item)) {
+    return factItems.filter((value) => value !== item);
   }
-
-  if (price > maxPrice) {
-    price = maxPrice;
-  }
-
-  if (maxUserPrice !== '') {
-    const max = Number(maxUserPrice);
-
-    if (price > max) {
-      price = max;
-    }
-  }
-
-  return String(price);
-};
-
-
-export const getCheckingMaxPrice = (userPrice: number, minPrice: number, maxPrice: number, minUserPrice: string): string => {
-  let price = userPrice;
-
-  if (price < minPrice) {
-    price = minPrice;
-  }
-
-  if (price > maxPrice || price < DIGIT_ZERO) {
-    price = maxPrice;
-  }
-
-  if (minUserPrice !== '') {
-    const min = Number(minUserPrice);
-
-    if (price < min) {
-      price = min;
-    }
-  }
-
-  return String(price);
+  return [...factItems, item];
 };

@@ -7,24 +7,29 @@ export type MainData = {
   isDataLoaded: boolean,
   minDefaultPrice: number,
   maxDefaultPrice: number,
-  pageCount: number,
+  pagesCount: number,
   currentProduct: Guitar,
   currentComments: Comment[],
+  commentsCounter: number,
 };
 
 export type UserData = {
   searching: Guitars,
+  filter: FilterState,
+  sort: SortState,
+};
+
+export type FilterState = {
+  types: string [],
+  strings: string [],
   minPrice: string,
   maxPrice: string,
-  types: string[],
-  strings: string[],
+}
+
+export type SortState = {
   sorting: string,
   order: string,
-  actualPage: number,
-  actualPageCount: number,
-  firstPage: number,
-  lastPage: number,
-};
+}
 
 
 export type State = RootState;

@@ -1,102 +1,81 @@
-import {useSelector, useDispatch} from 'react-redux';
-import {useLocation} from 'react-router-dom';
-import {AppRoute, STEP_OF_COUNT, DEFAULT_PAGE} from '../../const';
-import {getPagesCount} from '../../store/main-data/selectors';
-import {getUserActualPage, getIsFilterChecked, getUserActualPageCount, getUserFirstPage, getUserLastPage} from '../../store/user-data/selectors';
-import {selectActualPage, nextFirstPage, nextLastPage, prevFirstPage, prevLastPage} from '../../store/action';
-import browserHistory from '../../browser-history';
 import { memo } from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {generatePath, Link} from 'react-router-dom';
+import {AppRoute, DEFAULT_PAGE, ITEMS_PER_PAGE} from '../../const';
+import {getPagesCount} from '../../store/main-data/selectors';
+import usePage from '../../hooks/use-page/use-page';
+import { fetchCatalogPageAction } from '../../store/api-actions';
 
 
-function Pagination(): JSX.Element {
-  const isFilter = useSelector(getIsFilterChecked);
+type PaginationProps = {
+  page: number;
+};
+
+function Pagination({page}: PaginationProps): JSX.Element | null{
   const pagesCount = useSelector(getPagesCount);
-  const actualPageCount = useSelector(getUserActualPageCount);
-  const firstPage = useSelector(getUserFirstPage);
-  const lastPage = useSelector(getUserLastPage);
-  const actualPage = useSelector(getUserActualPage);
-
   const dispatch = useDispatch();
+  const pages = usePage(page);
+  const prevPage = page - 1;
+  const nextPage = page + 1;
+  const prevPagePath = generatePath(`${AppRoute.Main} ${AppRoute.Page}`, {number: prevPage.toString()});
+  const nextPagePath = generatePath(`${AppRoute.Main}${AppRoute.Page}`, {number: nextPage.toString()});
 
-  const pageCountDefault = isFilter ? actualPageCount : pagesCount;
-  const pagination = Array(pageCountDefault).fill(true).map((_, i) => i + 1);
-
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-
+  if (pagesCount === null) {
+    return null;
+  }
+  const lastPage = Math.ceil(pagesCount /ITEMS_PER_PAGE);
 
   return (
     <div className="pagination page-content__pagination">
       <ul className="pagination__list">
-        {
-          (actualPage !== DEFAULT_PAGE) &&
-          <li className="pagination__page pagination__page--prev" id="prev">
-            <a
-              className="link pagination__page-link"
-              href="##"
-              onClick={(evt) => {
-                evt.preventDefault();
-                const currentPage = actualPage - 1;
-
-                if (currentPage % STEP_OF_COUNT === 0) {
-                  dispatch(prevFirstPage());
-                  dispatch(prevLastPage());
-                }
-
-                dispatch(selectActualPage(currentPage));
-                browserHistory.push(AppRoute.Page.replace(':page', `page_${currentPage}/?${searchParams.toString()}`));
-              }}
-            >
+        <li className="pagination__page pagination__page--prev"
+          id="prev"
+          style={{ visibility: page === DEFAULT_PAGE ? 'hidden' : 'visible' }}
+        >
+          <Link
+            to={prevPagePath}
+            className="link pagination__page-link"
+            onClick={() => {
+              dispatch(fetchCatalogPageAction(prevPage));
+            }}
+          >
               Назад
-            </a>
-          </li>
-        }
+          </Link>
+        </li>
         {
-          pagination.slice(firstPage, lastPage).map((page) => {
-            const key = `${page}-page`;
+          pages.map((value) => {
+            const pagePath = generatePath(`${AppRoute.Page}`, {number: value.toString()});
+            if (value > lastPage) {
+              return null;
+            }
 
             return (
-              <li key={key} className="pagination__page">
-                <a
-                  href="##"
-                  className= {`link pagination__page-link${(page === actualPage) ? ' pagination__page--active' : ''}`}
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    dispatch(selectActualPage(page));
-                    browserHistory.push(AppRoute.Page.replace(':page', `page_${page}/?${searchParams.toString()}`));
+              <li key={value} className={`pagination__page ${value === page ? 'pagination__page--active' : ''}`}>
+                <Link
+                  to={`/${pagePath}`}
+                  className= "link pagination__page-link"
+                  onClick={() => {
+                    dispatch(fetchCatalogPageAction(value));
                   }}
                 >
-                  {page}
-                </a>
+                  {value}
+                </Link>
               </li>
             );
           })
         }
-        {
-          (actualPage !== actualPageCount && actualPageCount !== 0) &&
 
-          <li className="pagination__page pagination__page--next" id="next">
-            <a
-              className="link pagination__page-link"
-              href="##"
-              onClick={(evt) => {
-                evt.preventDefault();
-                const currentPage = actualPage + 1;
-
-                if (currentPage % STEP_OF_COUNT === 1) {
-                  dispatch(nextFirstPage());
-                  dispatch(nextLastPage());
-                }
-
-                dispatch(selectActualPage(currentPage));
-                browserHistory.push(AppRoute.Page.replace(':page', `page_${currentPage}/?${searchParams.toString()}`));
-              }}
-            >
-              Далее
-            </a>
-          </li>
-        }
+        <li className="pagination__page pagination__page--next" id="next"
+          style={{ visibility: page >= lastPage ? 'hidden' : 'visible' }}
+        >
+          <Link
+            className="link pagination__page-link"
+            to={nextPagePath}
+            onClick={() => dispatch(fetchCatalogPageAction(nextPage))}
+          >
+            Далее
+          </Link>
+        </li>
       </ul>
     </div>
   );

@@ -1,10 +1,11 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {FormEvent, useState, useRef, ChangeEvent} from 'react';
-import {useHistory} from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
 import {getUserSearching} from '../../store/user-data/selectors';
 import {fetchSearchingProductsUserAction} from '../../store/api-actions';
 import {AppRoute} from '../../const';
 import {getSortedResult} from '../../utils';
+import { clearSearchingProducts } from '../../store/action';
 
 
 function HeaderSearch(): JSX.Element {
@@ -12,9 +13,12 @@ function HeaderSearch(): JSX.Element {
   const searchRef = useRef<HTMLInputElement | null>(null);
   const guitarsList = useSelector(getUserSearching);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const history = useNavigate();
 
   const handleSearchChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.value === '') {
+      dispatch(clearSearchingProducts());
+    }
     setSearchString(evt.target.value);
     dispatch(fetchSearchingProductsUserAction(evt.target.value));
   };
@@ -52,25 +56,26 @@ function HeaderSearch(): JSX.Element {
           (!searchString && sortedResult.length)
             ? ''
             : sortedResult.map((guitar) => {
-              const key = `${guitar.id}-${guitar.name}`;
+              const { name, id } = guitar;
+              const path = generatePath(AppRoute.Product, {id: id.toString()});
               return (
                 <li className="form-search__select-item"
                   tabIndex={0}
-                  key={key}
+                  key={id}
                   onClick={() => {
-                    history.push(`${AppRoute.Product}${guitar.id}`);
+                    history(`/${path}`);
                     setSearchString('');
                   }}
                   onKeyPress={(evt) => {
                     evt.preventDefault();
                     if (evt.key === 'Enter') {
-                      history.push(`${AppRoute.Product}${guitar.id}`);
+                      history(`/${path}`);
                       setSearchString('');
                     }
                   }}
 
                 >
-                  {guitar.name}
+                  {name}
                 </li>
               );
             })

@@ -1,92 +1,74 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {useRef, FormEvent, useEffect, useState, memo} from 'react';
-import {useLocation} from 'react-router-dom';
+import {ChangeEvent, memo, useEffect, useState} from 'react';
+
 import {getDefaultMinPrice, getDefaultMaxPrice} from '../../store/main-data/selectors';
-import {getMaxUserPrice, getMinUserPrice} from '../../store/user-data/selectors';
-import {FilterOfPrices, DEFAULT_PAGE, CountOfPages, AppRoute} from '../../const';
-import {selectMaxPrice, selectMinPrice, selectActualPage, selectFirstPage, selectLastPage} from '../../store/action';
-import browserHistory from '../../browser-history';
-import {getCheckingMinPrice, getCheckingMaxPrice, getItems} from '../../utils';
+import {FilterOfPrices} from '../../const';
+import { getUserFilter } from '../../store/user-data/selectors';
+import { fetchFilterUserAction } from '../../store/api-actions';
 
 
-function FilterPrice(): JSX.Element {
+type FilterPriceProps = {
+  page: number
+}
+
+function FilterPrice({page}: FilterPriceProps): JSX.Element {
   const minDefaultPrice = useSelector(getDefaultMinPrice);
   const maxDefaultPrice = useSelector(getDefaultMaxPrice);
-  const maxUserPrice = useSelector(getMaxUserPrice);
-  const minUserPrice = useSelector(getMinUserPrice);
+  const filter = useSelector(getUserFilter);
+  const {minPrice, maxPrice} = filter;
 
-  const [minPrice, setMinPrice] = useState<string>(minUserPrice);
-  const [maxPrice, setMaxPrice] = useState<string>(maxUserPrice);
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-
-  const minDefaultPriceRef = useRef(null);
-  const maxDefaultPriceRef = useRef(null);
+  const [actualMinPrice, setActualMinPrice] = useState(minPrice);
+  const [actualMaxPrice, setActualMaxPrice] = useState(maxPrice);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setMinPrice(minUserPrice);
-    setMaxPrice(maxUserPrice);
-  }, [minUserPrice, maxUserPrice]);
+    setActualMinPrice(minPrice);
+    setActualMaxPrice(maxPrice);
+  }, [minPrice, maxPrice]);
 
 
-  const handleInputBlur = (evt: FormEvent<HTMLInputElement>) => {
-    switch (evt.currentTarget.id) {
-      case FilterOfPrices.PRICE_MIN.id: {
-        if (evt.currentTarget.value === '') {
-          setMinPrice(evt.currentTarget.value);
-          dispatch(selectMinPrice(evt.currentTarget.value));
-          searchParams.delete('price_gte');
-          break;
-        }
-        const userPrice = Number(evt.currentTarget.value);
-        const checkedMinPrice = getCheckingMinPrice(userPrice, minDefaultPrice, maxDefaultPrice, maxPrice);
-        setMinPrice(checkedMinPrice);
-        dispatch(selectMinPrice(checkedMinPrice));
-
-        searchParams.has('price_gte')
-          ? searchParams.set('price_gte', checkedMinPrice)
-          : searchParams.append('price_gte', checkedMinPrice);
-        break;
-      }
-      case FilterOfPrices.PRICE_MAX.id: {
-        if (evt.currentTarget.value === '') {
-          setMaxPrice(evt.currentTarget.value);
-          dispatch(selectMaxPrice(evt.currentTarget.value));
-          searchParams.delete('price_lte');
-          break;
-        }
-        const userPrice = Number(evt.currentTarget.value);
-        const checkedMaxPrice = getCheckingMaxPrice(userPrice, minDefaultPrice, maxDefaultPrice, minPrice);
-        setMaxPrice(checkedMaxPrice);
-        dispatch(selectMaxPrice(checkedMaxPrice));
-
-        searchParams.has('price_lte')
-          ? searchParams.set('price_lte', checkedMaxPrice)
-          : searchParams.append('price_lte', checkedMaxPrice);
-        break;
-      }
-      default:
-        break;
+  const handleMinInputBlur = (evt: ChangeEvent<HTMLInputElement>) => {
+    let actualFilter = filter;
+    let userPrice = evt.target.value;
+    if (userPrice === '') {
+      setActualMinPrice(userPrice);
+      return;
     }
-
-    dispatch(selectFirstPage(CountOfPages.First));
-    dispatch(selectLastPage(CountOfPages.Last));
-    dispatch(selectActualPage(DEFAULT_PAGE));
-    const actualItemsOnPage = getItems(DEFAULT_PAGE);
-
-    searchParams.has('_start')
-      ? searchParams.set('_start', String(actualItemsOnPage.firstItem))
-      : searchParams.append('_start', String(actualItemsOnPage.firstItem));
-    searchParams.has('_end')
-      ? searchParams.set('_end', String(actualItemsOnPage.lastItem))
-      : searchParams.append('_end', String(actualItemsOnPage.lastItem));
-
-    browserHistory.push(AppRoute.Page.replace(':page', `page_${DEFAULT_PAGE}/?${searchParams.toString()}`));
+    if (+userPrice < minDefaultPrice) {
+      userPrice = minDefaultPrice.toString();
+    }
+    if (+userPrice > maxDefaultPrice) {
+      userPrice = maxDefaultPrice.toString();
+    }
+    if (+userPrice > +actualMinPrice&&actualMaxPrice!=='') {
+      userPrice = actualMaxPrice;
+    }
+    setActualMinPrice(userPrice);
+    actualFilter = {...actualFilter, minPrice: userPrice};
+    dispatch(fetchFilterUserAction(actualFilter, page));
   };
 
+  const handleMaxInputBlur = (evt: ChangeEvent<HTMLInputElement>) => {
+    let actualFilter = filter;
+    let userPrice = evt.target.value;
+    if (userPrice === '') {
+      setActualMaxPrice(userPrice);
+      return;
+    }
+    if (+userPrice > maxDefaultPrice) {
+      userPrice = maxDefaultPrice.toString();
+    }
+    if (+userPrice < minDefaultPrice) {
+      userPrice = minDefaultPrice.toString();
+    }
+    if (+userPrice < +actualMinPrice&&actualMaxPrice!=='') {
+      userPrice = actualMinPrice;
+    }
+    setActualMaxPrice(userPrice);
+    actualFilter = {...actualFilter, maxPrice: userPrice};
+    dispatch(fetchFilterUserAction(actualFilter, page));
+  };
 
   return (
     <fieldset className="catalog-filter__block">
@@ -99,10 +81,9 @@ function FilterPrice(): JSX.Element {
             placeholder={minDefaultPrice.toString()}
             id={FilterOfPrices.PRICE_MIN.id}
             name={FilterOfPrices.PRICE_MIN.name}
-            ref={minDefaultPriceRef}
-            onChange={(evt) => setMinPrice(evt.currentTarget.value)}
-            value={minPrice}
-            onBlur={handleInputBlur}
+            onChange={(evt) => setActualMinPrice(evt.currentTarget.value)}
+            value={actualMinPrice}
+            onBlur={handleMinInputBlur}
             data-testid="min-price"
           />
         </div>
@@ -113,10 +94,9 @@ function FilterPrice(): JSX.Element {
             placeholder={maxDefaultPrice.toString()}
             id={FilterOfPrices.PRICE_MAX.id}
             name={FilterOfPrices.PRICE_MAX.name}
-            ref={maxDefaultPriceRef}
-            onChange={(evt) => setMaxPrice(evt.currentTarget.value)}
-            value={maxPrice}
-            onBlur={handleInputBlur}
+            onChange={(evt) => setActualMaxPrice(evt.currentTarget.value)}
+            value={actualMaxPrice}
+            onBlur={handleMaxInputBlur}
             data-testid="max-price"
           />
         </div>

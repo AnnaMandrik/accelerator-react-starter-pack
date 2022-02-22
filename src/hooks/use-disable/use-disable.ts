@@ -1,26 +1,24 @@
 import { useCallback } from 'react';
-import {useSelector} from 'react-redux';
 import { ProductProperty } from '../../const';
-import {getUserType} from '../../store/user-data/selectors';
+import { FilterState } from '../../types/state';
 
-function useDisable(userType: string[]): (userStrings: string) => boolean {
-  const type = useSelector(getUserType);
-  userType = type;
+function useDisable(filter: FilterState): (strings: string) => boolean {
+  const {types} = filter;
   const checkIsDisable = useCallback(
-    (userStrings: string) => {
-      if (userType.length === 0) {
+    (strings: string) => {
+      if (types.length === 0) {
         return false;
       }
-      const isDisable = !userType
+      const isDisable = !types
         .reduce((acc: string[], item: string) => {
           const counts = ProductProperty.get(item) || [];
           return [...acc, ...counts];
         }, [])
-        .includes(userStrings);
+        .includes(strings);
 
       return isDisable;
     },
-    [userType]);
+    [types]);
 
   return checkIsDisable;
 }

@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import {HistoryRouter} from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import {fakeProducts} from '../../mocks';
 import CatalogPage from './catalog-page';
-import {DEFAULT_PAGE, SortKey} from '../../const';
+import {SortKey} from '../../const';
 import thunk from 'redux-thunk';
 
 const fakeGuitars = fakeProducts;
@@ -39,9 +39,9 @@ describe('Component: CatalogPage', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
-          <CatalogPage actualPage={DEFAULT_PAGE} />
-        </Router>
+        <HistoryRouter history={history}>
+          <CatalogPage />
+        </HistoryRouter>
       </Provider>,
     );
 

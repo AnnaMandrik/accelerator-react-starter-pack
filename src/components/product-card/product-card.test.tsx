@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import { HistoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import {fakeComments, fakeProduct} from '../../mocks';
 import ProductCard from './product-card';
@@ -25,9 +25,9 @@ describe('Component: ProductCard', () => {
     const history = createMemoryHistory();
 
     render(
-      <Router history={history}>
+      <HistoryRouter history={history}>
         <ProductCard guitar={product}/>
-      </Router>,
+      </HistoryRouter>,
     );
 
     expect(screen.getByText(NAME)).toBeInTheDocument();

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { HistoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
@@ -26,9 +26,9 @@ describe('Component: HeaderSearch', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
+        <HistoryRouter history={history}>
           <HeaderSearch />
-        </Router>
+        </HistoryRouter>
       </Provider>,
     );
 

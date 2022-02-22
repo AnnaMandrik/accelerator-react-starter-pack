@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import { HistoryRouter, useParams } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
@@ -7,12 +7,16 @@ import Pagination from './pagination';
 
 const mockStore = configureMockStore();
 const history = createMemoryHistory();
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const {number} = useParams();
+const page = Number(number);
+
 
 const getFakeApp = (store: any) => (
   <Provider store={store}>
-    <Router history={history}>
-      <Pagination />
-    </Router>
+    <HistoryRouter history={history}>
+      <Pagination page={page} />
+    </HistoryRouter>
   </Provider>
 );
 

@@ -2,6 +2,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {ActionType} from '../types/action';
 import {Guitars, Guitar, Product} from '../types/guitar';
 import {Comment} from '../types/comment';
+import { FilterState, SortState } from '../types/state';
 
 export const loadProductCardsList = createAction(
   ActionType.LoadProductCardsList,
@@ -24,12 +25,14 @@ export const loadMaxDefaultPrice = createAction(
   }),
 );
 
-export const loadPageCount = createAction(
-  ActionType.LoadPageCount,
+export const loadPagesCount = createAction(
+  ActionType.LoadPagesCount,
   (count: number) => ({
     payload: count,
   }),
 );
+
+export const clearPagesCount = createAction(ActionType.ClearPagesCount);
 
 export const loadCurrentProduct = createAction(
   ActionType.LoadCurrentProduct,
@@ -38,12 +41,16 @@ export const loadCurrentProduct = createAction(
   }),
 );
 
+export const clearCurrentProduct = createAction(ActionType.ClearCurrentProduct);
+
 export const loadCurrentComments = createAction(
   ActionType.LoadCurrentComments,
   (currentComments: Comment[]) => ({
     payload: currentComments,
   }),
 );
+
+export const clearCurrentComments = createAction(ActionType.ClearCurrentComments);
 
 export const searchingProducts = createAction(
   ActionType.SearchingProducts,
@@ -52,79 +59,25 @@ export const searchingProducts = createAction(
   }),
 );
 
+export const clearSearchingProducts = createAction(ActionType.ClearSearchingProducts);
 
-export const selectMinPrice = createAction(
-  ActionType.SelectMinPrice,
-  (minPrice: string) => ({
-    payload: minPrice,
+
+export const selectFilter = createAction(
+  ActionType.SelectFilter,
+  (filter: FilterState) => ({
+    payload: filter,
   }),
 );
 
-export const selectMaxPrice = createAction(
-  ActionType.SelectMaxPrice,
-  (maxPrice: string) => ({
-    payload: maxPrice,
+export const clearFilter = createAction(ActionType.ClearFilter);
+
+
+export const selectSort = createAction(
+  ActionType.SelectSort,
+  (sort: SortState) => ({
+    payload: sort,
   }),
 );
 
-export const selectType = createAction(
-  ActionType.SelectType,
-  (types: string[]) => ({
-    payload: types,
-  }),
-);
-
-export const selectStrings = createAction(
-  ActionType.SelectStrings,
-  (types: string[]) => ({
-    payload: types,
-  }),
-);
-
-export const selectSorting = createAction(
-  ActionType.SelectSorting,
-  (sorting: string) => ({
-    payload: sorting,
-  }),
-);
-
-export const selectOrder = createAction(
-  ActionType.SelectOrder,
-  (order: string) => ({
-    payload: order,
-  }),
-);
-
-export const selectActualPage = createAction(
-  ActionType.SelectActualPage,
-  (actualPage: number) => ({
-    payload: actualPage,
-  }),
-);
-
-export const selectActualPageCount = createAction(
-  ActionType.SelectActualPageCount,
-  (actualPageCount: number) => ({
-    payload: actualPageCount,
-  }),
-);
-
-export const selectFirstPage = createAction(
-  ActionType.SelectFirstPage,
-  (firstPage: number) => ({
-    payload: firstPage,
-  }),
-);
-
-export const selectLastPage = createAction(
-  ActionType.SelectLastPage,
-  (lastPage: number) => ({
-    payload: lastPage,
-  }),
-);
-
-export const prevFirstPage = createAction(ActionType.PrevFirstPage);
-export const prevLastPage = createAction(ActionType.PrevLastPage);
-export const nextFirstPage = createAction(ActionType.NextFirstPage);
-export const nextLastPage = createAction(ActionType.NextLastPage);
+export const clearSort = createAction(ActionType.ClearSort);
 

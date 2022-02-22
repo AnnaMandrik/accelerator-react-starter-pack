@@ -8,7 +8,7 @@ const getGuitars = (state: State): Product[] => state[NameDataList.MainData].pro
 const getIsLoaded = (state: State): boolean => state[NameDataList.MainData].isDataLoaded;
 const getDefaultMinPrice = (state: State): number => state[NameDataList.MainData].minDefaultPrice;
 const getDefaultMaxPrice = (state: State): number => state[NameDataList.MainData].maxDefaultPrice;
-const getPagesCount = (state: State): number => state[NameDataList.MainData].pageCount;
+const getPagesCount = (state: State): number => state[NameDataList.MainData].pagesCount;
 const getCurrentProduct = (state: State): Guitar => state[NameDataList.MainData].currentProduct;
 const getCurrentComments = (state:State): Comment[] => state[NameDataList.MainData].currentComments;
 

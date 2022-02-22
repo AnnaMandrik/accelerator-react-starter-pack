@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import { HistoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
@@ -24,9 +24,9 @@ describe('Component: Header', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
+        <HistoryRouter history={history}>
           <Header />
-        </Router>
+        </HistoryRouter>
       </Provider>,
     );
 

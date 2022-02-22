@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import {HistoryRouter, useParams} from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
@@ -11,6 +11,9 @@ import thunk from 'redux-thunk';
 const mockGuitars = fakeProducts;
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const {number} = useParams();
+const page = Number(number);
 
 describe('Component: Filter', () => {
   const store = mockStore({
@@ -37,9 +40,9 @@ describe('Component: Filter', () => {
 
   const fakeApp = (
     <Provider store={store}>
-      <Router history={history}>
-        <Filter />
-      </Router>
+      <HistoryRouter history={history}>
+        <Filter page={page} />
+      </HistoryRouter>
     </Provider>
   );
 
