@@ -50,7 +50,7 @@ describe('Reducer: user-data', () => {
   });
 
   it('should clear sort by clearSort', () => {
-    state = { ...state, sort: FAKE_SORT };
+    state = { ...initialState, sort: FAKE_SORT };
     expect(userData(state, clearSort())).toEqual(initialState);
   });
 

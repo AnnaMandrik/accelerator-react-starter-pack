@@ -31,7 +31,7 @@ ReactDOM.render(
     <Provider store={store}>
       <HistoryRouter history={browserHistory}>
 
-          <App />
+        <App />
 
         <ToastContainer />
       </HistoryRouter>

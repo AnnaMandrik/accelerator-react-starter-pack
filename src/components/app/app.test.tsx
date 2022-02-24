@@ -6,32 +6,14 @@ import { HistoryRouter} from 'react-router-dom';
 import thunk from 'redux-thunk';
 import App from './app';
 import { AppRoute } from '../../const';
-import {fakeProducts} from '../../mocks';
+import { MockMainData, MockUserData } from '../../mocks';
 
-const fakeGuitars = fakeProducts;
+
 const mockStore = configureMockStore([thunk]);
 
 const store = mockStore({
-  MainData: {
-    productsList: fakeGuitars,
-    minDefaultPrice: 1500,
-    maxDefaultPrice: 55000,
-    isDataLoaded: true,
-    pageCount: 3,
-  },
-  UserData: {
-    minPrice: '2000',
-    maxPrice: '15000',
-    types: [],
-    strings: [],
-    sorting: '',
-    order: '',
-    actualPage: 1,
-    actualPageCount: 3,
-    firstPage: 1,
-    lastPage: 3,
-    searching: fakeGuitars,
-  },
+  MainData: MockMainData,
+  UserData: MockUserData,
 });
 
 const history = createMemoryHistory();
@@ -50,7 +32,7 @@ describe('Application Routing', () => {
     expect(screen.getByText(/каталог гитар/i)).toBeInTheDocument();
   });
   it('should render "ErrorPage" when user navigate to non-existent route', () => {
-    history.push('/non-existent-route');
+    history.push(AppRoute.Error);
     render(fakeApp);
 
     expect(screen.getByText(/404 страница не найдена/i)).toBeInTheDocument();

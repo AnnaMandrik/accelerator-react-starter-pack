@@ -4,7 +4,7 @@ import {Guitars, Guitar} from './types/guitar';
 import { FilterState, SortState } from './types/state';
 
 
-const createFilterQuery = (filter: FilterState) : string =>  {
+export const createFilterQuery = (filter: FilterState) : string =>  {
   const {types, strings, minPrice, maxPrice} = filter;
   return queryString.stringify(
     {

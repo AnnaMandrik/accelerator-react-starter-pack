@@ -6,7 +6,7 @@ import Spinner from '../spinner/spinner';
 
 
 function ProductCardsList(): JSX.Element {
-  const productsList = useSelector(getGuitars);
+  const allProductsList = useSelector(getGuitars);
   const isLoaded = useSelector(getIsLoaded);
 
   if (!isLoaded) {
@@ -15,7 +15,7 @@ function ProductCardsList(): JSX.Element {
 
   return (
     <div className="cards catalog__cards" data-testid="load-ok">
-      {productsList.slice(0, ITEMS_PER_PAGE).map((product) => (
+      {allProductsList.slice(0, ITEMS_PER_PAGE).map((product) => (
         <ProductCard key={product.id} guitar={product} /> ))}
     </div>
   );

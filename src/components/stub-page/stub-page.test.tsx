@@ -13,9 +13,7 @@ describe('Component: StubPage', () => {
   it('should render correctly', () => {
     const store = mockStore({
       MainData: {},
-      UserData: {
-        searching: [],
-      },
+      UserData: {},
     });
 
     render(

@@ -17,8 +17,8 @@ function Pagination({page}: PaginationProps): JSX.Element | null{
   const pages = usePage(page);
   const prevPage = page - 1;
   const nextPage = page + 1;
-  const prevPagePath = generatePath(`${AppRoute.Main} ${AppRoute.Page}`, {number: prevPage.toString()});
-  const nextPagePath = generatePath(`${AppRoute.Main}${AppRoute.Page}`, {number: nextPage.toString()});
+  const prevPagePath = generatePath(`${AppRoute.Main} ${AppRoute.Catalog}`, {number: prevPage.toString()});
+  const nextPagePath = generatePath(`${AppRoute.Main}${AppRoute.Catalog}`, {number: nextPage.toString()});
 
   if (pagesCount === null) {
     return null;
@@ -31,6 +31,7 @@ function Pagination({page}: PaginationProps): JSX.Element | null{
         <li className="pagination__page pagination__page--prev"
           id="prev"
           style={{ visibility: page === DEFAULT_PAGE ? 'hidden' : 'visible' }}
+          data-testid = 'back'
         >
           <Link
             to={prevPagePath}
@@ -44,7 +45,7 @@ function Pagination({page}: PaginationProps): JSX.Element | null{
         </li>
         {
           pages.map((value) => {
-            const pagePath = generatePath(`${AppRoute.Page}`, {number: value.toString()});
+            const pagePath = generatePath(`${AppRoute.Catalog}`, {number: value.toString()});
             if (value > lastPage) {
               return null;
             }
@@ -57,6 +58,7 @@ function Pagination({page}: PaginationProps): JSX.Element | null{
                   onClick={() => {
                     dispatch(fetchCatalogPageAction(value));
                   }}
+                  data-testid = 'pagination'
                 >
                   {value}
                 </Link>
@@ -67,6 +69,7 @@ function Pagination({page}: PaginationProps): JSX.Element | null{
 
         <li className="pagination__page pagination__page--next" id="next"
           style={{ visibility: page >= lastPage ? 'hidden' : 'visible' }}
+          data-testid = 'next'
         >
           <Link
             className="link pagination__page-link"

@@ -13,8 +13,10 @@ describe('Component: Sorting', () => {
     const store = mockStore({
       MainData: {},
       UserData: {
-        sorting: SortKey.Price,
-        order: OrderKey.Asc,
+        sort: {
+          sorting: SortKey.Price,
+          order: OrderKey.Asc,
+        },
       },
     });
 

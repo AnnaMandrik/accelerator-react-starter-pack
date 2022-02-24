@@ -7,15 +7,14 @@ import {State} from '../types/state';
 import {APIRoute} from '../const';
 import {fetchCatalogPageAction, fetchSearchingProductsUserAction, fetchCurrentProductAction} from './api-actions';
 import {loadCurrentComments, loadProductCardsList, searchingProducts, loadCurrentProduct} from './action';
-import {fakeProducts, HttpCode, MakeFakeGuitar, fakeComments} from '../mocks';
+import {fakeProducts, HttpCode, MakeFakeGuitar, fakeComments, MockUserData} from '../mocks';
+import { createQuery } from '../utils';
 
 
+jest.mock('../utils');
+const createFakeQuery = createQuery as jest.MockedFunction<typeof createQuery>;
 const FAKE_QUERY = '?name=СURT&type=electric';
-//const FAKE_COUNT = 20;
 const FAKE_PAGE = 1;
-//const FAKE_NEW_PAGE = 5;
-//const EMPTY_DATA = [] as Guitar[];
-//const FAKE_SEARCH_QUERY = true;
 const FAKE_ID = '1';
 const FAKE_PRODUCT_INFO = MakeFakeGuitar();
 const FAKE_COMMENTS = fakeComments;
@@ -32,18 +31,17 @@ describe('Async actions', () => {
       ThunkDispatch<State, typeof api, Action>
     >(middlewares);
 
-  it('should dispatch loadProductCardsList when GET /guitars', async () => {
-
+  it('should dispatch loadProductCardsList when GET page & HttpCode.OK', async () => {
     mockAPI
       .onGet(`${APIRoute.Guitars}${FAKE_QUERY}`)
       .reply(HttpCode.Ok, fakeProducts);
-
-    const store = mockStore();
+    const store = mockStore({ UserData: MockUserData });
+    createFakeQuery.mockReturnValue(FAKE_QUERY);
     await store.dispatch(fetchCatalogPageAction(FAKE_PAGE));
-
     expect(store.getActions()).toEqual([
       loadProductCardsList(fakeProducts),
     ]);
+    expect(createFakeQuery).toBeCalled();
   });
 
 

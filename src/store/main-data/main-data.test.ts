@@ -1,6 +1,6 @@
 import {fakeProduct, fakeProducts, fakeComments} from '../../mocks';
 import {mainData} from '../main-data/main-data';
-import {loadCurrentComments, loadProductCardsList, loadPagesCount, loadMaxDefaultPrice, loadMinDefaultPrice, loadCurrentProduct, clearCurrentProduct, clearCurrentComments} from '../action';
+import {loadCurrentComments, loadProductCardsList, loadPagesCount, loadMaxDefaultPrice, loadMinDefaultPrice, loadCurrentProduct, clearCurrentProduct, clearCurrentComments, clearPagesCount} from '../action';
 import { Guitar } from '../../types/guitar';
 import { START_COMMENTS_COUNT } from '../../const';
 import { MainData } from '../../types/state';
@@ -44,9 +44,13 @@ describe('Reducer: main-data', () => {
       .toEqual({...state, maxDefaultPrice: 10000});
   });
 
-  it('should set all page count', () => {
+  it('should loadPagesCount count', () => {
     expect(mainData(state, loadPagesCount(3)))
-      .toEqual({...state, pageCount: 3});
+      .toEqual({...state, pagesCount: 3});
+  });
+  it('should clear pages by loadPagesCount', () => {
+    state = { ...initialState, pagesCount: 3 };
+    expect(mainData(state, clearPagesCount())).toEqual(initialState);
   });
 
   it('should load currentProduct from all productList', () => {

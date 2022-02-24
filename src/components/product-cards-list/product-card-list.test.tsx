@@ -19,7 +19,7 @@ describe('Component: ProductCardsList', () => {
         productsList: fakeGuitars,
         minDefaultPrice: 1500,
         maxDefaultPrice: 15000,
-        pageCount: 3,
+        pagesCount: 3,
         isDataLoaded: true,
       },
       UserData: {},

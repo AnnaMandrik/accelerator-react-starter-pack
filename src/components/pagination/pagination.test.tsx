@@ -1,93 +1,90 @@
-import { render, screen } from '@testing-library/react';
-import { HistoryRouter, useParams } from 'react-router-dom';
+import { act, cleanup, render, screen } from '@testing-library/react';
+import { HistoryRouter, Route, Routes} from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import Pagination from './pagination';
+import { AppRoute } from '../../const';
+import { TestReg } from '../../mocks';
 
+const COUNT = 54;
+const PAGE_COUNT = 3;
+
+const prevPage = (page: number) => (page - 1).toString();
+const nextPage = (page: number) => (page + 1).toString();
 const mockStore = configureMockStore();
 const history = createMemoryHistory();
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const {number} = useParams();
-const page = Number(number);
 
+const componentState = {
+  MainData: {
+    pagesCount: COUNT,
+  },
+  UserData: {},
+};
+const store = mockStore(componentState);
 
-const getFakeApp = (store: any) => (
-  <Provider store={store}>
-    <HistoryRouter history={history}>
-      <Pagination page={page} />
-    </HistoryRouter>
-  </Provider>
-);
+const renderPagination = (page: number) =>
+  render(
+    <Provider store={store}>
+      <HistoryRouter history={history}>
+        <Routes>
+          <Route
+            path={AppRoute.Main}
+          />
+          <Route
+            path={`/${AppRoute.Catalog}`}
+            element={<Pagination page={page} />}
+          />
+        </Routes>
+      </HistoryRouter>
+    </Provider>);
 
 describe('Component: Pagination', () => {
-  it('should render correctly pagination for three pages (the first is actual page)', () => {
-    const store = mockStore({
-      MainData: {
-        pageCount: 3,
-      },
-      UserData: {
-        actualPage: 1,
-        actualPageCount: 3,
-        firstPage: 0,
-        lastPage: 3,
-      },
+  afterEach(cleanup);
+  it('should render correctly with Далее & Назад', () => {
+    const fifthPage = 5;
+    act(() => {
+      history.replace(`/catalog/page_${fifthPage}`);
     });
-
-    const fakeApp = getFakeApp(store);
-    render(fakeApp);
-
-    expect(screen.queryByRole('link', {name: 'Назад'})).not.toBeInTheDocument();
-    expect(screen.getByRole('link', {name: '1'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: '2'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: '3'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: 'Далее'})).toBeInTheDocument();
+    renderPagination(fifthPage);
+    expect(screen.getAllByTestId('pagination').length).toEqual(PAGE_COUNT);
+    expect(screen.getByText(fifthPage.toString())).toBeInTheDocument();
+    expect(screen.getByText(prevPage(fifthPage))).toBeInTheDocument();
+    expect(screen.getByText(nextPage(fifthPage))).toBeInTheDocument();
+    expect(screen.getByText(TestReg.NextPage)).toBeInTheDocument();
+    expect(screen.getByText(TestReg.PrevPage)).toBeInTheDocument();
+    expect(screen.getByTestId('back')).toBeVisible();
+    expect(screen.getByTestId('next')).toBeVisible();
   });
 
-  it('should render correctly pagination for five pages (the five is actual page)', () => {
-    const store = mockStore({
-      MainData: {
-        pageCount: 5,
-      },
-      UserData: {
-        actualPage: 5,
-        actualPageCount: 5,
-        firstPage: 3,
-        lastPage: 5,
-      },
+  it('should render correctly with Далее witout Назад', () => {
+    const firstPage = 1;
+    act(() => {
+      history.replace(`/catalog/page_${firstPage}`);
     });
-
-    const fakeApp = getFakeApp(store);
-    render(fakeApp);
-
-    expect(screen.getByRole('link', {name: 'Назад'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: '4'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: '5'})).toBeInTheDocument();
-    expect(screen.queryByRole('link', {name: 'Далее'})).not.toBeInTheDocument();
+    renderPagination(firstPage);
+    expect(screen.getAllByTestId('pagination').length).toEqual(PAGE_COUNT);
+    expect(screen.getByText(firstPage.toString())).toBeInTheDocument();
+    expect(screen.getByText(nextPage(firstPage))).toBeInTheDocument();
+    expect(screen.getByText(nextPage(firstPage+1))).toBeInTheDocument();
+    expect(screen.getByText(TestReg.NextPage)).toBeInTheDocument();
+    expect(screen.getByTestId('back')).not.toBeVisible();
+    expect(screen.getByTestId('next')).toBeVisible();
   });
 
-  it('should render correctly pagination for five pages (the two is actual page)', () => {
-    const store = mockStore({
-      MainData: {
-        pageCount: 5,
-      },
-      UserData: {
-        actualPage: 2,
-        actualPageCount: 5,
-        firstPage: 0,
-        lastPage: 3,
-      },
+
+  it('should render correctly with Назад witout Далее', () => {
+    const lastPage = 6;
+    act(() => {
+      history.replace(`/catalog/page_${lastPage}`);
     });
-
-    const fakeApp = getFakeApp(store);
-    render(fakeApp);
-
-    expect(screen.getByRole('link', {name: 'Назад'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: '1'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: '2'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: '3'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: 'Далее'})).toBeInTheDocument();
+    renderPagination(lastPage);
+    expect(screen.getAllByTestId('pagination').length).toEqual(PAGE_COUNT);
+    expect(screen.getByText(lastPage.toString())).toBeInTheDocument();
+    expect(screen.getByText(prevPage(lastPage))).toBeInTheDocument();
+    expect(screen.getByText(prevPage(lastPage-1))).toBeInTheDocument();
+    expect(screen.getByText(TestReg.NextPage)).toBeInTheDocument();
+    expect(screen.getByTestId('back')).toBeVisible();
+    expect(screen.getByTestId('next')).not.toBeVisible();
   });
-
 });
-

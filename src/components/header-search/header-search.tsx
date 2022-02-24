@@ -49,7 +49,7 @@ function HeaderSearch(): JSX.Element {
         />
         <label className="visually-hidden" htmlFor="search">Поиск</label>
       </form>
-      <ul style={{zIndex: 1}} data-testid="search-suggestion-list"
+      <ul style={{zIndex: 1}}
         className={`form-search__select-list ${!searchString ? 'hidden' : ''}`}
       >
         {

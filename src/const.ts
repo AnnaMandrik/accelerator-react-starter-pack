@@ -9,13 +9,14 @@ const HEADER_TOTAL_COUNT = 'x-total-count';
 
 const enum AppRoute {
   Main = '/',
-  Page = 'catalog/page_:number',
+  Catalog = 'catalog/page_:number',
+  Page = 'catalog/page_1',
   Product = 'product/:id',
   About = 'about',
   Where = 'where',
   Cart = 'cart',
   Stub = '/stub',
-  Error = '/error',
+  Error = '/page404',
 }
 
 const enum APIRoute {
@@ -91,7 +92,6 @@ const enum ErrorText {
   Attention = 'Внимание!'
 }
 
-const FOOTER_NAV = [ 'Где купить?', 'Блог', 'Вопрос - ответ', 'Возврат', 'Сервис-центры' ];
 
 const socialsNets = [
   {
@@ -117,7 +117,7 @@ const RATING_NUMBERS: number[] = [1, 2, 3, 4, 5];
 export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO,
   DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, ErrorText,
-  FOOTER_NAV, socialsNets, HEADER_TOTAL_COUNT, RATING_NUMBERS,
+  socialsNets, HEADER_TOTAL_COUNT, RATING_NUMBERS,
   START_COMMENTS_COUNT, StringCount, ProductProperty,
   GuitarsType, ProductType};
 

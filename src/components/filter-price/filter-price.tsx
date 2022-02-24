@@ -1,6 +1,5 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {ChangeEvent, memo, useEffect, useState} from 'react';
-
 import {getDefaultMinPrice, getDefaultMaxPrice} from '../../store/main-data/selectors';
 import {FilterOfPrices} from '../../const';
 import { getUserFilter } from '../../store/user-data/selectors';
@@ -84,7 +83,7 @@ function FilterPrice({page}: FilterPriceProps): JSX.Element {
             onChange={(evt) => setActualMinPrice(evt.currentTarget.value)}
             value={actualMinPrice}
             onBlur={handleMinInputBlur}
-            data-testid="min-price"
+            data-testid = 'priceMin'
           />
         </div>
         <div className="form-input">
@@ -97,7 +96,7 @@ function FilterPrice({page}: FilterPriceProps): JSX.Element {
             onChange={(evt) => setActualMaxPrice(evt.currentTarget.value)}
             value={actualMaxPrice}
             onBlur={handleMaxInputBlur}
-            data-testid="max-price"
+            data-testid = 'priceMax'
           />
         </div>
       </div>

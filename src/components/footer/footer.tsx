@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import {FOOTER_NAV, socialsNets} from '../../const';
+import {socialsNets} from '../../const';
 import {AppRoute} from '../../const';
 
 function Footer(): JSX.Element {
@@ -32,18 +32,34 @@ function Footer(): JSX.Element {
           <h2 className="footer__nav-title">О нас</h2>
           <p className="footer__nav-content footer__nav-content--font-secondary">Магазин гитар, музыкальных инструментов и гитарная мастерская <br/> в Санкт-Петербурге.<br/><br/>Все инструменты проверены, отстроены <br/> и доведены до идеала!</p>
         </section>
-        <section className="footer__nav-section footer__nav-section--links">
-          <h2 className="footer__nav-title">Информация</h2>
-          <ul className="footer__nav-list">
-            {
-              FOOTER_NAV.map((nav) => {
-                const key = `${nav}`;
-
-                return (
-                  <li key={key} className="footer__nav-list-item"><a className="link" href="#top">{nav}</a></li>
-                );
-              })
-            }
+        <section className='footer__nav-section footer__nav-section--links'>
+          <h2 className='footer__nav-title'>Информация</h2>
+          <ul className='footer__nav-list'>
+            <li className='footer__nav-list-item'>
+              <Link className='link' to={`/${AppRoute.Where}`}>
+                Где купить?
+              </Link>
+            </li>
+            <li className='footer__nav-list-item'>
+              <Link className='link' to={AppRoute.Stub}>
+                Блог
+              </Link>
+            </li>
+            <li className='footer__nav-list-item'>
+              <Link className='link' to={AppRoute.Stub}>
+                Вопрос - ответ
+              </Link>
+            </li>
+            <li className='footer__nav-list-item'>
+              <Link className='link' to={AppRoute.Stub}>
+                Возврат
+              </Link>
+            </li>
+            <li className='footer__nav-list-item'>
+              <Link className='link' to={AppRoute.Stub}>
+                Сервис-центры
+              </Link>
+            </li>
           </ul>
         </section>
         <section className="footer__nav-section footer__nav-section--contacts">
