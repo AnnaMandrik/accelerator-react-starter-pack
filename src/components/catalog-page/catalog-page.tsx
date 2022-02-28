@@ -49,6 +49,9 @@ function CatalogPage() {
     if (maxPriceSearch !== '') {
       actualFilter = { ...actualFilter, maxPrice: maxPriceSearch };
     }
+    if (maxPriceSearch === '') {
+      actualFilter = { ...actualFilter, maxPrice: '' };
+    }
     if (sortingSearch !== '') {
       actualSort = { ...actualSort, sorting: sortingSearch };
     }

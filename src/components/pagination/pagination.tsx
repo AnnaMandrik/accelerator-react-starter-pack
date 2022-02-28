@@ -17,7 +17,7 @@ function Pagination({page}: PaginationProps): JSX.Element | null{
   const pages = usePage(page);
   const prevPage = page - 1;
   const nextPage = page + 1;
-  const prevPagePath = generatePath(`${AppRoute.Main} ${AppRoute.Catalog}`, {number: prevPage.toString()});
+  const prevPagePath = generatePath(`${AppRoute.Main}${AppRoute.Catalog}`, {number: prevPage.toString()});
   const nextPagePath = generatePath(`${AppRoute.Main}${AppRoute.Catalog}`, {number: nextPage.toString()});
 
   if (pagesCount === null) {
@@ -43,6 +43,7 @@ function Pagination({page}: PaginationProps): JSX.Element | null{
               Назад
           </Link>
         </li>
+
         {
           pages.map((value) => {
             const pagePath = generatePath(`${AppRoute.Catalog}`, {number: value.toString()});

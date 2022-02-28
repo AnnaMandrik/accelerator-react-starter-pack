@@ -30,8 +30,11 @@ function FilterPrice({page}: FilterPriceProps): JSX.Element {
   const handleMinInputBlur = (evt: ChangeEvent<HTMLInputElement>) => {
     let actualFilter = filter;
     let userPrice = evt.target.value;
+
     if (userPrice === '') {
       setActualMinPrice(userPrice);
+      actualFilter = {...actualFilter, minPrice: userPrice};
+      dispatch(fetchFilterUserAction(actualFilter, page));
       return;
     }
     if (+userPrice < minDefaultPrice) {
@@ -53,6 +56,8 @@ function FilterPrice({page}: FilterPriceProps): JSX.Element {
     let userPrice = evt.target.value;
     if (userPrice === '') {
       setActualMaxPrice(userPrice);
+      actualFilter = {...actualFilter, maxPrice: userPrice};
+      dispatch(fetchFilterUserAction(actualFilter, page));
       return;
     }
     if (+userPrice > maxDefaultPrice) {
