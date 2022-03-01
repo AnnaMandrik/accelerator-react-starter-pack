@@ -11,7 +11,10 @@ export const enum ActionType {
   LoadCurrentProduct = 'data/loadCurrentProduct',
   ClearCurrentProduct = 'data/clearCurrentProduct',
   LoadCurrentComments = 'data/loadCurrentComments',
-  ClearCurrentComments = 'data/clearCurrentCoents',
+  ClearCurrentComments = 'data/clearCurrentComments',
+  AddNewComment = 'data/addNewComment',
+  IncreaseCommentsCounter = 'data/increaseCommentsCounter',
+  ClearComentsCounter = 'data/clearCommentsCounter',
 
   SearchingProducts = 'user/searchingProducts',
   ClearSearchingProducts = 'user/clearSearchingProducts',

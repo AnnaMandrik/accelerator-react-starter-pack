@@ -11,3 +11,4 @@ export type Comment = {
 
 
 export type CommentPost = Omit<Comment, 'createAt' | 'id'>
+export type CommentData = Omit<CommentPost, 'guitarId'>

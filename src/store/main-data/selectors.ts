@@ -11,6 +11,6 @@ const getDefaultMaxPrice = (state: State): number => state[NameDataList.MainData
 const getPagesCount = (state: State): number => state[NameDataList.MainData].pagesCount;
 const getCurrentProduct = (state: State): Guitar => state[NameDataList.MainData].currentProduct;
 const getCurrentComments = (state:State): Comment[] => state[NameDataList.MainData].currentComments;
+const getCommentsCounter = (state: State) => state[NameDataList.MainData].commentsCounter;
 
-
-export {getCurrentComments, getCurrentProduct, getGuitars, getIsLoaded, getDefaultMinPrice, getDefaultMaxPrice, getPagesCount};
+export {getCommentsCounter, getCurrentComments, getCurrentProduct, getGuitars, getIsLoaded, getDefaultMinPrice, getDefaultMaxPrice, getPagesCount};

@@ -3,6 +3,7 @@ import {AppRoute} from '../../const';
 import CatalogPage from '../catalog-page/catalog-page';
 import ErrorPage from '../error-page/error-page';
 import MainLayout from '../main-layout/main-layout';
+import ProductPage from '../product-page/product-page';
 import StubPage from '../stub-page/stub-page';
 
 function App(): JSX.Element {
@@ -12,7 +13,7 @@ function App(): JSX.Element {
       <Route path = {AppRoute.Main} element={<MainLayout />}>
         <Route index element={<Navigate to={AppRoute.Page} replace />} />
         <Route path={AppRoute.Catalog} element={<CatalogPage />} />
-        <Route path={AppRoute.Product} element={<StubPage />} />
+        <Route path={AppRoute.Product} element={<ProductPage />} />
         <Route path={AppRoute.About} element={<StubPage />} />
         <Route path={AppRoute.Where} element={<StubPage />} />
         <Route path={AppRoute.Cart} element={<StubPage />} />

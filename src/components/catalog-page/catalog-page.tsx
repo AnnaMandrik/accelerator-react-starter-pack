@@ -1,6 +1,6 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {useEffect} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import queryString from 'query-string';
 import {useSearchParams} from 'react-router-dom';
 import Filter from '../filter/filter';
@@ -9,10 +9,10 @@ import ProductCardsList from '../product-cards-list/product-cards-list';
 import Pagination from '../pagination/pagination';
 import {getIsLoaded} from '../../store/main-data/selectors';
 import {fetchFilterUserAction, fetchDefaultMinPriceAction, fetchSortedUserAction} from '../../store/api-actions';
-import {AppRoute} from '../../const';
 import Spinner from '../spinner/spinner';
 import { getUserFilter, getUserSorting } from '../../store/user-data/selectors';
 import { clearFilter, clearSort } from '../../store/action';
+import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 
 
 function CatalogPage() {
@@ -95,14 +95,7 @@ function CatalogPage() {
   return (
     <div className="container">
       <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
-      <ul className="breadcrumbs page-content__breadcrumbs">
-        <li className="breadcrumbs__item">
-          <Link className="link" to={AppRoute.Stub}>Главная</Link>
-        </li>
-        <li className="breadcrumbs__item">
-          <Link className="link" to={AppRoute.Main}>Каталог</Link>
-        </li>
-      </ul>
+      <Breadcrumbs />
       <div className="catalog">
         <Filter page={page} />
         <Sorting />

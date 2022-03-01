@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {generatePath, Link} from 'react-router-dom';
 import {AppRoute, RATING_NUMBERS} from '../../const';
 import {Product} from '../../types/guitar';
 
@@ -7,7 +7,8 @@ type ProductCardProps = {
 }
 
 function ProductCard({guitar}: ProductCardProps): JSX.Element {
-  const {previewImg, rating, name, price, comments} = guitar;
+  const {previewImg, rating, name, price, comments, id} = guitar;
+  const productInfoPath = generatePath(AppRoute.Product, { id: id.toString() });
   return (
     <div className="product-card">
       <img src={previewImg.replace('img', 'img/content')} width="75" height="190" alt={name} />
@@ -32,7 +33,7 @@ function ProductCard({guitar}: ProductCardProps): JSX.Element {
         <p className="product-card__price"><span className="visually-hidden">Цена:</span>{price} ₽</p>
       </div>
       <div className="product-card__buttons">
-        <Link className="button button--mini" to={AppRoute.Stub} data-testid="more">Подробнее</Link>
+        <Link className="button button--mini" to={`/${productInfoPath}`} data-testid="more">Подробнее</Link>
         <Link className="button button--red button--mini button--add-to-cart" to={AppRoute.Stub}>Купить</Link>
       </div>
     </div>

@@ -52,6 +52,17 @@ export const loadCurrentComments = createAction(
 
 export const clearCurrentComments = createAction(ActionType.ClearCurrentComments);
 
+export const addNewComment = createAction(
+  ActionType.AddNewComment,
+  (currentComments: Comment) => ({
+    payload: currentComments,
+  }),
+);
+
+export const increaseCommentsCounter = createAction(ActionType.IncreaseCommentsCounter);
+
+export const clearCommentsCounter = createAction(ActionType.ClearComentsCounter);
+
 export const searchingProducts = createAction(
   ActionType.SearchingProducts,
   (productsList: Guitars) => ({

@@ -113,11 +113,17 @@ const socialsNets = [
 
 const RATING_NUMBERS: number[] = [1, 2, 3, 4, 5];
 
+const HeaderLinks = new Map([
+  ['catalog', { title: 'Каталог', link: `/${AppRoute.Catalog}` }],
+  ['where', { title: 'Где купить?', link: `/${AppRoute.Where}` }],
+  ['about', { title: 'О компании', link: `/${AppRoute.About}` }],
+]);
+
 
 export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO,
   DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, ErrorText,
   socialsNets, HEADER_TOTAL_COUNT, RATING_NUMBERS,
   START_COMMENTS_COUNT, StringCount, ProductProperty,
-  GuitarsType, ProductType};
+  GuitarsType, ProductType, HeaderLinks};
 

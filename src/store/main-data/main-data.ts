@@ -1,6 +1,6 @@
 import {MainData} from '../../types/state';
 import {createReducer} from '@reduxjs/toolkit';
-import {clearCurrentComments, clearCurrentProduct, clearPagesCount, loadPagesCount, loadCurrentComments, loadProductCardsList, loadMinDefaultPrice, loadMaxDefaultPrice, loadCurrentProduct} from '../action';
+import {clearCurrentComments, clearCurrentProduct, clearPagesCount, loadPagesCount, loadCurrentComments, loadProductCardsList, loadMinDefaultPrice, loadMaxDefaultPrice, loadCurrentProduct, addNewComment, increaseCommentsCounter, clearCommentsCounter} from '../action';
 import {Guitar} from '../../types/guitar';
 import { START_COMMENTS_COUNT } from '../../const';
 
@@ -45,6 +45,18 @@ const mainData = createReducer (initialState, (builder) => {
     })
     .addCase(clearCurrentComments, (state) => {
       state.currentComments = initialState.currentComments;
+    })
+    .addCase(addNewComment, (state, action) => {
+      state.currentComments = [action.payload, ...state.currentComments];
+    })
+    .addCase(increaseCommentsCounter, (state) => {
+      if (state.commentsCounter > state.currentComments.length) {
+        return;
+      }
+      state.commentsCounter = state.commentsCounter + START_COMMENTS_COUNT;
+    })
+    .addCase(clearCommentsCounter, (state) => {
+      state.commentsCounter = initialState.commentsCounter;
     });
 });
 
