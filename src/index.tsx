@@ -10,7 +10,9 @@ import {createAPI} from './services/api';
 import browserHistory from './browser-history';
 import {HistoryRouter} from 'react-router-dom';
 import { redirect } from './store/middlewares/redirect';
-//import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from 'react-helmet-async';
+import ModalReviewForm from './components/product-page/product-components/modal-review-form/modal-review-form';
+import ModalSuccessReview from './components/product-page/product-components/modal-success-review/modal-success-review';
 
 
 const api = createAPI();
@@ -30,9 +32,11 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <HistoryRouter history={browserHistory}>
-
-        <App />
-
+        <HelmetProvider>
+          <App />
+          <ModalReviewForm />
+          <ModalSuccessReview />
+        </HelmetProvider>
         <ToastContainer />
       </HistoryRouter>
     </Provider>

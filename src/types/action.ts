@@ -22,6 +22,10 @@ export const enum ActionType {
   ClearFilter ='user/clearFilter',
   SelectSort = 'user/selectSort',
   ClearSort = 'user/clearSort',
+
+  ToggleIsReviewFormOpened = 'process/toggleIsReviewFormOpened',
+  ToggleIsSuccessReviewOpened = 'process/toggleIsSuccessReviewOpened',
+  CloseAllModals = 'process/closeAllModals',
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;

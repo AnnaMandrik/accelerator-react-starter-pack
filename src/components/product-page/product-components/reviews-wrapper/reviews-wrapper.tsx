@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearCommentsCounter, increaseCommentsCounter } from '../../../../store/action';
-import { getCommentsCounter, getCurrentComments } from '../../../../store/main-data/selectors';
+import { clearCommentsCounter, increaseCommentsCounter, toggleIsReviewFormOpened } from '../../../../store/action';
+import { getCommentsCounter, getSortedComments } from '../../../../store/main-data/selectors';
 import ReviewProduct from '../review-product/review-product';
 
 function ReviewsWrapper(): JSX.Element {
-  const currentComments = useSelector(getCurrentComments);
+  const currentComments = useSelector(getSortedComments);
   const commentsCounter = useSelector(getCommentsCounter);
   const dispatch = useDispatch();
 
@@ -17,7 +17,15 @@ function ReviewsWrapper(): JSX.Element {
   return (
     <section className="reviews">
       <h3 className='reviews__title title title--bigger'> {currentComments.length===0 ? 'Отзывов ещё нет' : 'Отзывы'}</h3>
-      <a className="button button--red-border button--big reviews__sumbit-button" href='todo'>Оставить отзыв</a>
+      <a className="button button--red-border button--big reviews__sumbit-button"
+        href='todo'
+        onClick={(evt) => {
+          evt.preventDefault();
+          dispatch(toggleIsReviewFormOpened(true));
+        }}
+      >
+        Оставить отзыв
+      </a>
 
       {currentComments.slice(0, commentsCounter).map((comment) => (
         <ReviewProduct key={comment.id} review={comment} />

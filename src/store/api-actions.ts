@@ -3,7 +3,9 @@ import {ThunkActionResult} from '../types/action';
 import {APIRoute, ErrorText, HEADER_TOTAL_COUNT, DIGIT_ZERO, DEFAULT_PAGE, AppRoute} from '../const';
 import {Product, Guitars} from '../types/guitar';
 import {Comment, CommentPost} from '../types/comment';
-import {loadCurrentComments, loadCurrentProduct, loadProductCardsList, searchingProducts, loadMinDefaultPrice, loadMaxDefaultPrice, clearPagesCount, loadPagesCount, selectFilter, selectSort} from './action';
+import {loadCurrentComments, loadCurrentProduct, loadProductCardsList, searchingProducts,
+  loadMinDefaultPrice, loadMaxDefaultPrice, clearPagesCount, loadPagesCount, selectFilter, selectSort,
+  addNewComment, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened} from './action';
 import { createQuery } from '../utils';
 import { FilterState, SortState } from '../types/state';
 import { redirectToRoute } from './middlewares/middleware-action';
@@ -154,9 +156,11 @@ export const fetchCurrentProductAction = (id: string): ThunkActionResult =>
 export const postCommentAction = (comment: CommentPost): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     try {
-      const { data } = await api.post<Comment>(`${APIRoute.Comments}`, comment);
-      // eslint-disable-next-line no-console
-      console.log(data);
+      const { data } = await api.post<Comment>(
+        `${APIRoute.Comments}`, comment);
+      dispatch(addNewComment(data));
+      dispatch(toggleIsReviewFormOpened(false));
+      dispatch(toggleIsSuccessReviewOpened(true));
     } catch (err) {
       if (err instanceof Error) {
         if  (err.message === ErrorText.LoadData) {

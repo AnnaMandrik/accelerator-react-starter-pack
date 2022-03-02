@@ -1,6 +1,9 @@
+import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
 import queryString from 'query-string';
 import {ITEMS_PER_PAGE} from './const';
 import {Guitars, Guitar} from './types/guitar';
+import {Comment} from './types/comment';
 import { FilterState, SortState } from './types/state';
 
 
@@ -81,3 +84,11 @@ export const allItems = (factItems: string[], item: string): string[] => {
   }
   return [...factItems, item];
 };
+
+export const getCommentsSortByDate = (comments: Comment[]): Comment[] =>
+  [...comments].sort((objA, objB) => Date.parse(objB.createAt) - Date.parse(objA.createAt));
+
+export const getFormatDate = (date: string): string => dayjs(date).locale('ru').format('D MMMM');
+
+export const isEscEvent = (evt: KeyboardEvent): boolean =>
+  evt.key === 'Escape' || evt.key === 'Esc';

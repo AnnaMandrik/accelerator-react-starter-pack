@@ -1,5 +1,6 @@
 import { RATING_NUMBERS } from '../../../../const';
 import {Comment} from '../../../../types/comment';
+import { getFormatDate } from '../../../../utils';
 
 type ReviewProductProps = {
   review: Comment,
@@ -7,13 +8,14 @@ type ReviewProductProps = {
 
 
 function ReviewProduct({review}: ReviewProductProps): JSX.Element {
-  const {userName, advantage, disadvantage, comment, rating} = review;
+  const {userName, advantage, disadvantage, comment, rating, createAt} = review;
+  const date = getFormatDate(createAt);
 
   return (
     <div className="review">
       <div className="review__wrapper">
         <h4 className="review__title review__title--author title title--lesser">{userName}</h4>
-        <span className="review__date">12 декабря</span>
+        <span className="review__date">{date}</span>
       </div>
       <div className="rate review__rating-panel" aria-hidden="true">
         <span className="visually-hidden">Рейтинг:</span>

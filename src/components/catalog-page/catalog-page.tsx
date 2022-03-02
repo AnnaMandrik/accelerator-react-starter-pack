@@ -13,6 +13,8 @@ import Spinner from '../spinner/spinner';
 import { getUserFilter, getUserSorting } from '../../store/user-data/selectors';
 import { clearFilter, clearSort } from '../../store/action';
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
+import { Helmet } from 'react-helmet-async';
+import { HEAD_TITLE } from '../../const';
 
 
 function CatalogPage() {
@@ -93,16 +95,19 @@ function CatalogPage() {
 
 
   return (
-    <div className="container">
-      <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
-      <Breadcrumbs />
-      <div className="catalog">
-        <Filter page={page} />
-        <Sorting />
-        <ProductCardsList />
-        <Pagination page={page} />
+    <>
+      <Helmet title={HEAD_TITLE} />
+      <div className="container">
+        <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
+        <Breadcrumbs />
+        <div className="catalog">
+          <Filter page={page} />
+          <Sorting />
+          <ProductCardsList />
+          <Pagination page={page} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

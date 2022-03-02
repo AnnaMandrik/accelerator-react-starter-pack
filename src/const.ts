@@ -6,6 +6,7 @@ const DIGIT_ZERO = 0;
 const DEFAULT_PAGE = 1;
 const STEP_OF_COUNT = 3;
 const HEADER_TOTAL_COUNT = 'x-total-count';
+const HEAD_TITLE = 'Guitar-shop';
 
 const enum AppRoute {
   Main = '/',
@@ -119,11 +120,24 @@ const HeaderLinks = new Map([
   ['about', { title: 'О компании', link: `/${AppRoute.About}` }],
 ]);
 
+enum ModalType {
+  Success = 'modal--success',
+  Review = 'modal--review',
+}
+
+const StarTitle: {[key: number]: string} = {
+  1: 'Ужасно',
+  2: 'Плохо',
+  3: 'Нормально',
+  4: 'Хорошо',
+  5: 'Отлично',
+};
 
 export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO,
   DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, ErrorText,
   socialsNets, HEADER_TOTAL_COUNT, RATING_NUMBERS,
   START_COMMENTS_COUNT, StringCount, ProductProperty,
-  GuitarsType, ProductType, HeaderLinks};
+  GuitarsType, ProductType, HeaderLinks, HEAD_TITLE, ModalType,
+  StarTitle};
 

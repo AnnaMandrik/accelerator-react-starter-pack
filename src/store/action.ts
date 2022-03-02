@@ -92,3 +92,18 @@ export const selectSort = createAction(
 
 export const clearSort = createAction(ActionType.ClearSort);
 
+export const toggleIsReviewFormOpened = createAction(
+  ActionType.ToggleIsReviewFormOpened,
+  (isReviewFormOpened: boolean) => ({
+    payload: isReviewFormOpened,
+  }),
+);
+
+export const toggleIsSuccessReviewOpened = createAction(
+  ActionType.ToggleIsSuccessReviewOpened,
+  (isSuccessReviewOpened: boolean) => ({
+    payload: isSuccessReviewOpened,
+  }),
+);
+
+export const closeAllModals = createAction(ActionType.CloseAllModals);

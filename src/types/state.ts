@@ -31,6 +31,11 @@ export type SortState = {
   order: string,
 }
 
+export type ProcessData = {
+  isReviewFormOpened: boolean,
+  isSuccessReviewOpened: boolean,
+};
+
 
 export type State = RootState;
 
