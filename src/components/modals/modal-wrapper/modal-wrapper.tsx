@@ -31,9 +31,12 @@ function ModalWrapper({modalType, children}: ModalWrapperProps): JSX.Element {
   return (
     <RemoveScroll>
       <FocusLock>
-        <div className={`modal is-active ${modalType}`}>
+        <div className={`modal is-active ${modalType}`}
+          data-testid = 'modalWrap'
+        >
           <div className="modal__wrapper">
             <div className="modal__overlay"
+              data-testid = 'modalOverlay'
               data-close-modal
               onClick={() => dispatch(closeAllModals())}
             >

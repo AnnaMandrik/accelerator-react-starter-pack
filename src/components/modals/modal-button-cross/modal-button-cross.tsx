@@ -9,6 +9,7 @@ function ModalButtonCross({onClick}: ModalButtonCrossProps) {
       type='button'
       aria-label='Закрыть'
       onClick={onClick}
+      data-testid = 'modalCloseBtn'
     >
       <span className='button-cross__icon'></span>
       <span className='modal__close-btn-interactive-area'></span>

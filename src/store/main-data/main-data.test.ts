@@ -1,12 +1,13 @@
-import {fakeProduct, fakeProducts, fakeComments} from '../../mocks';
+import {fakeProduct, fakeProducts, fakeComments, MakeFakeComment} from '../../mocks';
 import {mainData} from '../main-data/main-data';
-import {loadCurrentComments, loadProductCardsList, loadPagesCount, loadMaxDefaultPrice, loadMinDefaultPrice, loadCurrentProduct, clearCurrentProduct, clearCurrentComments, clearPagesCount} from '../action';
+import {loadCurrentComments, loadProductCardsList, loadPagesCount, loadMaxDefaultPrice, loadMinDefaultPrice, loadCurrentProduct, clearCurrentProduct, clearCurrentComments, clearPagesCount, addNewComment, increaseCommentsCounter, clearCommentsCounter} from '../action';
 import { Guitar } from '../../types/guitar';
 import { START_COMMENTS_COUNT } from '../../const';
 import { MainData } from '../../types/state';
 
-
+const fakeComment = MakeFakeComment();
 const fakeGuitars = fakeProducts;
+const FAKE_COMMENT_COUNTER = 6;
 const initialState: MainData = {
   productsList: [],
   isDataLoaded: false,
@@ -70,5 +71,26 @@ describe('Reducer: main-data', () => {
   it('should clear currentComments by clearCurrentComments', () => {
     state = { ...initialState, currentComments: fakeComments };
     expect(mainData(state, clearCurrentComments())).toEqual(initialState);
+  });
+  it('should addNewComment', () => {
+    state = { ...initialState, currentComments: fakeComments };
+    expect(mainData(state, addNewComment(fakeComment))).toEqual({
+      ...state,
+      currentComments: [fakeComment, ...fakeComments],
+    });
+  });
+  it('should update commentsCounter by incrementCommentsCounter', () => {
+    state = { ...initialState, currentComments: fakeComments };
+    expect(mainData(state, increaseCommentsCounter())).toEqual({
+      ...initialState,
+      currentComments: fakeComments,
+      commentsCounter: initialState.commentsCounter + START_COMMENTS_COUNT,
+    });
+  });
+  it('should clear commentsCounter by clearCommentsCounter', () => {
+    state = { ...initialState, commentsCounter: FAKE_COMMENT_COUNTER };
+    expect(mainData(state, clearCommentsCounter())).toEqual({
+      ...initialState,
+    });
   });
 });

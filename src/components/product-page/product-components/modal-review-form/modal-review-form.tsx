@@ -68,6 +68,7 @@ function ModalReviewForm(): JSX.Element | null {
                 {...register('userName', {
                   required: true,
                 })}
+                data-testid = 'userName'
               />
               <span className="form-review__warning"
                 style={{ visibility: errors.userName ? 'visible' : 'hidden' }}
@@ -90,6 +91,7 @@ function ModalReviewForm(): JSX.Element | null {
                         required: true,
                         value: starNumber,
                       })}
+                      data-testid = 'star'
                     />
                     <label
                       className='new-rate__label'
@@ -120,6 +122,7 @@ function ModalReviewForm(): JSX.Element | null {
               {...register('advantage', {
                 required: true,
               })}
+              data-testid = 'adv'
             />
             <span className='form-review__warning form-review__other-warning'
               style={{ visibility: errors.advantage ? 'visible' : 'hidden' }}
@@ -139,6 +142,7 @@ function ModalReviewForm(): JSX.Element | null {
               {...register('disadvantage', {
                 required: true,
               })}
+              data-testid = 'disadv'
             />
             <span className='form-review__warning form-review__other-warning'
               style={{ visibility: errors.disadvantage ? 'visible' : 'hidden' }}
@@ -158,6 +162,7 @@ function ModalReviewForm(): JSX.Element | null {
               {...register('comment', {
                 required: true,
               })}
+              data-testid = 'comment'
             >
             </textarea>
             <span className='form-review__warning form-review__other-warning'
@@ -168,6 +173,7 @@ function ModalReviewForm(): JSX.Element | null {
           <button
             className='button button--medium-20 form-review__button'
             type='submit'
+            data-testid = 'submit'
           >
             Отправить отзыв
           </button>

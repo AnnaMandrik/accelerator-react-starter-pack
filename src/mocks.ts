@@ -1,7 +1,7 @@
 import {Guitar} from './types/guitar';
 import {name, image, datatype, lorem, date, random, commerce} from 'faker';
 import {Comment} from './types/comment';
-import { MainData, UserData } from './types/state';
+import { MainData, UserData, ProcessData } from './types/state';
 
 const STRINGS: number[] = [4, 6, 7, 12];
 const TYPES: string[] = ['ukulele', 'acoustic', 'electric'];
@@ -82,6 +82,12 @@ export const MockMainData: MainData = {
   commentsCounter: 3,
 };
 
+export const MockProcessData: ProcessData = {
+  isReviewFormOpened: false,
+  isSuccessReviewOpened: false,
+};
+
+
 export const TestReg = {
   BackToRoot: new RegExp('Перейти главную страницу', 'i'),
   NotFoundPage: new RegExp('404. Этой страницы не существует', 'i'),
@@ -143,3 +149,4 @@ export const TestReg = {
 
 export const Stub= `${TestReg.StubPage}`;
 export const Main =`${TestReg.Main}`;
+export const ROOT = `${TestReg.Root}`;

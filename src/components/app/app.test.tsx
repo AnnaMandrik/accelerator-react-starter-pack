@@ -6,21 +6,29 @@ import { HistoryRouter} from 'react-router-dom';
 import thunk from 'redux-thunk';
 import App from './app';
 import { AppRoute } from '../../const';
-import { MockMainData, MockUserData } from '../../mocks';
+import { MockMainData, MockUserData, fakeProduct, MockProcessData } from '../../mocks';
+import { HelmetProvider } from 'react-helmet-async';
 
 
+HelmetProvider.canUseDOM = false;
 const mockStore = configureMockStore([thunk]);
+const NAME = 'Product';
+const ID = 1;
+const fakeCurrentProduct = { ...fakeProduct, name: NAME, id: ID };
 
 const store = mockStore({
-  MainData: MockMainData,
+  MainData: {...MockMainData, currentProduct: fakeCurrentProduct},
   UserData: MockUserData,
+  ProcessData: MockProcessData,
 });
 
 const history = createMemoryHistory();
 const fakeApp = (
   <Provider store={store}>
     <HistoryRouter history={history}>
-      <App />
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>
     </HistoryRouter>
   </Provider>
 );
@@ -44,5 +52,10 @@ describe('Application Routing', () => {
 
     expect(screen.getByText(/Страница находится в разработке!/)).toBeInTheDocument();
     expect(screen.getByText(/Вернуться в каталог/)).toBeInTheDocument();
+  });
+  it('should render ProductPage when user navigate to /product/:id', () => {
+    history.push('/product/1');
+    render(fakeApp);
+    expect(screen.getAllByText(NAME).length).toEqual(3);
   });
 });

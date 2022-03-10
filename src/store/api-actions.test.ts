@@ -5,9 +5,9 @@ import {configureMockStore} from '@jedmao/redux-mock-store';
 import {createAPI} from '../services/api';
 import {State} from '../types/state';
 import {APIRoute} from '../const';
-import {fetchCatalogPageAction, fetchSearchingProductsUserAction, fetchCurrentProductAction} from './api-actions';
-import {loadCurrentComments, loadProductCardsList, searchingProducts, loadCurrentProduct} from './action';
-import {fakeProducts, HttpCode, MakeFakeGuitar, fakeComments, MockUserData} from '../mocks';
+import {postCommentAction, fetchCatalogPageAction, fetchSearchingProductsUserAction, fetchCurrentProductAction} from './api-actions';
+import {loadCurrentComments, loadProductCardsList, searchingProducts, loadCurrentProduct, addNewComment, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened} from './action';
+import {fakeProducts, HttpCode, MakeFakeGuitar, fakeComments, MockUserData,MakeFakeComment} from '../mocks';
 import { createQuery } from '../utils';
 
 
@@ -19,6 +19,17 @@ const FAKE_ID = '1';
 const FAKE_PRODUCT_INFO = MakeFakeGuitar();
 const FAKE_COMMENTS = fakeComments;
 const FAKE_PRODUCT = {...FAKE_PRODUCT_INFO, comments: FAKE_COMMENTS};
+const FAKE_COMMENT = MakeFakeComment();
+
+const NewComment = {
+  guitarId: 1,
+  userName: 'user',
+  advantage: 'advantage',
+  disadvantage: 'disadvantage',
+  comment: 'comment',
+  rating: 7,
+};
+
 
 describe('Async actions', () => {
   const api = createAPI();
@@ -67,6 +78,17 @@ describe('Async actions', () => {
     expect(store.getActions()).toEqual([
       { payload: FAKE_PRODUCT_INFO, type: loadCurrentProduct.type },
       { payload: FAKE_COMMENTS, type: loadCurrentComments.type },
+    ]);
+  });
+  it('should dispatch toggleIsReviewFormOpened, toggleIsSuccessReviewOpened, addNewComment with FAKE_COMMENT when POST /comments', async () => {
+    mockAPI
+      .onPost(APIRoute.Comments).reply(HttpCode.Ok, FAKE_COMMENT);
+    const store = mockStore();
+    await store.dispatch(postCommentAction(NewComment));
+    expect(store.getActions()).toEqual([
+      { payload: FAKE_COMMENT, type: addNewComment.type },
+      { payload: false, type: toggleIsReviewFormOpened.type },
+      { payload: true, type: toggleIsSuccessReviewOpened.type },
     ]);
   });
 });
