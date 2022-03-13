@@ -2,7 +2,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {ActionType} from '../types/action';
 import {Guitars, Guitar, Product} from '../types/guitar';
 import {Comment} from '../types/comment';
-import { FilterState, SortState } from '../types/state';
+import { FilterState, SortState, Coupon } from '../types/state';
 
 export const loadProductCardsList = createAction(
   ActionType.LoadProductCardsList,
@@ -107,3 +107,94 @@ export const toggleIsSuccessReviewOpened = createAction(
 );
 
 export const closeAllModals = createAction(ActionType.CloseAllModals);
+
+export const addInCart = createAction(
+  ActionType.AddInCart,
+  (inCart: number) => ({
+    payload: inCart,
+  }),
+);
+
+export const deleteFromCart = createAction(
+  ActionType.DeleteFromCart,
+  (inCart: number) => ({
+    payload: inCart,
+  }),
+);
+
+export const selectQuantityInCart = createAction(
+  ActionType.SelectQuantityInCart,
+  (id: number, quantity: number) => ({
+    payload: {
+      id: id,
+      quantity: quantity,
+    },
+  }),
+);
+
+export const clearCart = createAction(ActionType.ClearCart);
+
+export const selectTotalPrice = createAction(
+  ActionType.SelectTotalPrice,
+  (id: number, price: number) => ({
+    payload: {
+      id: id,
+      price: price,
+    },
+  }),
+);
+
+export const addCoupon = createAction(
+  ActionType.AddCoupon,
+  (coupon: Coupon) => ({
+    payload: coupon,
+  }),
+);
+
+export const clearCoupon = createAction(ActionType.ClearCoupon);
+
+export const addTemporaryProductsInCart = createAction(
+  ActionType.AddTemporaryProductsInCart,
+  (temporaryProductsInCart: Guitar) => ({
+    payload: temporaryProductsInCart,
+  }),
+);
+
+export const clearTemporaryProductsInCart = createAction(ActionType.ClearTemporaryProductsInCart);
+
+export const addProductsInCart = createAction(
+  ActionType.AddProductsInCart,
+  (productsInCart: Guitars) => ({
+    payload: productsInCart,
+  }),
+);
+
+export const clearProductsCart = createAction(ActionType.ClearProductsCart);
+
+export const deleteProductsFromCart = createAction(
+  ActionType.DeleteProductsFromCart,
+  (productsInCart: number) => ({
+    payload: productsInCart,
+  }),
+);
+
+export const toggleIsAddOpened = createAction(
+  ActionType.ToggleIsAddOpened,
+  (isAddOpened: boolean) => ({
+    payload: isAddOpened,
+  }),
+);
+
+export const toggleIsDeleteOpened = createAction(
+  ActionType.ToggleIsDeleteOpened,
+  (isDeleteOpened: boolean) => ({
+    payload: isDeleteOpened,
+  }),
+);
+
+export const toggleIsSuccessCartOpened = createAction(
+  ActionType.ToggleIsSuccessCartOpened,
+  (isSuccessCartOpened: boolean) => ({
+    payload: isSuccessCartOpened,
+  }),
+);

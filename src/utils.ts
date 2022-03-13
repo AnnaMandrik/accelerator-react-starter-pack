@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import {ITEMS_PER_PAGE} from './const';
 import {Guitars, Guitar} from './types/guitar';
 import {Comment} from './types/comment';
-import { FilterState, SortState } from './types/state';
+import { FilterState, InCart, SortState } from './types/state';
 
 
 export const createFilterQuery = (filter: FilterState) : string =>  {
@@ -92,3 +92,17 @@ export const getFormatDate = (date: string): string => dayjs(date).locale('ru').
 
 export const isEscEvent = (evt: KeyboardEvent): boolean =>
   evt.key === 'Escape' || evt.key === 'Esc';
+
+export const getSumValues = (object: InCart): number => {
+  const values = Object.values(object);
+  return values.length !==0
+    ? values.reduce((sum, item) => sum = sum+item)
+    : 0;
+};
+
+export const getAllQuantity = (object: InCart): number[] =>
+  Object.entries(object)
+    .reduce((allItms: number[], [key, value]) => {
+      const currentItems = new Array(value).fill(Number(key));
+      return [...allItms, ...currentItems];
+    }, [] as number[]);

@@ -13,6 +13,9 @@ import { redirect } from './store/middlewares/redirect';
 import { HelmetProvider } from 'react-helmet-async';
 import ModalReviewForm from './components/product-page/product-components/modal-review-form/modal-review-form';
 import ModalSuccessReview from './components/product-page/product-components/modal-success-review/modal-success-review';
+import ModalAdd from './components/cart-page/cart-components/modal-add/modal-add';
+import ModalDelete from './components/cart-page/cart-components/modal-delete/modal-delete';
+import ModalSuccess from './components/cart-page/cart-components/modal-success/modal-success';
 
 
 const api = createAPI();
@@ -36,6 +39,9 @@ ReactDOM.render(
           <App />
           <ModalReviewForm />
           <ModalSuccessReview />
+          <ModalAdd />
+          <ModalDelete />
+          <ModalSuccess />
         </HelmetProvider>
         <ToastContainer />
       </HistoryRouter>

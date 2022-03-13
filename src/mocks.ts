@@ -69,6 +69,12 @@ export const MockUserData: UserData = {
     maxPrice: '',
   },
   searching: fakeProducts,
+  inCart: {},
+  totalPrice: {},
+  coupon: {
+    value: null,
+    discount: 0,
+  },
 };
 
 export const MockMainData: MainData = {
@@ -80,11 +86,16 @@ export const MockMainData: MainData = {
   currentComments: [],
   currentProduct: {} as Guitar,
   commentsCounter: 3,
+  temporaryProductsInCart: {} as Guitar,
+  productsInCart: [],
 };
 
 export const MockProcessData: ProcessData = {
   isReviewFormOpened: false,
   isSuccessReviewOpened: false,
+  isAddOpened: false,
+  isDeleteOpened: false,
+  isSuccessCartOpened: false,
 };
 
 

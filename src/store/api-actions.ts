@@ -1,11 +1,12 @@
+import axios from 'axios';
 import {toast} from 'react-toastify';
 import {ThunkActionResult} from '../types/action';
-import {APIRoute, ErrorText, HEADER_TOTAL_COUNT, DIGIT_ZERO, DEFAULT_PAGE, AppRoute} from '../const';
-import {Product, Guitars} from '../types/guitar';
+import {APIRoute, ErrorText, HEADER_TOTAL_COUNT, DIGIT_ZERO, DEFAULT_PAGE, AppRoute, CouponError, OK_MESSAGE} from '../const';
+import {Product, Guitars, Order} from '../types/guitar';
 import {Comment, CommentPost} from '../types/comment';
 import {loadCurrentComments, loadCurrentProduct, loadProductCardsList, searchingProducts,
   loadMinDefaultPrice, loadMaxDefaultPrice, clearPagesCount, loadPagesCount, selectFilter, selectSort,
-  addNewComment, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened} from './action';
+  addNewComment, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened, addProductsInCart, addCoupon, clearProductsCart, clearCoupon, clearCart} from './action';
 import { createQuery } from '../utils';
 import { FilterState, SortState } from '../types/state';
 import { redirectToRoute } from './middlewares/middleware-action';
@@ -169,6 +170,66 @@ export const postCommentAction = (comment: CommentPost): ThunkActionResult =>
         }
         if (err.message === ErrorText.BadRequest) {
           toast.warning(ErrorText.Attention);
+          toast.clearWaitingQueue();
+        }
+      }
+    }
+  };
+
+export const fetchCartProductsAction = (productsCount: string[]): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    try {
+      const response = await axios.all(productsCount.map((id) =>
+        api.get<Product>(`${APIRoute.Guitars}/${id}`)));
+      const products = response.map((resp) => resp.data);
+      dispatch(addProductsInCart(products));
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.NotFound) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+      }
+    }
+  };
+
+export const postCouponAction = (value: string): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    try {
+      const { data } = await api.post<number>(`${APIRoute.Coupon}`, {coupon: value});
+      dispatch(addCoupon({value, discount: data}));
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.NotFound) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+        if (err.message === ErrorText.BadRequest) {
+          dispatch(addCoupon(CouponError));
+          toast.warning(ErrorText.Incorrect);
+          toast.clearWaitingQueue();
+        }
+      }
+    }
+  };
+
+export const postOrderAction = (order: Order): ThunkActionResult =>
+  async (dispatch, getState, api): Promise<void> => {
+    try {
+      await api.post<number>(`${APIRoute.Order}`, order);
+      dispatch(clearProductsCart());
+      dispatch(clearCoupon());
+      dispatch(clearCart());
+      toast.success(OK_MESSAGE);
+    } catch (err) {
+      if (err instanceof Error) {
+        if  (err.message === ErrorText.LoadData) {
+          toast.error(err.message);
+          toast.clearWaitingQueue();
+        }
+        if (err.message === ErrorText.BadRequest) {
+          dispatch(addCoupon(CouponError));
+          toast.warning(ErrorText.Incorrect);
           toast.clearWaitingQueue();
         }
       }

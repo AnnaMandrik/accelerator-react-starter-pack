@@ -30,3 +30,7 @@ export type GuitarType = {
 
 export type Product = Guitar & {comments: Comment[]};
 
+export type Order = {
+  guitarsQuantity: number[],
+  coupon: null | string
+};

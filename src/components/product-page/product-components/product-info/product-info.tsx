@@ -1,6 +1,7 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { GuitarsType, RATING_NUMBERS } from '../../../../const';
 import { useToggle } from '../../../../hooks/use-toggle/use-toggle';
+import { addTemporaryProductsInCart, toggleIsAddOpened } from '../../../../store/action';
 import { getCurrentComments } from '../../../../store/main-data/selectors';
 import { Guitar } from '../../../../types/guitar';
 
@@ -12,6 +13,7 @@ function ProductInfo({currentProduct}: ProductInfoProps): JSX.Element {
   const {name, vendorCode, type, description, stringCount, rating, price, previewImg} = currentProduct;
   const commentsCount = useSelector(getCurrentComments).length;
   const productType = GuitarsType.get(type)?.type;
+  const dispatch = useDispatch();
 
   const [isCharTab, toggleIsCharTab] = useToggle(true);
   const [isDescTab, toggleIsDescTab] = useToggle(false);
@@ -32,6 +34,11 @@ function ProductInfo({currentProduct}: ProductInfoProps): JSX.Element {
     }
     toggleIsDescTab();
     toggleIsCharTab();
+  };
+
+  const handleAddToCartClick = () => {
+    dispatch(addTemporaryProductsInCart(currentProduct));
+    dispatch(toggleIsAddOpened(true));
   };
 
   return (
@@ -107,14 +114,16 @@ function ProductInfo({currentProduct}: ProductInfoProps): JSX.Element {
       <div className="product-container__price-wrapper">
         <p className="product-container__price-info product-container__price-info--title">Цена:</p>
         <p className="product-container__price-info product-container__price-info--value">{price} ₽</p>
-        <a className="button button--red button--big product-container__button"
-          href='todo'
+        <button className="button button--red button--big product-container__button"
+          onClick = {handleAddToCartClick}
         >
             Добавить в корзину
-        </a>
+        </button>
       </div>
     </div>
   );
 }
 
 export default ProductInfo;
+
+

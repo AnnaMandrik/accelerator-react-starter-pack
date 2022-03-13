@@ -1,6 +1,11 @@
 import {MainData} from '../../types/state';
 import {createReducer} from '@reduxjs/toolkit';
-import {clearCurrentComments, clearCurrentProduct, clearPagesCount, loadPagesCount, loadCurrentComments, loadProductCardsList, loadMinDefaultPrice, loadMaxDefaultPrice, loadCurrentProduct, addNewComment, increaseCommentsCounter, clearCommentsCounter} from '../action';
+import {clearCurrentComments, clearCurrentProduct, clearPagesCount,
+  loadPagesCount, loadCurrentComments, loadProductCardsList,
+  loadMinDefaultPrice, loadMaxDefaultPrice, loadCurrentProduct,
+  addNewComment, increaseCommentsCounter, clearCommentsCounter,
+  addTemporaryProductsInCart, clearTemporaryProductsInCart,
+  addProductsInCart, clearProductsCart, deleteProductsFromCart} from '../action';
 import {Guitar} from '../../types/guitar';
 import { START_COMMENTS_COUNT } from '../../const';
 
@@ -13,6 +18,8 @@ const initialState: MainData = {
   currentProduct: {} as Guitar,
   currentComments: [],
   commentsCounter: START_COMMENTS_COUNT,
+  temporaryProductsInCart: {} as Guitar,
+  productsInCart: [],
 };
 
 const mainData = createReducer (initialState, (builder) => {
@@ -57,6 +64,21 @@ const mainData = createReducer (initialState, (builder) => {
     })
     .addCase(clearCommentsCounter, (state) => {
       state.commentsCounter = initialState.commentsCounter;
+    })
+    .addCase(addTemporaryProductsInCart, (state, action) => {
+      state.temporaryProductsInCart = action.payload;
+    })
+    .addCase(clearTemporaryProductsInCart, (state) => {
+      state.temporaryProductsInCart = initialState.temporaryProductsInCart;
+    })
+    .addCase(addProductsInCart, (state, action) => {
+      state.productsInCart = action.payload;
+    })
+    .addCase(clearProductsCart, (state) => {
+      state.productsInCart = initialState.productsInCart;
+    })
+    .addCase(deleteProductsFromCart, (state, action) => {
+      state.productsInCart = state.productsInCart.filter((product) => product.id !== action.payload);
     });
 });
 

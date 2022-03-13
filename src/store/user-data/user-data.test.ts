@@ -30,6 +30,12 @@ const initialState: UserData = {
     minPrice: '',
     maxPrice: '',
   },
+  inCart: {},
+  totalPrice: {},
+  coupon: {
+    value: null,
+    discount: 0,
+  },
 };
 
 describe('Reducer: user-data', () => {

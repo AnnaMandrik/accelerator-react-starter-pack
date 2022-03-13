@@ -18,4 +18,10 @@ const getCommentsCounter = (state: State) => state[NameDataList.MainData].commen
 const getSortedComments  = createSelector(
   getCurrentComments, getCommentsSortByDate);
 
-export {getSortedComments, getCommentsCounter, getCurrentComments, getCurrentProduct, getGuitars, getIsLoaded, getDefaultMinPrice, getDefaultMaxPrice, getPagesCount};
+const getTemporaryProductsInCart = (state: State) => state[NameDataList.MainData].temporaryProductsInCart;
+const getProductsInCart = (state: State) => state[NameDataList.MainData].productsInCart;
+
+export {getSortedComments, getCommentsCounter, getCurrentComments,
+  getCurrentProduct, getGuitars, getIsLoaded, getDefaultMinPrice,
+  getDefaultMaxPrice, getPagesCount, getTemporaryProductsInCart,
+  getProductsInCart};

@@ -7,6 +7,9 @@ const DEFAULT_PAGE = 1;
 const STEP_OF_COUNT = 3;
 const HEADER_TOTAL_COUNT = 'x-total-count';
 const HEAD_TITLE = 'Guitar-shop';
+const OK_MESSAGE = 'Order is successful';
+const DELAY_COUNT = 240;
+const MAX_IN_CART = 99;
 
 const enum AppRoute {
   Main = '/',
@@ -90,7 +93,8 @@ const enum ErrorText {
   Redirect = 'Перенаправление на основную страницу.',
   NotFound = 'Запрос не выполнен с кодом состояния 404',
   BadRequest = 'Запрос не выполнен с кодом состояния 400',
-  Attention = 'Внимание!'
+  Attention = 'Внимание!',
+  Incorrect = 'Введены не актуальные данные!',
 }
 
 
@@ -133,11 +137,16 @@ const StarTitle: {[key: number]: string} = {
   5: 'Отлично',
 };
 
+const CouponError = {
+  value: 'error',
+  discount: 0,
+};
+
 export {FilterOfPrices, AppRoute, APIRoute, ITEMS_PER_PAGE,
   Parameter, SortKey, OrderKey, DIGIT_ZERO,
   DEFAULT_PAGE, STEP_OF_COUNT, CountOfPages, ErrorText,
   socialsNets, HEADER_TOTAL_COUNT, RATING_NUMBERS,
   START_COMMENTS_COUNT, StringCount, ProductProperty,
   GuitarsType, ProductType, HeaderLinks, HEAD_TITLE, ModalType,
-  StarTitle};
+  StarTitle, CouponError, OK_MESSAGE, DELAY_COUNT, MAX_IN_CART};
 

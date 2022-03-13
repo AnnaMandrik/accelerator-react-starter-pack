@@ -1,6 +1,10 @@
+import { useSelector } from 'react-redux';
 import {generatePath, Link} from 'react-router-dom';
 import {AppRoute, RATING_NUMBERS} from '../../const';
+import { getUserInCart } from '../../store/user-data/selectors';
 import {Product} from '../../types/guitar';
+import ProductCardButtonInCart from '../product-card-button-cart/product-card-button-in-cart/product-card-button-in-cart';
+import ProductCardButtonToCart from '../product-card-button-cart/product-card-button-to-cart/product-card-button-to-cart';
 
 type ProductCardProps = {
   guitar: Product;
@@ -9,6 +13,9 @@ type ProductCardProps = {
 function ProductCard({guitar}: ProductCardProps): JSX.Element {
   const {previewImg, rating, name, price, comments, id} = guitar;
   const productInfoPath = generatePath(AppRoute.Product, { id: id.toString() });
+  const inCart = useSelector(getUserInCart);
+
+
   return (
     <div className="product-card">
       <img src={previewImg.replace('img', 'img/content')} width="75" height="190" alt={name} />
@@ -34,7 +41,7 @@ function ProductCard({guitar}: ProductCardProps): JSX.Element {
       </div>
       <div className="product-card__buttons">
         <Link className="button button--mini" to={`/${productInfoPath}`} data-testid="more">Подробнее</Link>
-        <Link className="button button--red button--mini button--add-to-cart" to={AppRoute.Stub}>Купить</Link>
+        {id in inCart ? <ProductCardButtonInCart /> : <ProductCardButtonToCart product={guitar} />}
       </div>
     </div>
   );

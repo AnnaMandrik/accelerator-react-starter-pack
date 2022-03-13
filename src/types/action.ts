@@ -15,6 +15,11 @@ export const enum ActionType {
   AddNewComment = 'data/addNewComment',
   IncreaseCommentsCounter = 'data/increaseCommentsCounter',
   ClearComentsCounter = 'data/clearCommentsCounter',
+  AddTemporaryProductsInCart = 'data/addTemporaryProductsInCart',
+  ClearTemporaryProductsInCart = 'data/clearTemporaryProductsInCart',
+  AddProductsInCart = 'data/addProductsInCart',
+  DeleteProductsFromCart = 'data/deleteProductsFromCart',
+  ClearProductsCart = 'data/clearProductsCart',
 
   SearchingProducts = 'user/searchingProducts',
   ClearSearchingProducts = 'user/clearSearchingProducts',
@@ -22,10 +27,20 @@ export const enum ActionType {
   ClearFilter ='user/clearFilter',
   SelectSort = 'user/selectSort',
   ClearSort = 'user/clearSort',
+  AddInCart = 'user/addInCart',
+  DeleteFromCart = 'user/deleteFromCart',
+  ClearCart = 'user/clearCart',
+  SelectTotalPrice = 'user/selectTotalPrice',
+  AddCoupon = 'user/addCoupon',
+  ClearCoupon = 'user/clearCoupon',
+  SelectQuantityInCart = 'user/selectQuantityInCart',
 
   ToggleIsReviewFormOpened = 'process/toggleIsReviewFormOpened',
   ToggleIsSuccessReviewOpened = 'process/toggleIsSuccessReviewOpened',
   CloseAllModals = 'process/closeAllModals',
+  ToggleIsAddOpened = 'process/toggleIsAddOpened',
+  ToggleIsDeleteOpened = 'process/toggleIsDeleteOpened',
+  ToggleIsSuccessCartOpened = 'process/toggleIsSuccessCartOpened',
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;

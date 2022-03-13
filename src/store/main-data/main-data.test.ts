@@ -8,6 +8,7 @@ import { MainData } from '../../types/state';
 const fakeComment = MakeFakeComment();
 const fakeGuitars = fakeProducts;
 const FAKE_COMMENT_COUNTER = 6;
+
 const initialState: MainData = {
   productsList: [],
   isDataLoaded: false,
@@ -17,6 +18,8 @@ const initialState: MainData = {
   currentProduct: {} as Guitar,
   currentComments: [],
   commentsCounter: START_COMMENTS_COUNT,
+  temporaryProductsInCart: {} as Guitar,
+  productsInCart: [],
 };
 
 describe('Reducer: main-data', () => {

@@ -6,6 +6,9 @@ import { processData } from './process-data';
 export const initialState: ProcessData = {
   isReviewFormOpened: false,
   isSuccessReviewOpened: false,
+  isAddOpened: false,
+  isDeleteOpened: false,
+  isSuccessCartOpened: false,
 };
 
 describe('Reducer: process-data', () => {

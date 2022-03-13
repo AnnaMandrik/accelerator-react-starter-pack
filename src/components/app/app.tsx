@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {AppRoute} from '../../const';
+import CartPage from '../cart-page/cart-page';
 import CatalogPage from '../catalog-page/catalog-page';
 import ErrorPage from '../error-page/error-page';
 import MainLayout from '../main-layout/main-layout';
@@ -16,7 +17,7 @@ function App(): JSX.Element {
         <Route path={AppRoute.Product} element={<ProductPage />} />
         <Route path={AppRoute.About} element={<StubPage />} />
         <Route path={AppRoute.Where} element={<StubPage />} />
-        <Route path={AppRoute.Cart} element={<StubPage />} />
+        <Route path={AppRoute.Cart} element={<CartPage />} />
         <Route path={AppRoute.Stub} element={<StubPage />} />
         <Route path={AppRoute.Error} element={<ErrorPage />} />
       </Route>
