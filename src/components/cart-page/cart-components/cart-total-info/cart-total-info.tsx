@@ -3,10 +3,10 @@ import { postOrderAction } from '../../../../store/api-actions';
 import { getUserCoupon, getUserOrderQuantity, getUserSumOfTotal, getUserTotalDiscount } from '../../../../store/user-data/selectors';
 
 function CartTotalInfo(): JSX.Element {
-  const sumTotalPrices = useSelector(getUserSumOfTotal);
+  const totalPrices = useSelector(getUserSumOfTotal);
   const totalDiscount = useSelector(getUserTotalDiscount);
   const coupon = useSelector(getUserCoupon).value;
-  const guitarsQuantity = useSelector(getUserOrderQuantity);
+  const guitarsIds = useSelector(getUserOrderQuantity);
 
   const dispatch = useDispatch();
 
@@ -14,7 +14,7 @@ function CartTotalInfo(): JSX.Element {
     <div className="cart__total-info">
       <p className="cart__total-item">
         <span className="cart__total-value-name">Всего:</span>
-        <span className="cart__total-value">{sumTotalPrices} ₽</span>
+        <span className="cart__total-value">{totalPrices} ₽</span>
       </p>
       <p className="cart__total-item">
         <span className="cart__total-value-name">Скидка:</span>
@@ -29,13 +29,14 @@ function CartTotalInfo(): JSX.Element {
       <p className="cart__total-item">
         <span className="cart__total-value-name">К оплате:</span>
         <span className="cart__total-value cart__total-value--payment">
-          {sumTotalPrices - totalDiscount} ₽
+          {totalPrices - totalDiscount} ₽
         </span>
       </p>
       <button
+        onClick={() => dispatch(postOrderAction({ guitarsIds, coupon }))}
         className="button button--red button--big cart__order-button"
-        onClick={()=>dispatch(postOrderAction({ guitarsQuantity, coupon }))}
-      >Оформить заказ
+      >
+        Оформить заказ
       </button>
     </div>
   );

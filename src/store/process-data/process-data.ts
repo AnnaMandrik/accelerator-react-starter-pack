@@ -24,6 +24,9 @@ const processData = createReducer (initialState, (builder) => {
     .addCase(closeAllModals, (state) => {
       state.isReviewFormOpened = initialState.isReviewFormOpened;
       state.isSuccessReviewOpened = initialState.isSuccessReviewOpened;
+      state.isAddOpened = initialState.isAddOpened;
+      state.isDeleteOpened = initialState.isDeleteOpened;
+      state.isSuccessCartOpened = initialState.isSuccessCartOpened;
     })
     .addCase(toggleIsAddOpened, (state, action) => {
       state.isAddOpened = action.payload;

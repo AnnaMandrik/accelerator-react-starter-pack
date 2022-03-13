@@ -11,7 +11,7 @@ import { START_COMMENTS_COUNT } from '../../const';
 
 const initialState: MainData = {
   productsList: [],
-  isDataLoaded: false,
+  isDataLoaded: true,
   pagesCount: 0,
   minDefaultPrice: 0,
   maxDefaultPrice: 0,

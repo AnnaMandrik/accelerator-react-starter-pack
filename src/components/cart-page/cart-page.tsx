@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import { HEAD_TITLE } from '../../const';
 import { fetchCartProductsAction } from '../../store/api-actions';
-import { getIsLoaded, getProductsInCart } from '../../store/main-data/selectors';
+import {getIsLoaded, getProductsInCart } from '../../store/main-data/selectors';
 import { getUserQuantity } from '../../store/user-data/selectors';
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import Spinner from '../spinner/spinner';
@@ -12,21 +12,20 @@ import CartItem from './cart-components/cart-item/cart-item';
 import EmptyCart from './cart-components/empty-cart/empty-cart';
 
 function CartPage(): JSX.Element {
-  const isLoading = useSelector(getIsLoaded);
+  const isLoaded = useSelector(getIsLoaded);
   const productsInCart = useSelector(getProductsInCart);
-  const dispatch = useDispatch();
   const productsCount = useSelector(getUserQuantity);
-  const headTitle = `'Корзина' - ${HEAD_TITLE}`;
+  const headTitle = `Корзина - ${HEAD_TITLE}`;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchCartProductsAction(productsCount));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (isLoading) {
+  if (!isLoaded) {
     return <Spinner />;
   }
-
 
   return (
     <>
@@ -46,3 +45,5 @@ function CartPage(): JSX.Element {
 }
 
 export default CartPage;
+
+

@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import {State} from '../../types/state';
-import { getSumValues, getAllQuantity } from '../../utils';
+import { getSumValues, getAllIds } from '../../utils';
 import {NameDataList} from '../root-reducer';
 
 
@@ -17,7 +17,7 @@ const getUserTotalInCart = createSelector(getUserInCart, getSumValues);
 const getUserQuantity = createSelector(getUserInCart, (inCart) =>  Object.keys(inCart));
 const getUserSumOfTotal = createSelector(getUserTotalPrice, getSumValues);
 const getUserTotalDiscount = createSelector(getUserSumOfTotal, getUserDiscount, (sum, percent) => (sum/100)*percent);
-const getUserOrderQuantity = createSelector(getUserInCart, getAllQuantity);
+const getUserOrderQuantity = createSelector(getUserInCart, getAllIds);
 
 
 export {getUserSearching, getUserSorting, getUserFilter,

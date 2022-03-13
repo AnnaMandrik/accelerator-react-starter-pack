@@ -1,7 +1,7 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MAX_IN_CART } from '../../../../const';
-import { addTemporaryProductsInCart, toggleIsDeleteOpened } from '../../../../store/action';
+import { DELAY_COUNT, MAX_IN_CART } from '../../../../const';
+import { addTemporaryProductsInCart, selectQuantityInCart, selectTotalPrice, toggleIsDeleteOpened } from '../../../../store/action';
 import { getUserInCart, getUserTotalPrice } from '../../../../store/user-data/selectors';
 import { Guitar } from '../../../../types/guitar';
 
@@ -11,25 +11,25 @@ type CartCountProps = {
 };
 
 function CartCount({ product }: CartCountProps) {
-  const { id } = product;
+  const { id, price } = product;
   const productCount = useSelector(getUserInCart)[id];
   const totalPrice = useSelector(getUserTotalPrice)[id];
   const dispatch = useDispatch();
   const [count, setCount] = useState(productCount.toString());
-  //const timeout = useRef<NodeJS.Timeout | null>(null);
+  const timeout = useRef<NodeJS.Timeout | null>(null);
 
-  // useEffect(() => {
-  //   if (timeout.current) {
-  //     clearTimeout(timeout.current);
-  //   }
-  //   if (count === '') {
-  //     return;
-  //   }
-  //   timeout.current = setTimeout(() => {
-  //     dispatch(selectQuantityInCart({id, quantity: +count}));
-  //     dispatch(selectTotalPrice(id, price: Number(count*price)));
-  //   }, DELAY_COUNT);
-  // }, [dispatch, id, price, count]);
+  useEffect(() => {
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+    if (count === '') {
+      return;
+    }
+    timeout.current = setTimeout(() => {
+      dispatch(selectQuantityInCart(id, +count));
+      dispatch(selectTotalPrice(id, +count*price));
+    }, DELAY_COUNT);
+  }, [dispatch, id, price, count]);
 
   const handleInputOnChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const quant = evt.target.validity.valid ? evt.target.value : count;

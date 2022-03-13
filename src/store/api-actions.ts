@@ -6,7 +6,8 @@ import {Product, Guitars, Order} from '../types/guitar';
 import {Comment, CommentPost} from '../types/comment';
 import {loadCurrentComments, loadCurrentProduct, loadProductCardsList, searchingProducts,
   loadMinDefaultPrice, loadMaxDefaultPrice, clearPagesCount, loadPagesCount, selectFilter, selectSort,
-  addNewComment, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened, addProductsInCart, addCoupon, clearProductsCart, clearCoupon, clearCart} from './action';
+  addNewComment, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened,
+  addProductsInCart, addCoupon, clearCoupon, clearCart, clearProductsCart} from './action';
 import { createQuery } from '../utils';
 import { FilterState, SortState } from '../types/state';
 import { redirectToRoute } from './middlewares/middleware-action';
@@ -22,8 +23,8 @@ export const fetchCatalogPageAction = (page: number): ThunkActionResult =>
       dispatch(loadProductCardsList(data));
     }catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
       }
@@ -51,8 +52,8 @@ export const fetchFilterUserAction = (filter: FilterState, page: number, isSearc
       dispatch(selectFilter(filter));
     } catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
         if (err.message === ErrorText.Redirect) {
@@ -73,8 +74,8 @@ export const fetchSortedUserAction = (page: number, sort: SortState): ThunkActio
       dispatch(selectSort(sort));
     } catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
       }
@@ -92,8 +93,8 @@ export const fetchDefaultMinPriceAction =(): ThunkActionResult =>
       dispatch(fetchDefaultMaxPriceAction(headers[HEADER_TOTAL_COUNT]));
     }  catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
       }
@@ -109,8 +110,8 @@ export const fetchDefaultMaxPriceAction =(productsCount: number): ThunkActionRes
       dispatch(loadMaxDefaultPrice(data[DIGIT_ZERO].price));
     } catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
       }
@@ -124,8 +125,8 @@ export const fetchSearchingProductsUserAction = (text: string): ThunkActionResul
       dispatch(searchingProducts(data));
     } catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
       }
@@ -142,8 +143,8 @@ export const fetchCurrentProductAction = (id: string): ThunkActionResult =>
       dispatch(loadCurrentComments(comments));
     } catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
         if (err.message === ErrorText.NotFound) {
@@ -164,12 +165,12 @@ export const postCommentAction = (comment: CommentPost): ThunkActionResult =>
       dispatch(toggleIsSuccessReviewOpened(true));
     } catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
         if (err.message === ErrorText.BadRequest) {
-          toast.warning(ErrorText.Attention);
+          toast.warning(ErrorText.Incorrect);
           toast.clearWaitingQueue();
         }
       }
@@ -179,14 +180,15 @@ export const postCommentAction = (comment: CommentPost): ThunkActionResult =>
 export const fetchCartProductsAction = (productsCount: string[]): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     try {
-      const response = await axios.all(productsCount.map((id) =>
+      const response = await
+      axios.all(productsCount.map((id) =>
         api.get<Product>(`${APIRoute.Guitars}/${id}`)));
       const products = response.map((resp) => resp.data);
       dispatch(addProductsInCart(products));
     } catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.NotFound) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
       }
@@ -200,8 +202,8 @@ export const postCouponAction = (value: string): ThunkActionResult =>
       dispatch(addCoupon({value, discount: data}));
     } catch (err) {
       if (err instanceof Error) {
-        if  (err.message === ErrorText.NotFound) {
-          toast.error(err.message);
+        if  (err.message === ErrorText.NetworkError) {
+          toast.error(ErrorText.LoadData);
           toast.clearWaitingQueue();
         }
         if (err.message === ErrorText.BadRequest) {
@@ -213,25 +215,28 @@ export const postCouponAction = (value: string): ThunkActionResult =>
     }
   };
 
-export const postOrderAction = (order: Order): ThunkActionResult =>
-  async (dispatch, getState, api): Promise<void> => {
-    try {
-      await api.post<number>(`${APIRoute.Order}`, order);
-      dispatch(clearProductsCart());
-      dispatch(clearCoupon());
-      dispatch(clearCart());
-      toast.success(OK_MESSAGE);
-    } catch (err) {
-      if (err instanceof Error) {
-        if  (err.message === ErrorText.LoadData) {
-          toast.error(err.message);
-          toast.clearWaitingQueue();
-        }
-        if (err.message === ErrorText.BadRequest) {
-          dispatch(addCoupon(CouponError));
-          toast.warning(ErrorText.Incorrect);
-          toast.clearWaitingQueue();
+
+export const postOrderAction =
+  (order: Order): ThunkActionResult =>
+    async (dispatch, getState, api): Promise<void> => {
+      try {
+        await api.post<number>(
+          `${APIRoute.Order}`, order);
+        dispatch(clearProductsCart());
+        dispatch(clearCoupon());
+        dispatch(clearCart());
+        toast.success(OK_MESSAGE);
+      } catch (err) {
+        if (err instanceof Error) {
+          if  (err.message === ErrorText.NetworkError) {
+            toast.error(ErrorText.LoadData);
+            toast.clearWaitingQueue();
+          }
+          if (err.message === ErrorText.BadRequest) {
+            dispatch(addCoupon(CouponError));
+            toast.warning(ErrorText.Incorrect);
+            toast.clearWaitingQueue();
+          }
         }
       }
-    }
-  };
+    };

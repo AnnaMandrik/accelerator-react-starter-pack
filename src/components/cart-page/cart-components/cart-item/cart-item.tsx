@@ -31,7 +31,7 @@ function CartItem({product}: CartItemProps): JSX.Element {
         <span className="cart-item__close-button-interactive-area"></span>
       </button>
       <div className="cart-item__image">
-        <img src={previewImg} width="55" height="130" alt={name}/>
+        <img src={previewImg.replace('img', 'img/content')} width="55" height="130" alt={name}/>
       </div>
       <div className="product-info cart-item__info">
         <p className="product-info__title">{productType} {name}</p>
@@ -40,7 +40,6 @@ function CartItem({product}: CartItemProps): JSX.Element {
       </div>
       <div className="cart-item__price">{price} ₽</div>
       <CartCount product={product}/>
-      <div className="cart-item__price-total">17 500 ₽</div>
     </div>
   );
 }

@@ -100,9 +100,9 @@ export const getSumValues = (object: InCart): number => {
     : 0;
 };
 
-export const getAllQuantity = (object: InCart): number[] =>
+export const getAllIds = (object: InCart): number[] =>
   Object.entries(object)
-    .reduce((allItms: number[], [key, value]) => {
-      const currentItems = new Array(value).fill(Number(key));
-      return [...allItms, ...currentItems];
+    .reduce((allIds: number[], [key, value]) => {
+      const currentIds = new Array(value).fill(Number(key));
+      return [...allIds, ...currentIds];
     }, [] as number[]);

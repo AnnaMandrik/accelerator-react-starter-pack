@@ -8,11 +8,11 @@ import { getUserCoupon } from '../../../../store/user-data/selectors';
 
 function CartCoupon(): JSX.Element {
   const couponValue = useSelector(getUserCoupon).value;
-  const initialCoupon =
+  const createCoupon =
     couponValue === null || couponValue === CouponError.value
       ? ''
       : couponValue;
-  const [coupon, setCoupon] = useState(initialCoupon);
+  const [coupon, setCoupon] = useState(createCoupon);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,8 +36,6 @@ function CartCoupon(): JSX.Element {
         onSubmit={handleOnSubmit}
         className="coupon__form"
         id="coupon-form"
-        method="post"
-        action="/"
       >
         <div className="form-input coupon__input">
           <label className="visually-hidden">Промокод</label>
@@ -56,11 +54,12 @@ function CartCoupon(): JSX.Element {
           )}
           {couponValue === CouponError.value && (
             <p className='form-input__message form-input__message--error'>
-              Промокод не подходит
+              неверный промокод
             </p>
           )}
         </div>
-        <button className="button button--big coupon__button">Применить
+        <button className="button button--big coupon__button">
+          Применить
         </button>
       </form>
     </div>

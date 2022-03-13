@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import { CouponInit } from '../../const';
 import {UserData} from '../../types/state';
 import {clearSearchingProducts, searchingProducts,
   selectFilter, clearFilter, selectSort, clearSort,
@@ -20,10 +21,7 @@ const initialState: UserData = {
   },
   inCart: {},
   totalPrice: {},
-  coupon: {
-    value: null,
-    discount: 0,
-  },
+  coupon: CouponInit,
 };
 
 const userData = createReducer (initialState, (builder) => {
