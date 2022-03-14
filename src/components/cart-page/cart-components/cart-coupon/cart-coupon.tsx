@@ -46,6 +46,7 @@ function CartCoupon(): JSX.Element {
             name="coupon"
             value={coupon}
             onChange={(evt) => setCoupon(evt.target.value)}
+            data-testid = 'coupon'
           />
           {couponValue !== null && couponValue !== CouponError.value && (
             <p className='form-input__message form-input__message--success'>

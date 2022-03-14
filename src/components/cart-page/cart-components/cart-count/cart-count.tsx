@@ -70,6 +70,7 @@ function CartCount({ product }: CartCountProps) {
           name='2-count'
           pattern='[1-9]|[1-9][0-9]'
           value={count}
+          data-testid='quantity'
         />
         <button
           onClick={() => {

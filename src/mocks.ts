@@ -13,6 +13,7 @@ export enum HttpCode {
   Ok = 200,
   NoContent = 204,
   NoAuth = 401,
+  BadRequest = 400,
 }
 
 export const MakeFakeGuitar = (): Guitar => ({
@@ -156,6 +157,22 @@ export const TestReg = {
   SubmitBtn: new RegExp('Отправить отзыв', 'i'),
   ValidErrorText: new RegExp('Заполните поле', 'i'),
   ValidErrorStar: new RegExp('Поставьте оценку', 'i'),
+  QuantAdd: new RegExp('Увеличить количество', 'i'),
+  QuantRemove: new RegExp('Уменьшить количество', 'i'),
+  CouponTitle: new RegExp('Промокод на скидку', 'i'),
+  CouponRight: new RegExp('Промокод принят', 'i'),
+  CouponWrong: new RegExp('неверный промокод', 'i'),
+  CouponBtn: new RegExp('Применить', 'i'),
+  OrderBtn: new RegExp('Оформить заказ', 'i'),
+  CartDeleteBtn: new RegExp('Удалить', 'i'),
+  ToCart: new RegExp('Перейти в корзину', 'i'),
+  CartAddBtn: new RegExp('Добавить в корзину', 'i'),
+  CartAddTitle: new RegExp('Добавить товар в корзину', 'i'),
+  CartDeleteRemove: new RegExp('Удалить товар', 'i'),
+  CartDeleteTitle: new RegExp('Удалить этот товар?', 'i'),
+  CartResume: new RegExp('Продолжить покупки', 'i'),
+  CartSuccessMessage: new RegExp('Товар успешно добавлен в корзину', 'i'),
+  CartSuccessRedirect: new RegExp('Перейти в корзину', 'i'),
 };
 
 export const Stub= `${TestReg.StubPage}`;

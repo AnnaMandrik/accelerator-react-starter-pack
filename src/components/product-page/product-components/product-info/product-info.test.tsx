@@ -10,7 +10,7 @@ const fakeCurrentProduct = MakeFakeGuitar();
 const mockStore = configureMockStore();
 const componentState = {
   MainData: {...MockMainData, currentComments: fakeComments},
-  MainUser: MockUserData,
+  UserData: MockUserData,
 };
 const store = mockStore(componentState);
 

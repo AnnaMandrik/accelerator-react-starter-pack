@@ -13,6 +13,7 @@ import { HelmetProvider } from 'react-helmet-async';
 HelmetProvider.canUseDOM = false;
 const mockStore = configureMockStore([thunk]);
 const NAME = 'Product';
+const CART = 'Корзина';
 const ID = 1;
 const fakeCurrentProduct = { ...fakeProduct, name: NAME, id: ID };
 
@@ -57,5 +58,10 @@ describe('Application Routing', () => {
     history.push('/product/1');
     render(fakeApp);
     expect(screen.getAllByText(NAME).length).toEqual(3);
+  });
+  it('should render CartPage when user navigate to /cart', () => {
+    history.push('/cart');
+    render(fakeApp);
+    expect(screen.getAllByText(CART).length).toEqual(2);
   });
 });

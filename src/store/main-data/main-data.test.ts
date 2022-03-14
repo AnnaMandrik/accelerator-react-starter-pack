@@ -1,6 +1,6 @@
-import {fakeProduct, fakeProducts, fakeComments, MakeFakeComment} from '../../mocks';
+import {fakeProduct, fakeProducts, fakeComments, MakeFakeComment, MakeFakeGuitar} from '../../mocks';
 import {mainData} from '../main-data/main-data';
-import {loadCurrentComments, loadProductCardsList, loadPagesCount, loadMaxDefaultPrice, loadMinDefaultPrice, loadCurrentProduct, clearCurrentProduct, clearCurrentComments, clearPagesCount, addNewComment, increaseCommentsCounter, clearCommentsCounter} from '../action';
+import {loadCurrentComments, loadProductCardsList, loadPagesCount, loadMaxDefaultPrice, loadMinDefaultPrice, loadCurrentProduct, clearCurrentProduct, clearCurrentComments, clearPagesCount, addNewComment, increaseCommentsCounter, clearCommentsCounter, addTemporaryProductsInCart, clearTemporaryProductsInCart, addProductsInCart, clearProductsCart, deleteProductsFromCart} from '../action';
 import { Guitar } from '../../types/guitar';
 import { START_COMMENTS_COUNT } from '../../const';
 import { MainData } from '../../types/state';
@@ -8,10 +8,16 @@ import { MainData } from '../../types/state';
 const fakeComment = MakeFakeComment();
 const fakeGuitars = fakeProducts;
 const FAKE_COMMENT_COUNTER = 6;
+const FAKE_PRODUCT = MakeFakeGuitar();
+const FAKE_ID = 2;
+
+const fakeFirstGuitar = {...MakeFakeGuitar(), id: 1};
+const fakeSecondGuitar = {...MakeFakeGuitar(), id: 2};
+
 
 const initialState: MainData = {
   productsList: [],
-  isDataLoaded: false,
+  isDataLoaded: true,
   pagesCount: 0,
   minDefaultPrice: 0,
   maxDefaultPrice: 0,
@@ -95,5 +101,29 @@ describe('Reducer: main-data', () => {
     expect(mainData(state, clearCommentsCounter())).toEqual({
       ...initialState,
     });
+  });
+  it('should update tempItemCart by addTemporaryProductsInCart', () => {
+    expect(mainData(state, addTemporaryProductsInCart(FAKE_PRODUCT))).toEqual({
+      ...state,
+      temporaryProductsInCart: FAKE_PRODUCT,
+    });
+  });
+  it('should reset tempItemCart by clearTemporaryProductsInCart', () => {
+    state = { ...initialState, temporaryProductsInCart: FAKE_PRODUCT };
+    expect(mainData(state, clearTemporaryProductsInCart())).toEqual(initialState);
+  });
+  it('should update productsInCart by addProductsInCart', () => {
+    expect(mainData(state, addProductsInCart(fakeGuitars))).toEqual({
+      ...state,
+      productsInCart: fakeGuitars,
+    });
+  });
+  it('should clear productsInCart by clearProductsCart', () => {
+    state = { ...initialState, productsInCart: fakeGuitars };
+    expect(mainData(state, clearProductsCart())).toEqual(initialState);
+  });
+  it('should delete product from productsInCart by deleteProductsFromCart', () => {
+    state = { ...initialState, productsInCart: [fakeFirstGuitar, fakeSecondGuitar]};
+    expect(mainData(state, deleteProductsFromCart(FAKE_ID))).toEqual({ ...state, productsInCart: [fakeFirstGuitar]});
   });
 });

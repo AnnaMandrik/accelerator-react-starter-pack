@@ -1,5 +1,5 @@
 import { ProcessData } from '../../types/state';
-import { closeAllModals, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened } from '../action';
+import { closeAllModals, toggleIsAddOpened, toggleIsDeleteOpened, toggleIsReviewFormOpened, toggleIsSuccessCartOpened, toggleIsSuccessReviewOpened } from '../action';
 import { processData } from './process-data';
 
 
@@ -38,5 +38,24 @@ describe('Reducer: process-data', () => {
       isSuccessReviewOpened: true,
     });
   });
+  it('should update isAddOpened by toggleIsAddOpened', () => {
+    expect(processData(state, toggleIsAddOpened(true))).toEqual({
+      ...state,
+      isAddOpened: true,
+    });
+  });
 
+  it('should update isDeleteOpened by toggleIsCartDeleteOpen', () => {
+    expect(processData(state, toggleIsDeleteOpened(true))).toEqual({
+      ...state,
+      isDeleteOpened: true,
+    });
+  });
+
+  it('should update isSuccessCartOpened by toggleIsCartSuccessOpen', () => {
+    expect(processData(state, toggleIsSuccessCartOpened(true))).toEqual({
+      ...state,
+      isSuccessCartOpened: true,
+    });
+  });
 });

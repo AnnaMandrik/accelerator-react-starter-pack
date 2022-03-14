@@ -1,5 +1,5 @@
 import {userData} from '../user-data/user-data';
-import {clearFilter, clearSearchingProducts, clearSort, searchingProducts, selectFilter, selectSort} from '../action';
+import {addCoupon, addInCart, clearCart, clearCoupon, clearFilter, clearSearchingProducts, clearSort, deleteFromCart, searchingProducts, selectFilter, selectQuantityInCart, selectSort, selectTotalPrice} from '../action';
 import {fakeProducts} from '../../mocks';
 import { OrderKey, ProductType, SortKey } from '../../const';
 import { UserData } from '../../types/state';
@@ -16,6 +16,13 @@ const FAKE_FILTER = {
   minPrice: '1',
   maxPrice: '10',
 };
+const FAKE_COUPON = {
+  value: 'light-333',
+  discount: 15,
+};
+
+const FAKE_PRICE = 10;
+const FAKE_QUANTITY = 10;
 
 
 const initialState: UserData = {
@@ -69,5 +76,83 @@ describe('Reducer: user-data', () => {
     state = { ...initialState, filter: FAKE_FILTER };
     expect(userData(state, clearFilter())).toEqual(initialState);
   });
-
+  it('should update inCart by addInCart', () => {
+    state = { ...initialState, inCart: { '1': 1 } };
+    expect(userData(state, addInCart(1))).toEqual({
+      ...initialState,
+      inCart: { '1': 2 },
+    });
+  });
+  it('should add new key inCart by addInCart', () => {
+    state = { ...initialState, inCart: { '1': 1 } };
+    expect(userData(state, addInCart(2))).toEqual({
+      ...initialState,
+      inCart: {
+        '1': 1,
+        '2': 1,
+      },
+    });
+  });
+  it('should delete inCart by deleteFromCart', () => {
+    state = {
+      ...initialState,
+      inCart: {
+        '1': 2,
+        '2': 1,
+      },
+      totalPrice: {
+        '1': FAKE_PRICE,
+      },
+    };
+    expect(userData(state, deleteFromCart(1))).toEqual({
+      ...initialState,
+      inCart: {
+        '2': 1,
+      },
+    });
+  });
+  it('should clear inCart by clearCart', () => {
+    state = {
+      ...state,
+      inCart: {
+        '1': 2,
+        '2': 1,
+      },
+      totalPrice: {
+        '1': FAKE_PRICE,
+        '2': FAKE_PRICE,
+      },
+    };
+    expect(userData(state, clearCart())).toEqual(initialState);
+  });
+  it('should update inCart by selectQuantityInCart', () => {
+    state = { ...initialState, inCart: { '1': 1 } };
+    expect(
+      userData(state, selectQuantityInCart(1, FAKE_QUANTITY)),
+    ).toEqual({
+      ...initialState,
+      inCart: { '1': FAKE_QUANTITY },
+    });
+  });
+  it('should update totalPrice by selectTotalPrice', () => {
+    state = { ...initialState, totalPrice: {} };
+    expect(userData(state, selectTotalPrice(1, FAKE_PRICE))).toEqual(
+      {
+        ...initialState,
+        totalPrice: { '1': FAKE_PRICE },
+      },
+    );
+  });
+  it('should clear coupon by clearCoupon', () => {
+    state = { ...initialState, coupon: FAKE_COUPON };
+    expect(userData(state, clearCoupon())).toEqual(initialState);
+  });
+  it('should add coupon by addCoupon', () => {
+    state = initialState;
+    expect(userData(state, addCoupon(FAKE_COUPON))).toEqual({
+      ...initialState,
+      coupon: FAKE_COUPON,
+    });
+  });
 });
+

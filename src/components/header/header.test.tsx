@@ -1,40 +1,36 @@
-import { render, screen } from '@testing-library/react';
-import { HistoryRouter } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 import { configureMockStore } from '@jedmao/redux-mock-store';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+import { screen } from '@testing-library/react';
+import { MockMainData, MockUserData, TestReg } from '../../mocks';
+import { customRenderWithProvider } from '../../render-test';
 import Header from './header';
-import {fakeProducts} from '../../mocks';
 
-const mockStore = configureMockStore([thunk]);
-const fakeGuitars = fakeProducts;
+const mockStore = configureMockStore();
+const componentState = {
+  MainData: MockMainData,
+  UserData: MockUserData,
+};
+
+const IN_CART = {
+  '1': 5,
+  '2': 5,
+};
+const TOTAL = 10;
 
 describe('Component: Header', () => {
   it('should render correctly', () => {
-    const store = mockStore({
-      MainData: {
-        isDataLoaded: true,
-      },
-      UserData: {
-        searching: fakeGuitars,
-      },
-    });
-    const history = createMemoryHistory();
-
-    render(
-      <Provider store={store}>
-        <HistoryRouter history={history}>
-          <Header />
-        </HistoryRouter>
-      </Provider>,
-    );
-
-    expect(screen.getByAltText(/Логотип/i)).toBeInTheDocument();
-    expect(screen.getByRole('img')).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: 'Каталог'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: 'Где купить?'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: 'О компании'})).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: 'Корзина'})).toBeInTheDocument();
+    const store = mockStore(componentState);
+    customRenderWithProvider(<Header/>, store);
+    expect(screen.getByPlaceholderText(TestReg.SearchPlaceholder)).toBeInTheDocument();
+    expect(screen.getByAltText(TestReg.Logo)).toBeInTheDocument();
+    expect(screen.getByText(TestReg.About)).toBeInTheDocument();
+    expect(screen.getByText(TestReg.Where)).toBeInTheDocument();
+    expect(screen.getByText(TestReg.Catalog)).toBeInTheDocument();
+    expect(screen.getByLabelText(TestReg.CartLabel)).toBeInTheDocument();
+    expect(screen.queryByText(TOTAL)).not.toBeInTheDocument();
+  });
+  it('should render total in cart', () => {
+    const store = mockStore({ ...componentState, UserData: {...MockUserData, inCart: IN_CART } });
+    customRenderWithProvider(<Header/>, store);
+    expect(screen.getByText(TOTAL)).toBeInTheDocument();
   });
 });

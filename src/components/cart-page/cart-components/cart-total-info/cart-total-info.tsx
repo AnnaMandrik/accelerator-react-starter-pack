@@ -22,6 +22,7 @@ function CartTotalInfo(): JSX.Element {
           className={`cart__total-value ${
             !!totalDiscount && 'cart__total-value--bonus'
           }`}
+          data-testid = 'discount'
         >
           {totalDiscount} ₽
         </span>

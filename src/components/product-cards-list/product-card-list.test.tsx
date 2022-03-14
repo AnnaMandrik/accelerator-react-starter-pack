@@ -1,38 +1,20 @@
-import { render, screen  } from '@testing-library/react';
-import { HistoryRouter} from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { createMemoryHistory } from 'history';
+import { screen} from '@testing-library/react';
 import { configureMockStore } from '@jedmao/redux-mock-store';
+import { fakeProducts, MockMainData, MockUserData, TestReg} from '../../mocks';
 import ProductCardsList from './product-cards-list';
-import {fakeProducts} from '../../mocks';
-import thunk from 'redux-thunk';
+import { customRenderWithProvider } from '../../render-test';
 
-const history = createMemoryHistory();
-const fakeGuitars = fakeProducts;
-const mockStore = configureMockStore([thunk]);
 
+const mockStore = configureMockStore();
+const componentState = {
+  MainData: {...MockMainData, productsList: fakeProducts, isDataLoaded: true},
+  UserData: MockUserData,
+};
+const store = mockStore(componentState);
 
 describe('Component: ProductCardsList', () => {
-  it('should render correctly', () => {
-    const store = mockStore({
-      MainData: {
-        productsList: fakeGuitars,
-        minDefaultPrice: 1500,
-        maxDefaultPrice: 15000,
-        pagesCount: 3,
-        isDataLoaded: true,
-      },
-      UserData: {},
-    });
-
-    render(
-      <Provider store={store}>
-        <HistoryRouter history={history}>
-          <ProductCardsList />
-        </HistoryRouter>
-      </Provider>,
-    );
-
-    expect(screen.getByTestId('load-ok')).toBeInTheDocument();
+  it('should render all product cards correctly', () => {
+    customRenderWithProvider(<ProductCardsList />, store);
+    expect(screen.queryAllByText(TestReg.AboutProduct).length).toEqual(9);
   });
 });

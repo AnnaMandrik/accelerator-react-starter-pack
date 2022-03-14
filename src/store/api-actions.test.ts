@@ -4,11 +4,12 @@ import MockAdapter from 'axios-mock-adapter';
 import {configureMockStore} from '@jedmao/redux-mock-store';
 import {createAPI} from '../services/api';
 import {State} from '../types/state';
-import {APIRoute} from '../const';
-import {postCommentAction, fetchCatalogPageAction, fetchSearchingProductsUserAction, fetchCurrentProductAction} from './api-actions';
-import {loadCurrentComments, loadProductCardsList, searchingProducts, loadCurrentProduct, addNewComment, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened} from './action';
+import {APIRoute, CouponError} from '../const';
+import {postCommentAction, fetchCatalogPageAction, fetchSearchingProductsUserAction, fetchCurrentProductAction, fetchCartProductsAction, postCouponAction, postOrderAction} from './api-actions';
+import {loadCurrentComments, loadProductCardsList, searchingProducts, loadCurrentProduct, addNewComment, toggleIsReviewFormOpened, toggleIsSuccessReviewOpened, addProductsInCart, addCoupon, clearProductsCart, clearCoupon, clearCart} from './action';
 import {fakeProducts, HttpCode, MakeFakeGuitar, fakeComments, MockUserData,MakeFakeComment} from '../mocks';
 import { createQuery } from '../utils';
+import { Order } from '../types/guitar';
 
 
 jest.mock('../utils');
@@ -20,6 +21,12 @@ const FAKE_PRODUCT_INFO = MakeFakeGuitar();
 const FAKE_COMMENTS = fakeComments;
 const FAKE_PRODUCT = {...FAKE_PRODUCT_INFO, comments: FAKE_COMMENTS};
 const FAKE_COMMENT = MakeFakeComment();
+const FAKE_VALUE = 'coupon';
+const FAKE_DISCOUNT = 50;
+const FAKE_ORDER: Order = {
+  guitarsIds: [1, 1],
+  coupon: FAKE_VALUE,
+};
 
 const NewComment = {
   guitarId: 1,
@@ -91,4 +98,56 @@ describe('Async actions', () => {
       { payload: true, type: toggleIsSuccessReviewOpened.type },
     ]);
   });
+
+  it('should dispatch addProductsInCart when GET page & HttpCode.OK', async () => {
+    mockAPI
+      .onGet(`${APIRoute.Guitars}/1`)
+      .reply(HttpCode.Ok, FAKE_PRODUCT_INFO)
+      .onGet(`${APIRoute.Guitars}/2`)
+      .reply(HttpCode.Ok, FAKE_PRODUCT_INFO)
+      .onGet(`${APIRoute.Guitars}/3`)
+      .reply(HttpCode.Ok, FAKE_PRODUCT_INFO);
+    const store = mockStore();
+    await store.dispatch(fetchCartProductsAction(['1', '2', '3']));
+    expect(store.getActions()).toEqual([
+      addProductsInCart([
+        FAKE_PRODUCT_INFO,
+        FAKE_PRODUCT_INFO,
+        FAKE_PRODUCT_INFO,
+      ]),
+    ]);
+  });
+
+  it('should dispatch addCoupon with {FAKE_COMMENT when POST /coupons & HttpCode.OK', async () => {
+    mockAPI.onPost(APIRoute.Coupon).reply(HttpCode.Ok, FAKE_DISCOUNT);
+    const store = mockStore();
+    await store.dispatch(postCouponAction(FAKE_VALUE));
+    expect(store.getActions()).toEqual([
+      {
+        payload: { value: FAKE_VALUE, discount: FAKE_DISCOUNT },
+        type: addCoupon.type,
+      },
+    ]);
+  });
+
+  it('should dispatch addCoupon with CouponError when POST /coupons & HttpCode.BadRequest', async () => {
+    mockAPI.onPost(APIRoute.Coupon).reply(HttpCode.BadRequest);
+    const store = mockStore();
+    await store.dispatch(postCouponAction(FAKE_VALUE));
+    expect(store.getActions()).toEqual([
+      { payload: CouponError, type: addCoupon.type },
+    ]);
+  });
+
+  it('should dispatch clearCoupon, clearCart, clearProductsCart when POST /orders & HttpCode.OK', async () => {
+    mockAPI.onPost(APIRoute.Order).reply(HttpCode.Ok);
+    const store = mockStore();
+    await store.dispatch(postOrderAction(FAKE_ORDER));
+    expect(store.getActions()).toEqual([
+      { type: clearProductsCart.type },
+      { type: clearCoupon.type },
+      { type: clearCart.type },
+    ]);
+  });
 });
+
