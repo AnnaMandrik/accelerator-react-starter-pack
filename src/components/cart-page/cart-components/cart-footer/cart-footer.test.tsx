@@ -37,8 +37,8 @@ describe('Component: CartFooter', () => {
     expect(screen.getByText(TestReg.CouponBtn)).toBeInTheDocument();
     expect(screen.getByTestId('coupon')).toBeInTheDocument();
     expect(screen.getAllByText(`${FAKE_TOTAL_PRICE} ₽`).length).toEqual(1);
-    expect(screen.getByText(`${FAKE_DISCOUNT} ₽`)).toBeInTheDocument();
+
     expect(screen.getByText(`${FAKE_TOTAL_PRICE-FAKE_DISCOUNT} ₽`)).toBeInTheDocument();
-    expect(screen.getByTestId('discount')).toBeInTheDocument();
+
   });
 });

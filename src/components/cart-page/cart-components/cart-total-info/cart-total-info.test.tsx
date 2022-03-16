@@ -14,8 +14,6 @@ const fakePostOrder = postOrderAction as jest.MockedFunction<typeof postOrderAct
 const dispatch = jest.fn();
 const useDispatch = jest.spyOn(Redux, 'useDispatch');
 
-const BONUS_CLASSNAME = 'cart__total-value--bonus';
-
 const mockStore = configureMockStore();
 
 const FakeInCart = {
@@ -46,18 +44,14 @@ describe('Component: TotalInfo', () => {
     customRenderWithProvider(<CartTotalInfo />, store);
     expect(screen.getAllByText(`${FAKE_TOTAL_PRICE} ₽`).length).toEqual(2);
     expect(screen.getByText('0 ₽')).toBeInTheDocument();
-    expect(screen.getByTestId('discount')).toBeInTheDocument();
-    expect(screen.getByTestId('discount')).not.toHaveClass(BONUS_CLASSNAME);
     expect(screen.getByText(TestReg.OrderBtn)).toBeInTheDocument();
   });
   it('should render correctly with coupon', () => {
     const store = mockStore(componentStateWithCoupon);
     customRenderWithProvider(<CartTotalInfo />, store);
     expect(screen.getAllByText(`${FAKE_TOTAL_PRICE} ₽`).length).toEqual(1);
-    expect(screen.getByText(`${FAKE_DISCOUNT} ₽`)).toBeInTheDocument();
+    expect(screen.getByText(`- ${FAKE_DISCOUNT} ₽`)).toBeInTheDocument();
     expect(screen.getByText(`${FAKE_TOTAL_PRICE-FAKE_DISCOUNT} ₽`)).toBeInTheDocument();
-    expect(screen.getByTestId('discount')).toBeInTheDocument();
-    expect(screen.getByTestId('discount')).toHaveClass(BONUS_CLASSNAME);
   });
   it('should dispatch correctly if click on OrderBtn', () => {
     useDispatch.mockReturnValue(dispatch);

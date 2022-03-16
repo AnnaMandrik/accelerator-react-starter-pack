@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { DIGIT_ZERO } from '../../../../const';
 import { postOrderAction } from '../../../../store/api-actions';
 import { getUserCoupon, getUserOrderQuantity, getUserSumOfTotal, getUserTotalDiscount } from '../../../../store/user-data/selectors';
+import { numberWithSpaces } from '../../../../utils';
 
 function CartTotalInfo(): JSX.Element {
   const totalPrices = useSelector(getUserSumOfTotal);
@@ -14,23 +16,18 @@ function CartTotalInfo(): JSX.Element {
     <div className="cart__total-info">
       <p className="cart__total-item">
         <span className="cart__total-value-name">Всего:</span>
-        <span className="cart__total-value">{totalPrices} ₽</span>
+        <span className="cart__total-value">{numberWithSpaces(totalPrices)} ₽</span>
       </p>
       <p className="cart__total-item">
         <span className="cart__total-value-name">Скидка:</span>
-        <span
-          className={`cart__total-value ${
-            !!totalDiscount && 'cart__total-value--bonus'
-          }`}
-          data-testid = 'discount'
-        >
-          {totalDiscount} ₽
-        </span>
+        {(totalDiscount === DIGIT_ZERO)
+          ? <span className="cart__total-value">{`${totalDiscount} ₽`}</span>
+          : <span className="cart__total-value cart__total-value--bonus">{`- ${totalDiscount} ₽`}</span>}
       </p>
       <p className="cart__total-item">
         <span className="cart__total-value-name">К оплате:</span>
         <span className="cart__total-value cart__total-value--payment">
-          {totalPrices - totalDiscount} ₽
+          {numberWithSpaces(totalPrices - totalDiscount)} ₽
         </span>
       </p>
       <button

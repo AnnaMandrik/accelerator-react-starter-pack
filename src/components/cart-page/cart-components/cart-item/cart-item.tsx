@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 import { GuitarsType } from '../../../../const';
 import { addTemporaryProductsInCart, toggleIsDeleteOpened } from '../../../../store/action';
 import { Guitar } from '../../../../types/guitar';
+import { numberWithSpaces } from '../../../../utils';
 import CartCount from '../cart-count/cart-count';
 
 
@@ -38,7 +39,7 @@ function CartItem({product}: CartItemProps): JSX.Element {
         <p className="product-info__info">Артикул: {vendorCode}</p>
         <p className="product-info__info">{productType}, {stringCount} струнная</p>
       </div>
-      <div className="cart-item__price">{price} ₽</div>
+      <div className="cart-item__price">{numberWithSpaces(price)} ₽</div>
       <CartCount product={product}/>
     </div>
   );

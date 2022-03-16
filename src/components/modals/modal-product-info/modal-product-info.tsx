@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { GuitarsType } from '../../../const';
 import { getTemporaryProductsInCart } from '../../../store/main-data/selectors';
+import { numberWithSpaces } from '../../../utils';
 
 function ModalProductInfo() {
   const product = useSelector(getTemporaryProductsInCart);
@@ -28,7 +29,7 @@ function ModalProductInfo() {
         </p>
         <p className='modal__price-wrapper'>
           <span className='modal__price'>Цена:</span>
-          <span className='modal__price'>{price} ₽</span>
+          <span className='modal__price'>{numberWithSpaces(price)} ₽</span>
         </p>
       </div>
     </div>

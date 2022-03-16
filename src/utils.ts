@@ -106,3 +106,5 @@ export const getAllIds = (object: InCart): number[] =>
       const currentIds = new Array(value).fill(Number(key));
       return [...allIds, ...currentIds];
     }, [] as number[]);
+
+export const numberWithSpaces = (value: number): string => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');

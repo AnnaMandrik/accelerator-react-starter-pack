@@ -4,6 +4,7 @@ import { useToggle } from '../../../../hooks/use-toggle/use-toggle';
 import { addTemporaryProductsInCart, toggleIsAddOpened } from '../../../../store/action';
 import { getCurrentComments } from '../../../../store/main-data/selectors';
 import { Guitar } from '../../../../types/guitar';
+import { numberWithSpaces } from '../../../../utils';
 
 type ProductInfoProps = {
   currentProduct: Guitar;
@@ -113,7 +114,7 @@ function ProductInfo({currentProduct}: ProductInfoProps): JSX.Element {
       </div>
       <div className="product-container__price-wrapper">
         <p className="product-container__price-info product-container__price-info--title">Цена:</p>
-        <p className="product-container__price-info product-container__price-info--value">{price} ₽</p>
+        <p className="product-container__price-info product-container__price-info--value">{numberWithSpaces(price)} ₽</p>
         <button className="button button--red button--big product-container__button"
           onClick = {handleAddToCartClick}
         >
