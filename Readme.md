@@ -1,6 +1,6 @@
 # ["Guitar shop"](https://accelerator-react-starter-pack-2.vercel.app/catalog/page_1) - интернет-магазин по подборке и продажи гитар
 
-<img src="https://github.com/AnnaMandrik/accelerator-react-starter-pack/tree/main/public/img/image.png" alt="guitar shop app">
+<img src="https://github.com/AnnaMandrik/accelerator-react-starter-pack/blob/main/public/img/image.png" alt="guitar shop app">
 
 
 [Здесь](https://github.com/AnnaMandrik/accelerator-react-starter-pack/tree/main/src) вы можете посмотреть код, написанный мной на **React** с использованием **TypeScript**<br>
