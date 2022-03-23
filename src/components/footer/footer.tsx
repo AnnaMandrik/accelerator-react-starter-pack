@@ -1,10 +1,28 @@
-import {Link} from 'react-router-dom';
+import {Link, useMatch} from 'react-router-dom';
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { useDispatch } from 'react-redux';
 import {socialsNets} from '../../const';
 import {AppRoute} from '../../const';
+import { increaseCommentsCounter } from '../../store/action';
 
 function Footer(): JSX.Element {
+  const dispatch = useDispatch();
+  const isProductPage = useMatch(AppRoute.Product);
+
+  const { ref, inView } = useInView({
+    threshold: 1,
+  });
+
+  useEffect(() => {
+    if (!inView || !isProductPage) {
+      return;
+    }
+    dispatch(increaseCommentsCounter());
+  }, [dispatch, inView, isProductPage]);
+
   return (
-    <footer className="footer">
+    <footer className="footer" ref={ref}>
       <div className="footer__container container">
         <Link className="footer__logo logo" to={AppRoute.Main}>
           <img className="logo__img" width="70" height="70" src="./img/svg/logo.svg" alt="Логотип" />
